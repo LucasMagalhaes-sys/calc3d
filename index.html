@@ -254,60 +254,32 @@
 
 <!-- FIREBASE SDK -->
 <script type="module">
+    // Importações Diretas (Sem NPM) - Versão 11.6.1 (Compatível com suas chaves)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithCustomToken, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, doc, setDoc, getDoc, onSnapshot, serverTimestamp, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, doc, setDoc, getDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // --- SUAS CHAVES DO FIREBASE AQUI ---
-    // 1. Vá em console.firebase.google.com
-    // 2. Crie um projeto > Adicione app Web > Copie as chaves
-    // 3. Cole abaixo (Substitua todo o bloco const firebaseConfig...)
-    
-    let firebaseConfig = null;
-
-    // Tenta pegar config do ambiente de teste (chat) OU usa o placeholder que você deve substituir
-    if (typeof __firebase_config !== 'undefined') {
-        firebaseConfig = JSON.parse(__firebase_config);
-    } else {
-        // --- COLE SUAS CHAVES AQUI PARA RODAR NO VS CODE ---
-        firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "SEU_PROJETO.firebaseapp.com",
-            projectId: "SEU_PROJETO_ID",
-            storageBucket: "SEU_PROJETO.appspot.com",
-            messagingSenderId: "NUMEROS",
-            appId: "APP_ID"
-        };
-    }
-    
-    // Validação simples
-    if (firebaseConfig.apiKey === "SUA_API_KEY") {
-        alert("⚠️ ATENÇÃO: Você precisa configurar suas chaves do Firebase no arquivo HTML (linha ~190) para o login funcionar!");
-    }
+    // --- SUAS CHAVES (JÁ CONFIGURADAS) ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyBk5VOKh1YesWPObveNZcl6NDTQoSRv2MM",
+        authDomain: "calc3d-app.firebaseapp.com",
+        projectId: "calc3d-app",
+        storageBucket: "calc3d-app.firebasestorage.app",
+        messagingSenderId: "995189437836",
+        appId: "1:995189437836:web:1ea8b4a03ba78e0d87d2a9"
+    };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     
-    // Configurações de Path
-    // No seu projeto real, você pode simplificar isso para 'impressoes' e 'config'
-    // Aqui usamos um ID dinâmico para não misturar dados de teste
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app';
-    const COLLECTION_DATA = typeof __app_id !== 'undefined' ? `artifacts/${appId}/public/data/impressoes` : 'impressoes';
-    const DOC_CONFIG = typeof __app_id !== 'undefined' ? `artifacts/${appId}/public/data/config/geral` : 'config/geral';
-
     // Variáveis Globais
     let currentUser = null;
     let globalConfig = { resinaPreco: 180.00, kwh: 0.90, watts: 120, posProc: 2.50 };
     let currentCalculation = null;
 
-    // --- AUTHENTICATION HANDLERS ---
+    // --- LOGICA DE LOGIN E CADASTRO ---
     
-    // Auto-login apenas no ambiente de teste do Chat
-    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-        signInWithCustomToken(auth, __initial_auth_token);
-    }
-
     // Login Manual (Email/Senha)
     document.getElementById('login-form').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -318,7 +290,6 @@
 
         try {
             await signInWithEmailAndPassword(auth, email, pass);
-            // Sucesso é tratado no onAuthStateChanged
         } catch (err) {
             showError(traduzirErro(err.code));
             setLoading(false, 'btn-login');
@@ -343,7 +314,6 @@
 
         try {
             await createUserWithEmailAndPassword(auth, email, pass);
-            // Sucesso é tratado no onAuthStateChanged
         } catch (err) {
             showError(traduzirErro(err.code));
             setLoading(false, 'btn-register');
@@ -373,18 +343,8 @@
     function setupRealtimeListeners() {
         if (!currentUser) return;
         
-        // Se estiver usando paths diretos no seu projeto, adapte aqui
-        let qHistory, docRef;
-        
-        if (typeof __app_id !== 'undefined') {
-            // Modo Teste (Chat)
-             qHistory = collection(db, 'artifacts', appId, 'public', 'data', 'impressoes');
-             docRef = doc(db, 'artifacts', appId, 'public', 'data', 'config', 'geral');
-        } else {
-            // Modo Real (Seu Firebase)
-            qHistory = collection(db, 'impressoes');
-            docRef = doc(db, 'config', 'geral');
-        }
+        const qHistory = collection(db, 'impressoes');
+        const docRef = doc(db, 'config', 'geral');
 
         document.getElementById('loader-history').classList.remove('hidden');
         
@@ -426,8 +386,7 @@
                 globalConfig = { ...globalConfig, ...docSnap.data() };
                 updateConfigInputs();
             } else {
-                // Cria config padrão se não existir
-                setDoc(docRef, globalConfig);
+                setDoc(docRef, globalConfig); // Cria padrão se não existir
             }
         });
     }
@@ -447,7 +406,7 @@
         const custoPos = globalConfig.posProc;
         const custoTotal = custoMaterial + custoEnergia + custoPos + embalagem;
         
-        const precoBase = custoTotal * 2.0; // 100% markup padrao
+        const precoBase = custoTotal * 2.0; // 100% markup
         const precoVenda = precoBase / (1 - (taxaAppPercent/100));
 
         document.getElementById('res-total').innerText = formatMoney(custoTotal);
@@ -476,15 +435,7 @@
             btn.innerHTML = '<div class="loader !w-4 !h-4 !border-white !border-t-blue-600"></div> Salvando...';
             btn.disabled = true;
             
-            // Lógica de Path igual ao Listener
-            let collectionRef;
-            if (typeof __app_id !== 'undefined') {
-                 collectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'impressoes');
-            } else {
-                 collectionRef = collection(db, 'impressoes');
-            }
-
-            await addDoc(collectionRef, currentCalculation);
+            await addDoc(collection(db, 'impressoes'), currentCalculation);
             
             btn.innerHTML = '<i class="fa-solid fa-check"></i> Salvo!';
             btn.classList.replace('text-blue-700', 'text-green-600');
@@ -508,24 +459,15 @@
             watts: parseFloat(document.getElementById('conf-watts').value) || 0,
             posProc: parseFloat(document.getElementById('conf-pos').value) || 0
         };
-        
-        let docRef;
-        if (typeof __app_id !== 'undefined') {
-             docRef = doc(db, 'artifacts', appId, 'public', 'data', 'config', 'geral');
-        } else {
-             docRef = doc(db, 'config', 'geral');
-        }
 
         try {
-            await setDoc(docRef, newConfig);
+            await setDoc(doc(db, 'config', 'geral'), newConfig);
             closeConfig();
         } catch (e) { alert("Erro: " + e.message); }
     }
 
     // --- UTILS ---
-    window.logout = function() {
-        if(confirm("Sair?")) signOut(auth);
-    }
+    window.logout = function() { if(confirm("Sair?")) signOut(auth); }
     window.switchTab = function(t) { if(t==='config'){ document.getElementById('modal-config').classList.remove('hidden'); updateConfigInputs(); } }
     window.closeConfig = function() { document.getElementById('modal-config').classList.add('hidden'); }
     window.toggleAdvanced = function() { document.getElementById('advanced-options').classList.toggle('hidden'); }
@@ -571,12 +513,11 @@
     function traduzirErro(code) {
         switch(code) {
             case 'auth/invalid-email': return 'E-mail inválido.';
-            case 'auth/user-disabled': return 'Usuário bloqueado.';
             case 'auth/user-not-found': return 'Usuário não encontrado. Cadastre-se primeiro.';
             case 'auth/wrong-password': return 'Senha incorreta.';
             case 'auth/email-already-in-use': return 'Este e-mail já está cadastrado.';
-            case 'auth/weak-password': return 'A senha deve ter pelo menos 6 caracteres.';
-            default: return 'Erro no login: ' + code;
+            case 'auth/weak-password': return 'Senha fraca (min 6 caracteres).';
+            default: return 'Erro: ' + code;
         }
     }
 </script>
