@@ -49,15 +49,6 @@
                     <span class="btn-text">Entrar</span>
                     <div class="loader hidden"></div>
                 </button>
-                
-                <!-- 
-                     SEGURANÇA: Botão de cadastro ocultado para evitar que estranhos criem contas.
-                     Se precisar criar uma nova conta, remova a classe "hidden" temporariamente.
-                -->
-                <button type="button" onclick="handleRegister()" id="btn-register" class="hidden flex-1 bg-white border-2 border-blue-100 hover:bg-blue-50 text-blue-600 font-bold py-3.5 rounded-xl transition transform active:scale-95 flex justify-center items-center gap-2">
-                    <span class="btn-text">Cadastrar</span>
-                    <div class="loader !border-gray-200 !border-t-blue-600 hidden"></div>
-                </button>
             </div>
             
             <p id="login-error" class="text-red-500 text-xs text-center hidden bg-red-50 p-2 rounded-lg border border-red-100 mt-2"></p>
@@ -299,7 +290,7 @@
 <script type="module">
     // Importações Diretas (Sem NPM) - Versão 11.6.1
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     // --- SUAS CHAVES (JÁ CONFIGURADAS) ---
@@ -330,15 +321,6 @@
         try { await signInWithEmailAndPassword(auth, email, pass); } catch (err) { showError(traduzirErro(err.code)); setLoading(false, 'btn-login'); }
     });
 
-    window.handleRegister = async function() {
-        const email = document.getElementById('email-input').value;
-        const pass = document.getElementById('password-input').value;
-        if(!email || !pass) { showError("Preencha email e senha para cadastrar."); return; }
-        if(pass.length < 6) { showError("A senha deve ter pelo menos 6 caracteres."); return; }
-        setLoading(true, 'btn-register');
-        try { await createUserWithEmailAndPassword(auth, email, pass); } catch (err) { showError(traduzirErro(err.code)); setLoading(false, 'btn-register'); }
-    }
-
     onAuthStateChanged(auth, (user) => {
         if (user) {
             currentUser = user;
@@ -352,7 +334,6 @@
             document.getElementById('screen-app').classList.add('hidden');
             document.getElementById('screen-login').classList.remove('hidden');
             setLoading(false, 'btn-login');
-            setLoading(false, 'btn-register');
         }
     });
 
