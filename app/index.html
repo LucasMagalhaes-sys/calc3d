@@ -14,6 +14,10 @@
         ::-webkit-scrollbar { width: 0px; background: transparent; }
         .loader { border: 3px solid #f3f3f3; border-radius: 50%; border-top: 3px solid #3498db; width: 20px; height: 20px; -webkit-animation: spin 1s linear infinite; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Estilo para botões de estoque */
+        .btn-qty { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: bold; transition: all 0.2s; }
+        .btn-qty:active { transform: scale(0.9); }
     </style>
 </head>
 <body>
@@ -45,7 +49,12 @@
                     <span class="btn-text">Entrar</span>
                     <div class="loader hidden"></div>
                 </button>
-                <button type="button" onclick="handleRegister()" id="btn-register" class="flex-1 bg-white border-2 border-blue-100 hover:bg-blue-50 text-blue-600 font-bold py-3.5 rounded-xl transition transform active:scale-95 flex justify-center items-center gap-2">
+                
+                <!-- 
+                     SEGURANÇA: Botão de cadastro ocultado para evitar que estranhos criem contas.
+                     Se precisar criar uma nova conta, remova a classe "hidden" temporariamente.
+                -->
+                <button type="button" onclick="handleRegister()" id="btn-register" class="hidden flex-1 bg-white border-2 border-blue-100 hover:bg-blue-50 text-blue-600 font-bold py-3.5 rounded-xl transition transform active:scale-95 flex justify-center items-center gap-2">
                     <span class="btn-text">Cadastrar</span>
                     <div class="loader !border-gray-200 !border-t-blue-600 hidden"></div>
                 </button>
@@ -61,7 +70,7 @@
         <!-- Header -->
         <header class="bg-white px-6 py-4 flex justify-between items-center border-b border-gray-100 sticky top-0 z-10">
             <div>
-                <h2 class="text-lg font-bold text-gray-800">Nova Impressão</h2>
+                <h2 id="header-title" class="text-lg font-bold text-gray-800">Nova Impressão</h2>
                 <div class="flex items-center gap-1">
                     <span id="connection-status" class="w-2 h-2 rounded-full bg-yellow-400"></span>
                     <p class="text-xs text-gray-500 font-medium" id="status-text">Conectando...</p>
@@ -76,105 +85,139 @@
         </header>
 
         <!-- Conteúdo Rolável -->
-        <div class="flex-1 overflow-y-auto p-6 space-y-6 pb-24">
+        <div class="flex-1 overflow-y-auto p-6 pb-24 relative">
             
-            <!-- Card: Inputs Rápidos -->
-            <div class="bg-white rounded-2xl border border-gray-100 p-1 shadow-sm relative">
-                <div class="p-4 space-y-4">
-                    <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Projeto / Peça</label>
-                        <input type="text" id="input-nome" placeholder="Ex: Baby Yoda" class="w-full text-lg font-semibold border-b border-gray-200 py-2 focus:border-blue-500 outline-none text-gray-800 placeholder-gray-300">
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
+            <!-- ================== ABA CALCULAR ================== -->
+            <div id="tab-calc" class="fade-in space-y-6">
+                <!-- Card: Inputs Rápidos -->
+                <div class="bg-white rounded-2xl border border-gray-100 p-1 shadow-sm relative">
+                    <div class="p-4 space-y-4">
                         <div>
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Peso (g)</label>
-                            <div class="relative">
-                                <input type="number" id="input-peso" placeholder="0" class="w-full text-lg font-semibold border-b border-gray-200 py-2 pl-1 focus:border-blue-500 outline-none text-gray-800">
-                                <span class="absolute right-0 bottom-2 text-gray-400 text-sm">g</span>
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Projeto / Peça</label>
+                            <input type="text" id="input-nome" placeholder="Ex: Baby Yoda" class="w-full text-lg font-semibold border-b border-gray-200 py-2 focus:border-blue-500 outline-none text-gray-800 placeholder-gray-300">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Peso (g)</label>
+                                <div class="relative">
+                                    <input type="number" id="input-peso" placeholder="0" class="w-full text-lg font-semibold border-b border-gray-200 py-2 pl-1 focus:border-blue-500 outline-none text-gray-800">
+                                    <span class="absolute right-0 bottom-2 text-gray-400 text-sm">g</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Tempo (h)</label>
+                                <div class="relative">
+                                    <input type="number" id="input-tempo" placeholder="0" class="w-full text-lg font-semibold border-b border-gray-200 py-2 pl-1 focus:border-blue-500 outline-none text-gray-800">
+                                    <span class="absolute right-0 bottom-2 text-gray-400 text-sm">h</span>
+                                </div>
                             </div>
                         </div>
-                        <div>
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Tempo (h)</label>
-                            <div class="relative">
-                                <input type="number" id="input-tempo" placeholder="0" class="w-full text-lg font-semibold border-b border-gray-200 py-2 pl-1 focus:border-blue-500 outline-none text-gray-800">
-                                <span class="absolute right-0 bottom-2 text-gray-400 text-sm">h</span>
+                    </div>
+                    
+                    <!-- Toggle Opções Avançadas -->
+                    <div class="bg-gray-50 p-3 rounded-b-2xl border-t border-gray-100 cursor-pointer flex justify-between items-center" onclick="toggleAdvanced()">
+                        <span class="text-xs text-gray-500 font-medium"><i class="fa-solid fa-sliders mr-2"></i>Taxas Extras (Embalagem/App)</span>
+                        <i id="icon-advanced" class="fa-solid fa-chevron-down text-gray-400 text-xs transition"></i>
+                    </div>
+                    
+                    <div id="advanced-options" class="hidden bg-gray-50 px-4 pb-4 rounded-b-2xl border-t border-gray-100">
+                        <div class="grid grid-cols-2 gap-4 mt-3">
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase">Embalagem (R$)</label>
+                                <input type="number" id="input-embalagem" value="3.50" class="w-full bg-white border border-gray-200 rounded p-2 text-sm">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase">Taxa App (%)</label>
+                                <input type="number" id="input-taxa-app" value="18" class="w-full bg-white border border-gray-200 rounded p-2 text-sm">
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Toggle Opções Avançadas -->
-                <div class="bg-gray-50 p-3 rounded-b-2xl border-t border-gray-100 cursor-pointer flex justify-between items-center" onclick="toggleAdvanced()">
-                    <span class="text-xs text-gray-500 font-medium"><i class="fa-solid fa-sliders mr-2"></i>Taxas Extras (Embalagem/App)</span>
-                    <i id="icon-advanced" class="fa-solid fa-chevron-down text-gray-400 text-xs transition"></i>
-                </div>
-                
-                <div id="advanced-options" class="hidden bg-gray-50 px-4 pb-4 rounded-b-2xl border-t border-gray-100">
-                    <div class="grid grid-cols-2 gap-4 mt-3">
-                        <div>
-                            <label class="text-[10px] font-bold text-gray-500 uppercase">Embalagem (R$)</label>
-                            <input type="number" id="input-embalagem" value="3.50" class="w-full bg-white border border-gray-200 rounded p-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-gray-500 uppercase">Taxa App (%)</label>
-                            <input type="number" id="input-taxa-app" value="18" class="w-full bg-white border border-gray-200 rounded p-2 text-sm">
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Botão Calcular -->
-            <button onclick="calcular()" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-4 rounded-xl shadow-lg shadow-gray-400/30 transition transform active:scale-95 flex items-center justify-center gap-2">
-                <i class="fa-solid fa-calculator"></i> Calcular Custo
-            </button>
-
-            <!-- Resultado (Card Dinâmico) -->
-            <div id="result-card" class="hidden fade-in bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-6 text-white shadow-xl shadow-blue-500/20 relative overflow-hidden">
-                <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full blur-2xl"></div>
-                
-                <div class="flex justify-between items-end mb-4">
-                    <div>
-                        <p class="text-blue-100 text-xs uppercase font-bold tracking-wider mb-1">Custo Total</p>
-                        <h3 class="text-4xl font-bold" id="res-total">R$ 0,00</h3>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-blue-100 text-xs uppercase font-bold tracking-wider mb-1">Sugestão</p>
-                        <p class="text-xl font-medium text-green-300" id="res-sugestao">R$ 0,00</p>
-                    </div>
-                </div>
-
-                <div class="bg-black/20 rounded-lg p-3 text-sm space-y-1 backdrop-blur-sm border border-white/10">
-                    <div class="flex justify-between text-blue-100"><span>Resina</span> <span id="res-material">R$ 0,00</span></div>
-                    <div class="flex justify-between text-blue-100"><span>Energia</span> <span id="res-energia">R$ 0,00</span></div>
-                    <div class="flex justify-between text-blue-100"><span>Outros</span> <span id="res-outros">R$ 0,00</span></div>
-                </div>
-
-                <button id="btn-save-cloud" onclick="salvarNaNuvem()" class="mt-4 w-full bg-white text-blue-700 py-2 rounded-lg font-bold text-sm hover:bg-blue-50 transition flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> Salvar na Nuvem
+                <!-- Botão Calcular -->
+                <button onclick="calcular()" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-4 rounded-xl shadow-lg shadow-gray-400/30 transition transform active:scale-95 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-calculator"></i> Calcular Custo
                 </button>
+
+                <!-- Resultado (Card Dinâmico) -->
+                <div id="result-card" class="hidden fade-in bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-6 text-white shadow-xl shadow-blue-500/20 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full blur-2xl"></div>
+                    
+                    <div class="flex justify-between items-end mb-4">
+                        <div>
+                            <p class="text-blue-100 text-xs uppercase font-bold tracking-wider mb-1">Custo Total</p>
+                            <h3 class="text-4xl font-bold" id="res-total">R$ 0,00</h3>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-blue-100 text-xs uppercase font-bold tracking-wider mb-1">Sugestão</p>
+                            <p class="text-xl font-medium text-green-300" id="res-sugestao">R$ 0,00</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-black/20 rounded-lg p-3 text-sm space-y-1 backdrop-blur-sm border border-white/10">
+                        <div class="flex justify-between text-blue-100"><span>Resina</span> <span id="res-material">R$ 0,00</span></div>
+                        <div class="flex justify-between text-blue-100"><span>Energia</span> <span id="res-energia">R$ 0,00</span></div>
+                        <div class="flex justify-between text-blue-100"><span>Outros</span> <span id="res-outros">R$ 0,00</span></div>
+                    </div>
+
+                    <button id="btn-save-cloud" onclick="salvarNaNuvem()" class="mt-4 w-full bg-white text-blue-700 py-2 rounded-lg font-bold text-sm hover:bg-blue-50 transition flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Salvar na Nuvem
+                    </button>
+                </div>
+
+                <!-- Histórico Recente -->
+                <div>
+                    <div class="flex justify-between items-center mb-3 ml-1">
+                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Histórico (Nuvem)</h3>
+                        <div id="loader-history" class="loader !w-4 !h-4 !border-gray-300 !border-t-blue-500 hidden"></div>
+                    </div>
+                    <div id="history-list" class="space-y-3">
+                        <!-- Itens inseridos via JS -->
+                    </div>
+                </div>
             </div>
 
-            <!-- Histórico Recente -->
-            <div>
-                <div class="flex justify-between items-center mb-3 ml-1">
-                    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Histórico (Nuvem)</h3>
-                    <div id="loader-history" class="loader !w-4 !h-4 !border-gray-300 !border-t-blue-500 hidden"></div>
+            <!-- ================== ABA ESTOQUE (NOVO) ================== -->
+            <div id="tab-stock" class="hidden fade-in space-y-6">
+                <!-- Adicionar Item -->
+                <div class="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">Novo Item</h3>
+                    <div class="flex gap-2">
+                        <input type="text" id="stock-name" placeholder="Nome da Peça" class="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500">
+                        <input type="number" id="stock-qty" placeholder="Qtd" class="w-16 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500">
+                        <button onclick="addItemEstoque()" class="bg-blue-600 text-white rounded-lg px-4 hover:bg-blue-700 transition">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
                 </div>
-                <div id="history-list" class="space-y-3">
-                    <!-- Itens inseridos via JS -->
+
+                <!-- Lista de Estoque -->
+                <div>
+                    <div class="flex justify-between items-center mb-3 ml-1">
+                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Meu Estoque</h3>
+                        <div id="loader-stock" class="loader !w-4 !h-4 !border-gray-300 !border-t-blue-500 hidden"></div>
+                    </div>
+                    
+                    <div id="stock-list" class="space-y-3">
+                        <!-- Itens do estoque via JS -->
+                    </div>
                 </div>
             </div>
 
         </div>
 
         <!-- Barra de Navegação Inferior -->
-        <nav class="bg-white border-t border-gray-200 px-6 py-3 flex justify-around items-center absolute bottom-0 w-full pb-6 lg:pb-3">
-            <button onclick="switchTab('calc')" class="nav-btn active text-blue-600 flex flex-col items-center gap-1">
+        <nav class="bg-white border-t border-gray-200 px-6 py-3 flex justify-around items-center absolute bottom-0 w-full pb-6 lg:pb-3 z-20">
+            <button onclick="switchTab('calc')" id="nav-calc" class="nav-btn active text-blue-600 flex flex-col items-center gap-1 w-1/3">
                 <i class="fa-solid fa-calculator text-xl"></i>
                 <span class="text-[10px] font-bold">Calcular</span>
             </button>
-            <button onclick="switchTab('config')" class="nav-btn text-gray-400 hover:text-gray-600 flex flex-col items-center gap-1 transition">
+            <button onclick="switchTab('stock')" id="nav-stock" class="nav-btn text-gray-400 hover:text-gray-600 flex flex-col items-center gap-1 w-1/3 transition">
+                <i class="fa-solid fa-boxes-stacked text-xl"></i>
+                <span class="text-[10px] font-bold">Estoque</span>
+            </button>
+            <button onclick="switchTab('config')" id="nav-config" class="nav-btn text-gray-400 hover:text-gray-600 flex flex-col items-center gap-1 w-1/3 transition">
                 <i class="fa-solid fa-gear text-xl"></i>
                 <span class="text-[10px] font-bold">Ajustes</span>
             </button>
@@ -254,103 +297,48 @@
 
 <!-- FIREBASE SDK -->
 <script type="module">
+    // Importações Diretas (Sem NPM) - Versão 11.6.1
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithCustomToken, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, doc, setDoc, getDoc, onSnapshot, serverTimestamp, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // --- SUAS CHAVES DO FIREBASE AQUI ---
-    // 1. Vá em console.firebase.google.com
-    // 2. Crie um projeto > Adicione app Web > Copie as chaves
-    // 3. Cole abaixo (Substitua todo o bloco const firebaseConfig...)
-    
-    let firebaseConfig = null;
-
-    // Tenta pegar config do ambiente de teste (chat) OU usa o placeholder que você deve substituir
-    if (typeof __firebase_config !== 'undefined') {
-        firebaseConfig = JSON.parse(__firebase_config);
-    } else {
-        // --- COLE SUAS CHAVES AQUI PARA RODAR NO VS CODE ---
-        firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "SEU_PROJETO.firebaseapp.com",
-            projectId: "SEU_PROJETO_ID",
-            storageBucket: "SEU_PROJETO.appspot.com",
-            messagingSenderId: "NUMEROS",
-            appId: "APP_ID"
-        };
-    }
-    
-    // Validação simples
-    if (firebaseConfig.apiKey === "SUA_API_KEY") {
-        alert("⚠️ ATENÇÃO: Você precisa configurar suas chaves do Firebase no arquivo HTML (linha ~190) para o login funcionar!");
-    }
+    // --- SUAS CHAVES (JÁ CONFIGURADAS) ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyBk5VOKh1YesWPObveNZcl6NDTQoSRv2MM",
+        authDomain: "calc3d-app.firebaseapp.com",
+        projectId: "calc3d-app",
+        storageBucket: "calc3d-app.firebasestorage.app",
+        messagingSenderId: "995189437836",
+        appId: "1:995189437836:web:1ea8b4a03ba78e0d87d2a9"
+    };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     
-    // Configurações de Path
-    // No seu projeto real, você pode simplificar isso para 'impressoes' e 'config'
-    // Aqui usamos um ID dinâmico para não misturar dados de teste
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app';
-    const COLLECTION_DATA = typeof __app_id !== 'undefined' ? `artifacts/${appId}/public/data/impressoes` : 'impressoes';
-    const DOC_CONFIG = typeof __app_id !== 'undefined' ? `artifacts/${appId}/public/data/config/geral` : 'config/geral';
-
     // Variáveis Globais
     let currentUser = null;
     let globalConfig = { resinaPreco: 180.00, kwh: 0.90, watts: 120, posProc: 2.50 };
     let currentCalculation = null;
 
-    // --- AUTHENTICATION HANDLERS ---
-    
-    // Auto-login apenas no ambiente de teste do Chat
-    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-        signInWithCustomToken(auth, __initial_auth_token);
-    }
-
-    // Login Manual (Email/Senha)
+    // --- LOGICA DE LOGIN E CADASTRO ---
     document.getElementById('login-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         setLoading(true, 'btn-login');
-        
         const email = document.getElementById('email-input').value;
         const pass = document.getElementById('password-input').value;
-
-        try {
-            await signInWithEmailAndPassword(auth, email, pass);
-            // Sucesso é tratado no onAuthStateChanged
-        } catch (err) {
-            showError(traduzirErro(err.code));
-            setLoading(false, 'btn-login');
-        }
+        try { await signInWithEmailAndPassword(auth, email, pass); } catch (err) { showError(traduzirErro(err.code)); setLoading(false, 'btn-login'); }
     });
 
-    // Cadastro Manual
     window.handleRegister = async function() {
         const email = document.getElementById('email-input').value;
         const pass = document.getElementById('password-input').value;
-        
-        if(!email || !pass) {
-            showError("Preencha email e senha para cadastrar.");
-            return;
-        }
-        if(pass.length < 6) {
-            showError("A senha deve ter pelo menos 6 caracteres.");
-            return;
-        }
-
+        if(!email || !pass) { showError("Preencha email e senha para cadastrar."); return; }
+        if(pass.length < 6) { showError("A senha deve ter pelo menos 6 caracteres."); return; }
         setLoading(true, 'btn-register');
-
-        try {
-            await createUserWithEmailAndPassword(auth, email, pass);
-            // Sucesso é tratado no onAuthStateChanged
-        } catch (err) {
-            showError(traduzirErro(err.code));
-            setLoading(false, 'btn-register');
-        }
+        try { await createUserWithEmailAndPassword(auth, email, pass); } catch (err) { showError(traduzirErro(err.code)); setLoading(false, 'btn-register'); }
     }
 
-    // Monitora Estado do Login
     onAuthStateChanged(auth, (user) => {
         if (user) {
             currentUser = user;
@@ -358,7 +346,6 @@
             document.getElementById('screen-app').classList.remove('hidden');
             document.getElementById('screen-app').classList.add('fade-in');
             document.getElementById('user-display').innerText = user.email;
-            
             updateStatus('online');
             setupRealtimeListeners();
         } else {
@@ -373,20 +360,12 @@
     function setupRealtimeListeners() {
         if (!currentUser) return;
         
-        // Se estiver usando paths diretos no seu projeto, adapte aqui
-        let qHistory, docRef;
-        
-        if (typeof __app_id !== 'undefined') {
-            // Modo Teste (Chat)
-             qHistory = collection(db, 'artifacts', appId, 'public', 'data', 'impressoes');
-             docRef = doc(db, 'artifacts', appId, 'public', 'data', 'config', 'geral');
-        } else {
-            // Modo Real (Seu Firebase)
-            qHistory = collection(db, 'impressoes');
-            docRef = doc(db, 'config', 'geral');
-        }
+        const qHistory = collection(db, 'impressoes');
+        const qStock = collection(db, 'estoque');
+        const docRef = doc(db, 'config', 'geral');
 
         document.getElementById('loader-history').classList.remove('hidden');
+        document.getElementById('loader-stock').classList.remove('hidden');
         
         // 1. Histórico
         onSnapshot(qHistory, (snapshot) => {
@@ -400,7 +379,6 @@
 
             let items = [];
             snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
-            // Ordenação JS
             items.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
             list.innerHTML = items.map(item => `
@@ -409,7 +387,6 @@
                         <h4 class="font-bold text-gray-800">${item.nome}</h4>
                         <p class="text-xs text-gray-400">
                             ${item.timestamp ? new Date(item.timestamp.seconds * 1000).toLocaleDateString('pt-BR') : 'Hoje'} 
-                            <span class="text-gray-300">|</span> ${item.usuario ? item.usuario.split('@')[0] : 'Anônimo'}
                         </p>
                     </div>
                     <div class="text-right">
@@ -420,19 +397,47 @@
             `).join('');
         });
 
-        // 2. Configurações
+        // 2. Estoque (Novo)
+        onSnapshot(qStock, (snapshot) => {
+            const list = document.getElementById('stock-list');
+            document.getElementById('loader-stock').classList.add('hidden');
+            
+            if (snapshot.empty) {
+                list.innerHTML = '<div class="text-center py-8 text-gray-400 text-sm bg-white rounded-xl border border-dashed border-gray-200">Estoque vazio.</div>';
+                return;
+            }
+
+            let items = [];
+            snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+            // Ordernar Alfabético
+            items.sort((a, b) => a.nome.localeCompare(b.nome));
+
+            list.innerHTML = items.map(item => `
+                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-gray-800">${item.nome}</h4>
+                        <p class="text-xs text-gray-400 font-mono">ID: ${item.id.slice(0,4)}...</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="updateStock('${item.id}', -1)" class="btn-qty bg-red-50 text-red-600 hover:bg-red-100"><i class="fa-solid fa-minus"></i></button>
+                        <span class="font-bold text-lg w-6 text-center">${item.quantidade}</span>
+                        <button onclick="updateStock('${item.id}', 1)" class="btn-qty bg-green-50 text-green-600 hover:bg-green-100"><i class="fa-solid fa-plus"></i></button>
+                        <button onclick="deleteStock('${item.id}')" class="text-gray-300 hover:text-red-400 ml-2"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        });
+
+        // 3. Configurações
         onSnapshot(docRef, (docSnap) => {
             if (docSnap.exists()) {
                 globalConfig = { ...globalConfig, ...docSnap.data() };
                 updateConfigInputs();
-            } else {
-                // Cria config padrão se não existir
-                setDoc(docRef, globalConfig);
-            }
+            } else { setDoc(docRef, globalConfig); }
         });
     }
 
-    // --- FUNÇÕES APP ---
+    // --- FUNÇÕES APP (CALCULADORA) ---
     window.calcular = function() {
         const nome = document.getElementById('input-nome').value || "Sem nome";
         const peso = parseFloat(document.getElementById('input-peso').value);
@@ -447,7 +452,7 @@
         const custoPos = globalConfig.posProc;
         const custoTotal = custoMaterial + custoEnergia + custoPos + embalagem;
         
-        const precoBase = custoTotal * 2.0; // 100% markup padrao
+        const precoBase = custoTotal * 2.0; 
         const precoVenda = precoBase / (1 - (taxaAppPercent/100));
 
         document.getElementById('res-total').innerText = formatMoney(custoTotal);
@@ -459,45 +464,56 @@
         document.getElementById('result-card').classList.remove('hidden');
         document.getElementById('result-card').classList.add('block');
 
-        currentCalculation = {
-            nome: nome, peso: peso, tempo: tempo,
-            custoTotal: custoTotal, precoVenda: precoVenda,
-            usuario: currentUser.email,
-            timestamp: serverTimestamp()
-        };
+        currentCalculation = { nome: nome, peso: peso, tempo: tempo, custoTotal: custoTotal, precoVenda: precoVenda, usuario: currentUser.email, timestamp: serverTimestamp() };
     }
 
     window.salvarNaNuvem = async function() {
         if (!currentCalculation || !currentUser) return;
         const btn = document.getElementById('btn-save-cloud');
         const original = btn.innerHTML;
-        
         try {
             btn.innerHTML = '<div class="loader !w-4 !h-4 !border-white !border-t-blue-600"></div> Salvando...';
             btn.disabled = true;
-            
-            // Lógica de Path igual ao Listener
-            let collectionRef;
-            if (typeof __app_id !== 'undefined') {
-                 collectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'impressoes');
-            } else {
-                 collectionRef = collection(db, 'impressoes');
-            }
-
-            await addDoc(collectionRef, currentCalculation);
-            
+            await addDoc(collection(db, 'impressoes'), currentCalculation);
             btn.innerHTML = '<i class="fa-solid fa-check"></i> Salvo!';
             btn.classList.replace('text-blue-700', 'text-green-600');
             setTimeout(() => {
-                btn.innerHTML = original;
-                btn.classList.replace('text-green-600', 'text-blue-700');
-                btn.disabled = false;
+                btn.innerHTML = original; btn.classList.replace('text-green-600', 'text-blue-700'); btn.disabled = false;
                 document.getElementById('result-card').classList.add('hidden');
             }, 2000);
-        } catch (e) {
-            console.error(e);
-            alert("Erro: " + e.message);
-            btn.disabled = false;
+        } catch (e) { console.error(e); alert("Erro: " + e.message); btn.disabled = false; }
+    }
+
+    // --- FUNÇÕES DE ESTOQUE (NOVAS) ---
+    window.addItemEstoque = async function() {
+        const nome = document.getElementById('stock-name').value;
+        const qty = parseInt(document.getElementById('stock-qty').value);
+        if(!nome || isNaN(qty)) { alert("Preencha nome e quantidade"); return; }
+        
+        try {
+            await addDoc(collection(db, 'estoque'), {
+                nome: nome,
+                quantidade: qty,
+                updatedAt: serverTimestamp()
+            });
+            document.getElementById('stock-name').value = '';
+            document.getElementById('stock-qty').value = '';
+        } catch(e) { alert("Erro ao adicionar item: " + e.message); }
+    }
+
+    window.updateStock = async function(id, amount) {
+        try {
+            const itemRef = doc(db, 'estoque', id);
+            await updateDoc(itemRef, {
+                quantidade: increment(amount),
+                updatedAt: serverTimestamp()
+            });
+        } catch(e) { console.error(e); }
+    }
+
+    window.deleteStock = async function(id) {
+        if(confirm("Remover item do estoque?")) {
+            try { await deleteDoc(doc(db, 'estoque', id)); } catch(e) { alert("Erro: " + e.message); }
         }
     }
 
@@ -508,25 +524,39 @@
             watts: parseFloat(document.getElementById('conf-watts').value) || 0,
             posProc: parseFloat(document.getElementById('conf-pos').value) || 0
         };
-        
-        let docRef;
-        if (typeof __app_id !== 'undefined') {
-             docRef = doc(db, 'artifacts', appId, 'public', 'data', 'config', 'geral');
-        } else {
-             docRef = doc(db, 'config', 'geral');
-        }
-
-        try {
-            await setDoc(docRef, newConfig);
-            closeConfig();
-        } catch (e) { alert("Erro: " + e.message); }
+        try { await setDoc(doc(db, 'config', 'geral'), newConfig); closeConfig(); } catch (e) { alert("Erro: " + e.message); }
     }
 
     // --- UTILS ---
-    window.logout = function() {
-        if(confirm("Sair?")) signOut(auth);
+    window.logout = function() { if(confirm("Sair?")) signOut(auth); }
+    
+    window.switchTab = function(t) { 
+        if(t==='config'){ 
+            document.getElementById('modal-config').classList.remove('hidden'); 
+            updateConfigInputs(); 
+        } else if (t === 'calc') {
+            document.getElementById('tab-calc').classList.remove('hidden');
+            document.getElementById('tab-stock').classList.add('hidden');
+            
+            document.getElementById('nav-calc').classList.add('active', 'text-blue-600');
+            document.getElementById('nav-calc').classList.remove('text-gray-400');
+            document.getElementById('nav-stock').classList.remove('active', 'text-blue-600');
+            document.getElementById('nav-stock').classList.add('text-gray-400');
+            
+            document.getElementById('header-title').innerText = "Nova Impressão";
+        } else if (t === 'stock') {
+            document.getElementById('tab-calc').classList.add('hidden');
+            document.getElementById('tab-stock').classList.remove('hidden');
+            
+            document.getElementById('nav-stock').classList.add('active', 'text-blue-600');
+            document.getElementById('nav-stock').classList.remove('text-gray-400');
+            document.getElementById('nav-calc').classList.remove('active', 'text-blue-600');
+            document.getElementById('nav-calc').classList.add('text-gray-400');
+
+            document.getElementById('header-title').innerText = "Controle de Estoque";
+        }
     }
-    window.switchTab = function(t) { if(t==='config'){ document.getElementById('modal-config').classList.remove('hidden'); updateConfigInputs(); } }
+    
     window.closeConfig = function() { document.getElementById('modal-config').classList.add('hidden'); }
     window.toggleAdvanced = function() { document.getElementById('advanced-options').classList.toggle('hidden'); }
     window.formatMoney = function(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
@@ -541,42 +571,30 @@
     function updateStatus(s) {
         const d = document.getElementById('connection-status');
         const t = document.getElementById('status-text');
-        if (s === 'online') {
-            d.classList.replace('bg-yellow-400', 'bg-green-500');
-            t.innerText = 'Online'; t.classList.add('text-green-600');
-        }
+        if (s === 'online') { d.classList.replace('bg-yellow-400', 'bg-green-500'); t.innerText = 'Online'; t.classList.add('text-green-600'); }
     }
 
     function setLoading(isLoading, btnId) {
         const btn = document.getElementById(btnId);
         const txt = btn.querySelector('.btn-text');
         const ldr = btn.querySelector('.loader');
-        if(isLoading) {
-            btn.disabled = true;
-            txt.classList.add('hidden');
-            ldr.classList.remove('hidden');
-        } else {
-            btn.disabled = false;
-            txt.classList.remove('hidden');
-            ldr.classList.add('hidden');
-        }
+        if(isLoading) { btn.disabled = true; txt.classList.add('hidden'); ldr.classList.remove('hidden'); }
+        else { btn.disabled = false; txt.classList.remove('hidden'); ldr.classList.add('hidden'); }
     }
 
     function showError(msg) {
         const err = document.getElementById('login-error');
-        err.innerText = msg;
-        err.classList.remove('hidden');
+        err.innerText = msg; err.classList.remove('hidden');
     }
 
     function traduzirErro(code) {
         switch(code) {
             case 'auth/invalid-email': return 'E-mail inválido.';
-            case 'auth/user-disabled': return 'Usuário bloqueado.';
-            case 'auth/user-not-found': return 'Usuário não encontrado. Cadastre-se primeiro.';
+            case 'auth/user-not-found': return 'Usuário não encontrado.';
             case 'auth/wrong-password': return 'Senha incorreta.';
             case 'auth/email-already-in-use': return 'Este e-mail já está cadastrado.';
-            case 'auth/weak-password': return 'A senha deve ter pelo menos 6 caracteres.';
-            default: return 'Erro no login: ' + code;
+            case 'auth/weak-password': return 'Senha fraca (min 6 caracteres).';
+            default: return 'Erro: ' + code;
         }
     }
 </script>
