@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Calc3D - Gestão de Custos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .app-container { max-width: 480px; margin: 0 auto; min-height: 100vh; background-color: white; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        .loader { border: 3px solid #f3f3f3; border-radius: 50%; border-top: 3px solid #3498db; width: 20px; height: 20px; -webkit-animation: spin 1s linear infinite; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="app-container flex flex-col">
+
+    <!-- TELA: LOGIN -->
+    <div id="screen-login" class="flex-1 flex flex-col justify-center px-8 fade-in">
+        <div class="text-center mb-10">
+            <div class="w-20 h-20 bg-blue-600 rounded-2xl mx-auto flex items-center justify-center mb-4 shadow-lg shadow-blue-500/30">
+                <i class="fa-solid fa-cloud text-3xl text-white"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-800">Calc3D Cloud</h1>
+            <p class="text-gray-500 text-sm mt-1">Gestão compartilhada na nuvem</p>
+        </div>
+
+        <form id="login-form" class="space-y-4">
+            <div>
+                <label class="block text-xs font-medium text-gray-700 mb-1 ml-1">E-mail</label>
+                <input type="email" id="email-input" class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 outline-none transition" placeholder="seu@email.com" required>
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-gray-700 mb-1 ml-1">Senha</label>
+                <input type="password" id="password-input" class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 outline-none transition" placeholder="••••••••" required>
+            </div>
+            
+            <div class="flex gap-3 pt-2">
+                <button type="submit" id="btn-login" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-500/30 transition transform active:scale-95 flex justify-center items-center gap-2">
+                    <span class="btn-text">Entrar</span>
+                    <div class="loader hidden"></div>
+                </button>
+                <button type="button" onclick="handleRegister()" id="btn-register" class="flex-1 bg-white border-2 border-blue-100 hover:bg-blue-50 text-blue-600 font-bold py-3.5 rounded-xl transition transform active:scale-95 flex justify-center items-center gap-2">
+                    <span class="btn-text">Cadastrar</span>
+                    <div class="loader !border-gray-200 !border-t-blue-600 hidden"></div>
+                </button>
+            </div>
+            
+            <p id="login-error" class="text-red-500 text-xs text-center hidden bg-red-50 p-2 rounded-lg border border-red-100 mt-2"></p>
+        </form>
+    </div>
+
+    <!-- APP PRINCIPAL (Oculto inicialmente) -->
+    <div id="screen-app" class="hidden flex-1 flex flex-col h-screen">
+        
+        <!-- Header -->
+        <header class="bg-white px-6 py-4 flex justify-between items-center border-b border-gray-100 sticky top-0 z-10">
+            <div>
+                <h2 class="text-lg font-bold text-gray-800">Nova Impressão</h2>
+                <div class="flex items-center gap-1">
+                    <span id="connection-status" class="w-2 h-2 rounded-full bg-yellow-400"></span>
+                    <p class="text-xs text-gray-500 font-medium" id="status-text">Conectando...</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                 <span id="user-display" class="text-[10px] text-gray-400 font-mono hidden sm:block"></span>
+                <button onclick="logout()" class="text-gray-400 hover:text-red-500 transition">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-lg"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Conteúdo Rolável -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-6 pb-24">
+            
+            <!-- Card: Inputs Rápidos -->
+            <div class="bg-white rounded-2xl border border-gray-100 p-1 shadow-sm relative">
+                <div class="p-4 space-y-4">
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Projeto / Peça</label>
+                        <input type="text" id="input-nome" placeholder="Ex: Baby Yoda" class="w-full text-lg font-semibold border-b border-gray-200 py-2 focus:border-blue-500 outline-none text-gray-800 placeholder-gray-300">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Peso (g)</label>
+                            <div class="relative">
+                                <input type="number" id="input-peso" placeholder="0" class="w-full text-lg font-semibold border-b border-gray-200 py-2 pl-1 focus:border-blue-500 outline-none text-gray-800">
+                                <span class="absolute right-0 bottom-2 text-gray-400 text-sm">g</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Tempo (h)</label>
+                            <div class="relative">
+                                <input type="number" id="input-tempo" placeholder="0" class="w-full text-lg font-semibold border-b border-gray-200 py-2 pl-1 focus:border-blue-500 outline-none text-gray-800">
+                                <span class="absolute right-0 bottom-2 text-gray-400 text-sm">h</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Toggle Opções Avançadas -->
+                <div class="bg-gray-50 p-3 rounded-b-2xl border-t border-gray-100 cursor-pointer flex justify-between items-center" onclick="toggleAdvanced()">
+                    <span class="text-xs text-gray-500 font-medium"><i class="fa-solid fa-sliders mr-2"></i>Taxas Extras (Embalagem/App)</span>
+                    <i id="icon-advanced" class="fa-solid fa-chevron-down text-gray-400 text-xs transition"></i>
+                </div>
+                
+                <div id="advanced-options" class="hidden bg-gray-50 px-4 pb-4 rounded-b-2xl border-t border-gray-100">
+                    <div class="grid grid-cols-2 gap-4 mt-3">
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-500 uppercase">Embalagem (R$)</label>
+                            <input type="number" id="input-embalagem" value="3.50" class="w-full bg-white border border-gray-200 rounded p-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-500 uppercase">Taxa App (%)</label>
+                            <input type="number" id="input-taxa-app" value="18" class="w-full bg-white border border-gray-200 rounded p-2 text-sm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão Calcular -->
+            <button onclick="calcular()" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-4 rounded-xl shadow-lg shadow-gray-400/30 transition transform active:scale-95 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-calculator"></i> Calcular Custo
+            </button>
+
+            <!-- Resultado (Card Dinâmico) -->
+            <div id="result-card" class="hidden fade-in bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-6 text-white shadow-xl shadow-blue-500/20 relative overflow-hidden">
+                <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full blur-2xl"></div>
+                
+                <div class="flex justify-between items-end mb-4">
+                    <div>
+                        <p class="text-blue-100 text-xs uppercase font-bold tracking-wider mb-1">Custo Total</p>
+                        <h3 class="text-4xl font-bold" id="res-total">R$ 0,00</h3>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-blue-100 text-xs uppercase font-bold tracking-wider mb-1">Sugestão</p>
+                        <p class="text-xl font-medium text-green-300" id="res-sugestao">R$ 0,00</p>
+                    </div>
+                </div>
+
+                <div class="bg-black/20 rounded-lg p-3 text-sm space-y-1 backdrop-blur-sm border border-white/10">
+                    <div class="flex justify-between text-blue-100"><span>Resina</span> <span id="res-material">R$ 0,00</span></div>
+                    <div class="flex justify-between text-blue-100"><span>Energia</span> <span id="res-energia">R$ 0,00</span></div>
+                    <div class="flex justify-between text-blue-100"><span>Outros</span> <span id="res-outros">R$ 0,00</span></div>
+                </div>
+
+                <button id="btn-save-cloud" onclick="salvarNaNuvem()" class="mt-4 w-full bg-white text-blue-700 py-2 rounded-lg font-bold text-sm hover:bg-blue-50 transition flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Salvar na Nuvem
+                </button>
+            </div>
+
+            <!-- Histórico Recente -->
+            <div>
+                <div class="flex justify-between items-center mb-3 ml-1">
+                    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Histórico (Nuvem)</h3>
+                    <div id="loader-history" class="loader !w-4 !h-4 !border-gray-300 !border-t-blue-500 hidden"></div>
+                </div>
+                <div id="history-list" class="space-y-3">
+                    <!-- Itens inseridos via JS -->
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Barra de Navegação Inferior -->
+        <nav class="bg-white border-t border-gray-200 px-6 py-3 flex justify-around items-center absolute bottom-0 w-full pb-6 lg:pb-3">
+            <button onclick="switchTab('calc')" class="nav-btn active text-blue-600 flex flex-col items-center gap-1">
+                <i class="fa-solid fa-calculator text-xl"></i>
+                <span class="text-[10px] font-bold">Calcular</span>
+            </button>
+            <button onclick="switchTab('config')" class="nav-btn text-gray-400 hover:text-gray-600 flex flex-col items-center gap-1 transition">
+                <i class="fa-solid fa-gear text-xl"></i>
+                <span class="text-[10px] font-bold">Ajustes</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- MODAL DE CONFIGURAÇÕES -->
+    <div id="modal-config" class="hidden absolute inset-0 bg-white z-20 flex flex-col">
+        <header class="px-6 py-4 border-b border-gray-100 flex items-center gap-3">
+            <button onclick="closeConfig()" class="text-gray-500 hover:text-gray-800"><i class="fa-solid fa-arrow-left text-lg"></i></button>
+            <h2 class="text-lg font-bold text-gray-800">Configurações Globais</h2>
+        </header>
+        
+        <div class="p-6 space-y-6 flex-1 overflow-y-auto relative">
+            <!-- Overlay de Loading -->
+             <div id="config-loader-overlay" class="absolute inset-0 bg-white/80 z-10 flex justify-center items-center hidden">
+                <div class="loader"></div>
+            </div>
+
+            <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-2">
+                <p class="text-xs text-blue-800"><i class="fa-solid fa-info-circle mr-1"></i> Alterações aqui são salvas na nuvem e atualizam para todos os usuários.</p>
+            </div>
+
+            <!-- Grupo Resina -->
+            <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fa-solid fa-flask text-purple-500"></i> Resina</h3>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-xs text-gray-500 block mb-1">Preço Médio (Kg)</label>
+                        <div class="flex items-center bg-white border border-gray-200 rounded-lg px-3 py-2">
+                            <span class="text-gray-400 mr-2">R$</span>
+                            <input type="number" id="conf-resina-preco" class="w-full outline-none font-semibold text-gray-700">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grupo Energia -->
+            <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fa-solid fa-bolt text-yellow-500"></i> Energia</h3>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-xs text-gray-500 block mb-1">Custo kWh</label>
+                        <div class="flex items-center bg-white border border-gray-200 rounded-lg px-3 py-2">
+                            <span class="text-gray-400 mr-2">R$</span>
+                            <input type="number" id="conf-kwh" class="w-full outline-none font-semibold text-gray-700">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500 block mb-1">Potência Impressora (Watts)</label>
+                        <input type="number" id="conf-watts" class="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 outline-none text-gray-700">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grupo Pós-Processamento -->
+            <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fa-solid fa-pump-soap text-blue-500"></i> Pós-Processamento</h3>
+                <div>
+                    <label class="text-xs text-gray-500 block mb-1">Custo Fixo (Lavagem + Cura)</label>
+                    <div class="flex items-center bg-white border border-gray-200 rounded-lg px-3 py-2">
+                        <span class="text-gray-400 mr-2">R$</span>
+                        <input type="number" id="conf-pos" class="w-full outline-none font-semibold text-gray-700">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 border-t border-gray-100">
+            <button onclick="saveConfigToCloud()" class="w-full bg-gray-800 text-white font-bold py-3 rounded-xl flex justify-center gap-2 items-center">
+                <span>Salvar Configurações</span>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<!-- FIREBASE SDK -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithCustomToken, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, doc, setDoc, getDoc, onSnapshot, serverTimestamp, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // --- SUAS CHAVES DO FIREBASE AQUI ---
+    // 1. Vá em console.firebase.google.com
+    // 2. Crie um projeto > Adicione app Web > Copie as chaves
+    // 3. Cole abaixo (Substitua todo o bloco const firebaseConfig...)
+    
+    let firebaseConfig = null;
+
+    // Tenta pegar config do ambiente de teste (chat) OU usa o placeholder que você deve substituir
+    if (typeof __firebase_config !== 'undefined') {
+        firebaseConfig = JSON.parse(__firebase_config);
+    } else {
+        // --- COLE SUAS CHAVES AQUI PARA RODAR NO VS CODE ---
+        firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "SEU_PROJETO.firebaseapp.com",
+            projectId: "SEU_PROJETO_ID",
+            storageBucket: "SEU_PROJETO.appspot.com",
+            messagingSenderId: "NUMEROS",
+            appId: "APP_ID"
+        };
+    }
+    
+    // Validação simples
+    if (firebaseConfig.apiKey === "SUA_API_KEY") {
+        alert("⚠️ ATENÇÃO: Você precisa configurar suas chaves do Firebase no arquivo HTML (linha ~190) para o login funcionar!");
+    }
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    
+    // Configurações de Path
+    // No seu projeto real, você pode simplificar isso para 'impressoes' e 'config'
+    // Aqui usamos um ID dinâmico para não misturar dados de teste
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app';
+    const COLLECTION_DATA = typeof __app_id !== 'undefined' ? `artifacts/${appId}/public/data/impressoes` : 'impressoes';
+    const DOC_CONFIG = typeof __app_id !== 'undefined' ? `artifacts/${appId}/public/data/config/geral` : 'config/geral';
+
+    // Variáveis Globais
+    let currentUser = null;
+    let globalConfig = { resinaPreco: 180.00, kwh: 0.90, watts: 120, posProc: 2.50 };
+    let currentCalculation = null;
+
+    // --- AUTHENTICATION HANDLERS ---
+    
+    // Auto-login apenas no ambiente de teste do Chat
+    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+        signInWithCustomToken(auth, __initial_auth_token);
+    }
+
+    // Login Manual (Email/Senha)
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        setLoading(true, 'btn-login');
+        
+        const email = document.getElementById('email-input').value;
+        const pass = document.getElementById('password-input').value;
+
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
+            // Sucesso é tratado no onAuthStateChanged
+        } catch (err) {
+            showError(traduzirErro(err.code));
+            setLoading(false, 'btn-login');
+        }
+    });
+
+    // Cadastro Manual
+    window.handleRegister = async function() {
+        const email = document.getElementById('email-input').value;
+        const pass = document.getElementById('password-input').value;
+        
+        if(!email || !pass) {
+            showError("Preencha email e senha para cadastrar.");
+            return;
+        }
+        if(pass.length < 6) {
+            showError("A senha deve ter pelo menos 6 caracteres.");
+            return;
+        }
+
+        setLoading(true, 'btn-register');
+
+        try {
+            await createUserWithEmailAndPassword(auth, email, pass);
+            // Sucesso é tratado no onAuthStateChanged
+        } catch (err) {
+            showError(traduzirErro(err.code));
+            setLoading(false, 'btn-register');
+        }
+    }
+
+    // Monitora Estado do Login
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            currentUser = user;
+            document.getElementById('screen-login').classList.add('hidden');
+            document.getElementById('screen-app').classList.remove('hidden');
+            document.getElementById('screen-app').classList.add('fade-in');
+            document.getElementById('user-display').innerText = user.email;
+            
+            updateStatus('online');
+            setupRealtimeListeners();
+        } else {
+            document.getElementById('screen-app').classList.add('hidden');
+            document.getElementById('screen-login').classList.remove('hidden');
+            setLoading(false, 'btn-login');
+            setLoading(false, 'btn-register');
+        }
+    });
+
+    // --- DATABASE LISTENERS ---
+    function setupRealtimeListeners() {
+        if (!currentUser) return;
+        
+        // Se estiver usando paths diretos no seu projeto, adapte aqui
+        let qHistory, docRef;
+        
+        if (typeof __app_id !== 'undefined') {
+            // Modo Teste (Chat)
+             qHistory = collection(db, 'artifacts', appId, 'public', 'data', 'impressoes');
+             docRef = doc(db, 'artifacts', appId, 'public', 'data', 'config', 'geral');
+        } else {
+            // Modo Real (Seu Firebase)
+            qHistory = collection(db, 'impressoes');
+            docRef = doc(db, 'config', 'geral');
+        }
+
+        document.getElementById('loader-history').classList.remove('hidden');
+        
+        // 1. Histórico
+        onSnapshot(qHistory, (snapshot) => {
+            const list = document.getElementById('history-list');
+            document.getElementById('loader-history').classList.add('hidden');
+            
+            if (snapshot.empty) {
+                list.innerHTML = '<div class="text-center py-8 text-gray-400 text-sm bg-white rounded-xl border border-dashed border-gray-200">Sem histórico na nuvem.</div>';
+                return;
+            }
+
+            let items = [];
+            snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+            // Ordenação JS
+            items.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+            list.innerHTML = items.map(item => `
+                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-gray-800">${item.nome}</h4>
+                        <p class="text-xs text-gray-400">
+                            ${item.timestamp ? new Date(item.timestamp.seconds * 1000).toLocaleDateString('pt-BR') : 'Hoje'} 
+                            <span class="text-gray-300">|</span> ${item.usuario ? item.usuario.split('@')[0] : 'Anônimo'}
+                        </p>
+                    </div>
+                    <div class="text-right">
+                        <span class="block font-bold text-blue-600">${formatMoney(item.custoTotal)}</span>
+                        <span class="text-[10px] text-gray-400 uppercase">Custo</span>
+                    </div>
+                </div>
+            `).join('');
+        });
+
+        // 2. Configurações
+        onSnapshot(docRef, (docSnap) => {
+            if (docSnap.exists()) {
+                globalConfig = { ...globalConfig, ...docSnap.data() };
+                updateConfigInputs();
+            } else {
+                // Cria config padrão se não existir
+                setDoc(docRef, globalConfig);
+            }
+        });
+    }
+
+    // --- FUNÇÕES APP ---
+    window.calcular = function() {
+        const nome = document.getElementById('input-nome').value || "Sem nome";
+        const peso = parseFloat(document.getElementById('input-peso').value);
+        const tempo = parseFloat(document.getElementById('input-tempo').value);
+        const embalagem = parseFloat(document.getElementById('input-embalagem').value) || 0;
+        const taxaAppPercent = parseFloat(document.getElementById('input-taxa-app').value) || 0;
+
+        if (!peso || (!tempo && tempo !== 0)) { alert("Preencha Peso e Tempo!"); return; }
+
+        const custoMaterial = (peso * (globalConfig.resinaPreco / 1000));
+        const custoEnergia = (globalConfig.watts / 1000) * tempo * globalConfig.kwh;
+        const custoPos = globalConfig.posProc;
+        const custoTotal = custoMaterial + custoEnergia + custoPos + embalagem;
+        
+        const precoBase = custoTotal * 2.0; // 100% markup padrao
+        const precoVenda = precoBase / (1 - (taxaAppPercent/100));
+
+        document.getElementById('res-total').innerText = formatMoney(custoTotal);
+        document.getElementById('res-sugestao').innerText = formatMoney(precoVenda);
+        document.getElementById('res-material').innerText = formatMoney(custoMaterial);
+        document.getElementById('res-energia').innerText = formatMoney(custoEnergia + custoPos);
+        document.getElementById('res-outros').innerText = formatMoney(embalagem);
+
+        document.getElementById('result-card').classList.remove('hidden');
+        document.getElementById('result-card').classList.add('block');
+
+        currentCalculation = {
+            nome: nome, peso: peso, tempo: tempo,
+            custoTotal: custoTotal, precoVenda: precoVenda,
+            usuario: currentUser.email,
+            timestamp: serverTimestamp()
+        };
+    }
+
+    window.salvarNaNuvem = async function() {
+        if (!currentCalculation || !currentUser) return;
+        const btn = document.getElementById('btn-save-cloud');
+        const original = btn.innerHTML;
+        
+        try {
+            btn.innerHTML = '<div class="loader !w-4 !h-4 !border-white !border-t-blue-600"></div> Salvando...';
+            btn.disabled = true;
+            
+            // Lógica de Path igual ao Listener
+            let collectionRef;
+            if (typeof __app_id !== 'undefined') {
+                 collectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'impressoes');
+            } else {
+                 collectionRef = collection(db, 'impressoes');
+            }
+
+            await addDoc(collectionRef, currentCalculation);
+            
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Salvo!';
+            btn.classList.replace('text-blue-700', 'text-green-600');
+            setTimeout(() => {
+                btn.innerHTML = original;
+                btn.classList.replace('text-green-600', 'text-blue-700');
+                btn.disabled = false;
+                document.getElementById('result-card').classList.add('hidden');
+            }, 2000);
+        } catch (e) {
+            console.error(e);
+            alert("Erro: " + e.message);
+            btn.disabled = false;
+        }
+    }
+
+    window.saveConfigToCloud = async function() {
+        const newConfig = {
+            resinaPreco: parseFloat(document.getElementById('conf-resina-preco').value) || 0,
+            kwh: parseFloat(document.getElementById('conf-kwh').value) || 0,
+            watts: parseFloat(document.getElementById('conf-watts').value) || 0,
+            posProc: parseFloat(document.getElementById('conf-pos').value) || 0
+        };
+        
+        let docRef;
+        if (typeof __app_id !== 'undefined') {
+             docRef = doc(db, 'artifacts', appId, 'public', 'data', 'config', 'geral');
+        } else {
+             docRef = doc(db, 'config', 'geral');
+        }
+
+        try {
+            await setDoc(docRef, newConfig);
+            closeConfig();
+        } catch (e) { alert("Erro: " + e.message); }
+    }
+
+    // --- UTILS ---
+    window.logout = function() {
+        if(confirm("Sair?")) signOut(auth);
+    }
+    window.switchTab = function(t) { if(t==='config'){ document.getElementById('modal-config').classList.remove('hidden'); updateConfigInputs(); } }
+    window.closeConfig = function() { document.getElementById('modal-config').classList.add('hidden'); }
+    window.toggleAdvanced = function() { document.getElementById('advanced-options').classList.toggle('hidden'); }
+    window.formatMoney = function(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
+    
+    function updateConfigInputs() {
+        document.getElementById('conf-resina-preco').value = globalConfig.resinaPreco;
+        document.getElementById('conf-kwh').value = globalConfig.kwh;
+        document.getElementById('conf-watts').value = globalConfig.watts;
+        document.getElementById('conf-pos').value = globalConfig.posProc;
+    }
+
+    function updateStatus(s) {
+        const d = document.getElementById('connection-status');
+        const t = document.getElementById('status-text');
+        if (s === 'online') {
+            d.classList.replace('bg-yellow-400', 'bg-green-500');
+            t.innerText = 'Online'; t.classList.add('text-green-600');
+        }
+    }
+
+    function setLoading(isLoading, btnId) {
+        const btn = document.getElementById(btnId);
+        const txt = btn.querySelector('.btn-text');
+        const ldr = btn.querySelector('.loader');
+        if(isLoading) {
+            btn.disabled = true;
+            txt.classList.add('hidden');
+            ldr.classList.remove('hidden');
+        } else {
+            btn.disabled = false;
+            txt.classList.remove('hidden');
+            ldr.classList.add('hidden');
+        }
+    }
+
+    function showError(msg) {
+        const err = document.getElementById('login-error');
+        err.innerText = msg;
+        err.classList.remove('hidden');
+    }
+
+    function traduzirErro(code) {
+        switch(code) {
+            case 'auth/invalid-email': return 'E-mail inválido.';
+            case 'auth/user-disabled': return 'Usuário bloqueado.';
+            case 'auth/user-not-found': return 'Usuário não encontrado. Cadastre-se primeiro.';
+            case 'auth/wrong-password': return 'Senha incorreta.';
+            case 'auth/email-already-in-use': return 'Este e-mail já está cadastrado.';
+            case 'auth/weak-password': return 'A senha deve ter pelo menos 6 caracteres.';
+            default: return 'Erro no login: ' + code;
+        }
+    }
+</script>
+
+</body>
+</html>
