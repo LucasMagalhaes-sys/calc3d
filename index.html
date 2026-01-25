@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -11,7 +12,7 @@
             theme: {
                 extend: {
                     colors: {
-                        slate: { 750: '#2d3748', 850: '#1a202c', 950: '#0f172a' } 
+                        slate: { 750: '#2d3748', 850: '#1a202c', 950: '#0f172a' }
                     }
                 }
             }
@@ -19,427 +20,544 @@
     </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s; }
-        .loader { border: 3px solid #f3f3f3; border-radius: 50%; border-top: 3px solid #6366f1; width: 20px; height: 20px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
-        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s;
+        }
+
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid #6366f1;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 2px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
     </style>
 </head>
+
 <body class="bg-gray-100 text-gray-800 dark:bg-slate-900 dark:text-gray-100 transition-colors duration-300">
 
-<!-- TELA DE LOGIN -->
-<div id="screen-login" class="min-h-screen flex flex-col items-center justify-center p-6">
-    <div class="w-full max-w-sm bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-8 text-center border border-gray-100 dark:border-slate-700">
-        <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-lg shadow-indigo-500/30">
-            <i class="fa-solid fa-cube text-3xl text-white"></i>
+    <!-- TELA DE LOGIN -->
+    <div id="screen-login" class="min-h-screen flex flex-col items-center justify-center p-6">
+        <div
+            class="w-full max-w-sm bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-8 text-center border border-gray-100 dark:border-slate-700">
+            <div
+                class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-lg shadow-indigo-500/30">
+                <i class="fa-solid fa-cube text-3xl text-white"></i>
+            </div>
+            <h1 class="text-2xl font-bold mb-2">Calc3D Pro</h1>
+            <p class="text-sm text-gray-400 mb-8">Faça login para acessar seus dados</p>
+
+            <form id="login-form" class="space-y-4 text-left">
+                <div>
+                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400 ml-1">E-MAIL</label>
+                    <input type="email" id="email-input"
+                        class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 rounded-xl px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition placeholder-gray-400"
+                        required>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400 ml-1">SENHA</label>
+                    <input type="password" id="password-input"
+                        class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 rounded-xl px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition placeholder-gray-400"
+                        required>
+                </div>
+                <button type="submit" id="btn-login"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-500/30 transition flex justify-center items-center gap-2 transform active:scale-95">
+                    <span>Entrar</span>
+                    <div class="loader hidden !border-white/30 !border-t-white"></div>
+                </button>
+                <p id="login-error"
+                    class="text-red-500 text-xs text-center hidden bg-red-50 dark:bg-red-900/20 p-2 rounded-lg"></p>
+            </form>
         </div>
-        <h1 class="text-2xl font-bold mb-2">Calc3D Pro</h1>
-        <p class="text-sm text-gray-400 mb-8">Faça login para acessar seus dados</p>
-        
-        <form id="login-form" class="space-y-4 text-left">
-            <div>
-                <label class="text-xs font-bold text-gray-500 dark:text-gray-400 ml-1">E-MAIL</label>
-                <input type="email" id="email-input" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 rounded-xl px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition placeholder-gray-400" required>
-            </div>
-            <div>
-                <label class="text-xs font-bold text-gray-500 dark:text-gray-400 ml-1">SENHA</label>
-                <input type="password" id="password-input" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 rounded-xl px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition placeholder-gray-400" required>
-            </div>
-            <button type="submit" id="btn-login" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-500/30 transition flex justify-center items-center gap-2 transform active:scale-95">
-                <span>Entrar</span>
-                <div class="loader hidden !border-white/30 !border-t-white"></div>
-            </button>
-            <p id="login-error" class="text-red-500 text-xs text-center hidden bg-red-50 dark:bg-red-900/20 p-2 rounded-lg"></p>
-        </form>
     </div>
-</div>
 
-<!-- TELA DO APP -->
-<div id="screen-app" class="hidden min-h-screen flex flex-col md:flex-row max-w-7xl mx-auto md:p-4 gap-4">
-    
-    <!-- BARRA LATERAL -->
-    <nav class="bg-white dark:bg-slate-800 md:w-64 md:rounded-3xl shadow-sm border-r md:border border-gray-100 dark:border-slate-700 flex md:flex-col justify-between z-20 order-2 md:order-1 fixed bottom-0 w-full md:relative md:h-auto">
-        <div class="p-6 hidden md:block">
-            <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">Calc3D</h1>
-            <p class="text-xs text-gray-400">Versão 2.2</p>
-        </div>
+    <!-- TELA DO APP -->
+    <div id="screen-app" class="hidden min-h-screen flex flex-col md:flex-row max-w-7xl mx-auto md:p-4 gap-4">
 
-        <div class="flex md:flex-col justify-around p-2 md:p-4 gap-2">
-            <button onclick="switchTab('calc')" id="nav-calc" class="flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 dark:text-indigo-300 transition-all">
-                <i class="fa-solid fa-calculator text-xl md:text-lg"></i>
-                <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">Calculadora</span>
-            </button>
-            <button onclick="switchTab('stock')" id="nav-stock" class="flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all">
-                <i class="fa-solid fa-boxes-stacked text-xl md:text-lg"></i>
-                <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">Estoque</span>
-            </button>
-            <button onclick="switchTab('config')" id="nav-config" class="flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all">
-                <i class="fa-solid fa-gear text-xl md:text-lg"></i>
-                <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">Ajustes</span>
-            </button>
-        </div>
-
-        <div class="hidden md:block p-4">
-            <div class="bg-gray-50 dark:bg-slate-700 p-3 rounded-xl flex items-center gap-3 border border-gray-100 dark:border-slate-600">
-                <div class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold text-xs" id="user-initial">U</div>
-                <div class="flex-1 overflow-hidden">
-                    <p id="user-email" class="text-xs font-bold truncate text-gray-700 dark:text-gray-200">Usuario</p>
-                    <p class="text-[10px] text-green-500 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Online</p>
-                </div>
-                <button onclick="logout()" class="text-red-400 hover:text-red-600 transition"><i class="fa-solid fa-power-off"></i></button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- CONTEUDO PRINCIPAL -->
-    <main class="flex-1 flex flex-col h-screen md:h-auto overflow-hidden order-1 md:order-2 bg-white dark:bg-slate-800 md:rounded-3xl shadow-2xl relative border border-gray-100 dark:border-slate-700">
-        
-        <!-- HEADER MOBILE -->
-        <header class="md:hidden p-4 flex justify-between items-center bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700 z-10">
-            <h2 class="font-bold text-lg text-gray-800 dark:text-white" id="header-title">Calculadora</h2>
-            <div class="flex gap-3">
-                <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-700 flex items-center justify-center transition"><i id="theme-icon" class="fa-solid fa-moon text-gray-600 dark:text-yellow-400"></i></button>
-                <button onclick="logout()" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
-            </div>
-        </header>
-        
-        <!-- HEADER DESKTOP -->
-        <header class="hidden md:flex p-6 justify-between items-center border-b border-gray-100 dark:border-slate-700">
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-white" id="desktop-title">Dashboard</h2>
-            <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 transition flex items-center justify-center"><i id="theme-icon-desk" class="fa-solid fa-moon text-gray-600 dark:text-yellow-400"></i></button>
-        </header>
-
-        <!-- AREA DE SCROLL -->
-        <div class="flex-1 overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 bg-gray-50/50 dark:bg-slate-800/50">
-            
-            <!-- === ABA CALCULAR === -->
-            <div id="tab-calc" class="fade-in grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
-                <!-- CARD CALCULADORA -->
-                <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm">
-                    
-                    <!-- SELETOR DE PERFIL -->
-                    <div class="mb-6">
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1 mb-1 block">Perfil de Impressão</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fa-solid fa-layer-group text-indigo-500"></i>
-                            </div>
-                            <select id="profile-select" onchange="loadProfile(this.value)" class="appearance-none w-full bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-gray-700 dark:text-gray-200 py-3 pl-10 pr-8 rounded-xl leading-tight focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 font-bold text-sm cursor-pointer transition">
-                                <option value="default">Padrão</option>
-                            </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                                <i class="fa-solid fa-chevron-down text-xs"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4">
-                        <div>
-                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Nome do Projeto</label>
-                            <input type="text" id="calc-nome" placeholder="Ex: Figure Goku 15cm" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition placeholder-gray-400">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Peso (g)</label>
-                                <input type="number" id="calc-peso" placeholder="0" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition placeholder-gray-400">
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Tempo (h)</label>
-                                <input type="number" id="calc-tempo" placeholder="0" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition placeholder-gray-400">
-                            </div>
-                        </div>
-                        
-                        <!-- Accordion Avançado -->
-                        <div class="border-t border-gray-200 dark:border-slate-600 pt-2">
-                            <button onclick="document.getElementById('adv-opts').classList.toggle('hidden')" class="text-xs font-bold text-indigo-500 flex items-center gap-1 hover:underline">
-                                <span>+ Taxas e Embalagem</span>
-                            </button>
-                            <div id="adv-opts" class="hidden grid grid-cols-3 gap-3 mt-2">
-                                <div>
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase">Emb. (R$)</label>
-                                    <input type="number" id="calc-emb" value="3.50" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 rounded-lg p-2 text-sm outline-none focus:border-indigo-500">
-                                </div>
-                                <div>
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase">Taxa Venda (%)</label>
-                                    <input type="number" id="calc-taxa" value="18" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 rounded-lg p-2 text-sm outline-none focus:border-indigo-500">
-                                </div>
-                                <div>
-                                    <label class="text-[10px] font-bold text-indigo-500 uppercase">Lucro (%)</label>
-                                    <input type="number" id="calc-lucro" value="100" class="w-full bg-indigo-50 dark:bg-slate-700 dark:text-white border border-indigo-200 dark:border-indigo-500/50 rounded-lg p-2 text-sm font-bold text-indigo-600 outline-none focus:border-indigo-500">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button onclick="calcular()" class="w-full mt-6 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-4 rounded-xl shadow-lg hover:scale-[1.02] transition">
-                        Calcular Agora
-                    </button>
-                </div>
-
-                <!-- CARD RESULTADO -->
-                <div class="space-y-6">
-                    <div id="result-card" class="hidden bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
-                        <!-- Bolhas de efeito -->
-                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
-                        
-                        <div class="relative z-10">
-                            <p class="text-indigo-200 text-xs font-bold uppercase">Custo de Produção</p>
-                            <h2 class="text-4xl font-bold mb-1" id="res-custo">R$ 0,00</h2>
-                            
-                            <div class="my-4 border-t border-white/10"></div>
-                            
-                            <div class="flex justify-between items-end">
-                                <div>
-                                    <p class="text-indigo-200 text-xs font-bold uppercase">Preço Sugerido</p>
-                                    <p class="text-2xl font-bold text-green-300" id="res-venda">R$ 0,00</p>
-                                </div>
-                                <div class="text-right text-xs text-indigo-100">
-                                    <p>Lucro Estimado: <span class="font-bold" id="res-lucro">R$ 0,00</span></p>
-                                </div>
-                            </div>
-
-                            <div class="mt-4 bg-black/20 rounded-xl p-3 flex items-center gap-3 backdrop-blur-sm">
-                                <input type="checkbox" id="check-stock" class="w-5 h-5 rounded text-indigo-600 focus:ring-0 cursor-pointer border-none bg-white">
-                                <label for="check-stock" class="text-sm font-medium cursor-pointer select-none">Salvar também no Estoque</label>
-                            </div>
-
-                            <button id="btn-save" onclick="salvar()" class="w-full mt-4 bg-white text-indigo-700 font-bold py-3 rounded-xl hover:bg-indigo-50 transition flex justify-center items-center gap-2 shadow-lg">
-                                <i class="fa-solid fa-cloud-arrow-up"></i> Salvar Tudo
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- HISTÓRICO -->
-                    <div>
-                        <div class="flex justify-between items-center mb-3 px-1">
-                            <h3 class="text-xs font-bold text-gray-400 uppercase">Últimos Cálculos</h3>
-                            <button onclick="clearHistory()" class="text-xs text-red-400 hover:text-red-600">Limpar</button>
-                        </div>
-                        <div id="history-list" class="space-y-3 max-h-[400px] overflow-y-auto pr-1">
-                            <!-- Items via JS -->
-                        </div>
-                    </div>
-                </div>
+        <!-- BARRA LATERAL -->
+        <nav
+            class="bg-white dark:bg-slate-800 md:w-64 md:rounded-3xl shadow-sm border-r md:border border-gray-100 dark:border-slate-700 flex md:flex-col justify-between z-20 order-2 md:order-1 fixed bottom-0 w-full md:relative md:h-auto">
+            <div class="p-6 hidden md:block">
+                <h1
+                    class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
+                    Calc3D</h1>
+                <p class="text-xs text-gray-400">Versão 2.2</p>
             </div>
 
-            <!-- === ABA ESTOQUE === -->
-            <div id="tab-stock" class="hidden fade-in space-y-6">
-                <!-- ADD ITEM -->
-                <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm flex flex-col md:flex-row gap-6">
-                    <!-- Upload Foto -->
-                    <div class="flex-shrink-0 flex justify-center">
-                        <label class="w-32 h-32 bg-gray-50 dark:bg-slate-700 border-2 border-dashed border-gray-300 dark:border-slate-500 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-indigo-500 dark:hover:border-indigo-400 transition relative overflow-hidden group">
-                            <i class="fa-solid fa-camera text-2xl text-gray-300 dark:text-slate-500 group-hover:text-indigo-400 transition" id="stock-icon"></i>
-                            <p class="text-[10px] text-gray-400 dark:text-slate-400 mt-2 font-bold group-hover:text-indigo-400">FOTO</p>
-                            <img id="stock-preview" class="absolute inset-0 w-full h-full object-cover hidden">
-                            <input type="file" id="stock-file" accept="image/*" class="hidden" onchange="previewStock(this)">
-                        </label>
+            <div class="flex md:flex-col justify-around p-2 md:p-4 gap-2">
+                <button onclick="switchTab('calc')" id="nav-calc"
+                    class="flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 dark:text-indigo-300 transition-all">
+                    <i class="fa-solid fa-calculator text-xl md:text-lg"></i>
+                    <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">Calculadora</span>
+                </button>
+                <button onclick="switchTab('stock')" id="nav-stock"
+                    class="flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all">
+                    <i class="fa-solid fa-boxes-stacked text-xl md:text-lg"></i>
+                    <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">Estoque</span>
+                </button>
+                <button onclick="switchTab('config')" id="nav-config"
+                    class="flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all">
+                    <i class="fa-solid fa-gear text-xl md:text-lg"></i>
+                    <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">Ajustes</span>
+                </button>
+            </div>
+
+            <div class="hidden md:block p-4">
+                <div
+                    class="bg-gray-50 dark:bg-slate-700 p-3 rounded-xl flex items-center gap-3 border border-gray-100 dark:border-slate-600">
+                    <div class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold text-xs"
+                        id="user-initial">U</div>
+                    <div class="flex-1 overflow-hidden">
+                        <p id="user-email" class="text-xs font-bold truncate text-gray-700 dark:text-gray-200">Usuario
+                        </p>
+                        <p class="text-[10px] text-green-500 flex items-center gap-1"><span
+                                class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Online</p>
                     </div>
-                    
-                    <div class="flex-1 space-y-4">
-                        <div class="grid grid-cols-3 gap-4">
-                            <div class="col-span-2">
-                                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Nome da Peça</label>
-                                <input type="text" id="stock-nome" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Qtd</label>
-                                <input type="number" id="stock-qtd" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+                    <button onclick="logout()" class="text-red-400 hover:text-red-600 transition"><i
+                            class="fa-solid fa-power-off"></i></button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- CONTEUDO PRINCIPAL -->
+        <main
+            class="flex-1 flex flex-col h-screen md:h-auto overflow-hidden order-1 md:order-2 bg-white dark:bg-slate-800 md:rounded-3xl shadow-2xl relative border border-gray-100 dark:border-slate-700">
+
+            <!-- HEADER MOBILE -->
+            <header
+                class="md:hidden p-4 flex justify-between items-center bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700 z-10">
+                <h2 class="font-bold text-lg text-gray-800 dark:text-white" id="header-title">Calculadora</h2>
+                <div class="flex gap-3">
+                    <button onclick="toggleTheme()"
+                        class="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-700 flex items-center justify-center transition"><i
+                            id="theme-icon" class="fa-solid fa-moon text-gray-600 dark:text-yellow-400"></i></button>
+                    <button onclick="logout()" class="text-gray-400 hover:text-red-500"><i
+                            class="fa-solid fa-arrow-right-from-bracket"></i></button>
+                </div>
+            </header>
+
+            <!-- HEADER DESKTOP -->
+            <header
+                class="hidden md:flex p-6 justify-between items-center border-b border-gray-100 dark:border-slate-700">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white" id="desktop-title">Dashboard</h2>
+                <button onclick="toggleTheme()"
+                    class="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 transition flex items-center justify-center"><i
+                        id="theme-icon-desk" class="fa-solid fa-moon text-gray-600 dark:text-yellow-400"></i></button>
+            </header>
+
+            <!-- AREA DE SCROLL -->
+            <div class="flex-1 overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 bg-gray-50/50 dark:bg-slate-800/50">
+
+                <!-- === ABA CALCULAR === -->
+                <div id="tab-calc" class="fade-in grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                    <!-- CARD CALCULADORA -->
+                    <div
+                        class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm">
+
+                        <!-- SELETOR DE PERFIL -->
+                        <div class="mb-6">
+                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1 mb-1 block">Perfil de
+                                Impressão</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fa-solid fa-layer-group text-indigo-500"></i>
+                                </div>
+                                <select id="profile-select" onchange="loadProfile(this.value)"
+                                    class="appearance-none w-full bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-gray-700 dark:text-gray-200 py-3 pl-10 pr-8 rounded-xl leading-tight focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 font-bold text-sm cursor-pointer transition">
+                                    <option value="default">Padrão</option>
+                                </select>
+                                <div
+                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                                </div>
                             </div>
                         </div>
-                        <button onclick="addStockManual()" class="bg-indigo-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-indigo-700 transition w-full md:w-auto shadow-lg shadow-indigo-500/20">
-                            <i class="fa-solid fa-plus mr-2"></i> Adicionar ao Inventário
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Nome do
+                                    Projeto</label>
+                                <input type="text" id="calc-nome" placeholder="Ex: Figure Goku 15cm"
+                                    class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition placeholder-gray-400">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Peso (g)</label>
+                                    <input type="number" id="calc-peso" placeholder="0"
+                                        class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition placeholder-gray-400">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Tempo (h)</label>
+                                    <input type="number" id="calc-tempo" placeholder="0"
+                                        class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition placeholder-gray-400">
+                                </div>
+                            </div>
+
+                            <!-- Accordion Avançado -->
+                            <div class="border-t border-gray-200 dark:border-slate-600 pt-2">
+                                <button onclick="document.getElementById('adv-opts').classList.toggle('hidden')"
+                                    class="text-xs font-bold text-indigo-500 flex items-center gap-1 hover:underline">
+                                    <span>+ Taxas e Embalagem</span>
+                                </button>
+                                <div id="adv-opts" class="hidden grid grid-cols-3 gap-3 mt-2">
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Emb. (R$)</label>
+                                        <input type="number" id="calc-emb" value="3.50"
+                                            class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 rounded-lg p-2 text-sm outline-none focus:border-indigo-500">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Taxa Venda
+                                            (%)</label>
+                                        <input type="number" id="calc-taxa" value="18"
+                                            class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 rounded-lg p-2 text-sm outline-none focus:border-indigo-500">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-bold text-indigo-500 uppercase">Lucro (%)</label>
+                                        <input type="number" id="calc-lucro" value="100"
+                                            class="w-full bg-indigo-50 dark:bg-slate-700 dark:text-white border border-indigo-200 dark:border-indigo-500/50 rounded-lg p-2 text-sm font-bold text-indigo-600 outline-none focus:border-indigo-500">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="calcular()"
+                            class="w-full mt-6 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-4 rounded-xl shadow-lg hover:scale-[1.02] transition">
+                            Calcular Agora
                         </button>
                     </div>
-                </div>
 
-                <!-- GRID ESTOQUE -->
-                <div id="stock-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    <!-- Items via JS -->
-                </div>
-            </div>
+                    <!-- CARD RESULTADO -->
+                    <div class="space-y-6">
+                        <div id="result-card"
+                            class="hidden bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+                            <!-- Bolhas de efeito -->
+                            <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
 
-            <!-- === ABA AJUSTES / PERFIS === -->
-            <div id="tab-config" class="hidden fade-in max-w-lg mx-auto space-y-6">
-                
-                <!-- Card Criar Perfil -->
-                <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-3xl border border-purple-100 dark:border-purple-800">
-                    <h3 class="font-bold text-purple-800 dark:text-purple-300 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-save"></i> Salvar Configuração Atual
-                    </h3>
-                    <div class="flex gap-2">
-                        <input type="text" id="new-profile-name" placeholder="Nome do Perfil (Ex: Figures 200%)" class="flex-1 text-sm bg-white dark:bg-slate-700 dark:text-white p-3 rounded-xl border border-purple-100 dark:border-slate-600 outline-none focus:ring-2 focus:ring-purple-500">
-                        <button onclick="saveProfile()" class="bg-purple-600 text-white font-bold px-4 rounded-xl hover:bg-purple-700 shadow-lg shadow-purple-500/30">Salvar</button>
+                            <div class="relative z-10">
+                                <p class="text-indigo-200 text-xs font-bold uppercase">Custo de Produção</p>
+                                <h2 class="text-4xl font-bold mb-1" id="res-custo">R$ 0,00</h2>
+
+                                <div class="my-4 border-t border-white/10"></div>
+
+                                <div class="flex justify-between items-end">
+                                    <div>
+                                        <p class="text-indigo-200 text-xs font-bold uppercase">Preço Sugerido</p>
+                                        <p class="text-2xl font-bold text-green-300" id="res-venda">R$ 0,00</p>
+                                    </div>
+                                    <div class="text-right text-xs text-indigo-100">
+                                        <p>Lucro Estimado: <span class="font-bold" id="res-lucro">R$ 0,00</span></p>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 bg-black/20 rounded-xl p-3 flex items-center gap-3 backdrop-blur-sm">
+                                    <input type="checkbox" id="check-stock"
+                                        class="w-5 h-5 rounded text-indigo-600 focus:ring-0 cursor-pointer border-none bg-white">
+                                    <label for="check-stock"
+                                        class="text-sm font-medium cursor-pointer select-none">Salvar também no
+                                        Estoque</label>
+                                </div>
+
+                                <button id="btn-save" onclick="salvar()"
+                                    class="w-full mt-4 bg-white text-indigo-700 font-bold py-3 rounded-xl hover:bg-indigo-50 transition flex justify-center items-center gap-2 shadow-lg">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> Salvar Tudo
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- HISTÓRICO -->
+                        <div>
+                            <div class="flex justify-between items-center mb-3 px-1">
+                                <h3 class="text-xs font-bold text-gray-400 uppercase">Últimos Cálculos</h3>
+                                <button onclick="clearHistory()"
+                                    class="text-xs text-red-400 hover:text-red-600">Limpar</button>
+                            </div>
+                            <div id="history-list" class="space-y-3 max-h-[400px] overflow-y-auto pr-1">
+                                <!-- Items via JS -->
+                            </div>
+                        </div>
                     </div>
-                    <p class="text-xs text-purple-400 mt-2">Salva preços, taxas e <b>margem de lucro</b> abaixo como um preset.</p>
                 </div>
 
-                <!-- Inputs -->
-                <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 space-y-4 shadow-sm">
-                    <h3 class="font-bold text-gray-700 dark:text-white mb-2">Custos Base</h3>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-xs font-bold text-gray-400 ml-1">Preço Resina (Kg)</label>
-                            <input type="number" id="conf-resina" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+                <!-- === ABA ESTOQUE === -->
+                <div id="tab-stock" class="hidden fade-in space-y-6">
+                    <!-- ADD ITEM -->
+                    <div
+                        class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm flex flex-col md:flex-row gap-6">
+                        <!-- Upload Foto -->
+                        <div class="flex-shrink-0 flex justify-center">
+                            <label
+                                class="w-32 h-32 bg-gray-50 dark:bg-slate-700 border-2 border-dashed border-gray-300 dark:border-slate-500 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-indigo-500 dark:hover:border-indigo-400 transition relative overflow-hidden group">
+                                <i class="fa-solid fa-camera text-2xl text-gray-300 dark:text-slate-500 group-hover:text-indigo-400 transition"
+                                    id="stock-icon"></i>
+                                <p
+                                    class="text-[10px] text-gray-400 dark:text-slate-400 mt-2 font-bold group-hover:text-indigo-400">
+                                    FOTO</p>
+                                <img id="stock-preview" class="absolute inset-0 w-full h-full object-cover hidden">
+                                <input type="file" id="stock-file" accept="image/*" class="hidden"
+                                    onchange="previewStock(this)">
+                            </label>
                         </div>
-                        <div>
-                            <label class="text-xs font-bold text-gray-400 ml-1">Custo Pós (Fixo)</label>
-                            <input type="number" id="conf-pos" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+
+                        <div class="flex-1 space-y-4">
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="col-span-2">
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Nome da
+                                        Peça</label>
+                                    <input type="text" id="stock-nome"
+                                        class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Qtd</label>
+                                    <input type="number" id="stock-qtd"
+                                        class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+                                </div>
+                            </div>
+                            <button onclick="addStockManual()"
+                                class="bg-indigo-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-indigo-700 transition w-full md:w-auto shadow-lg shadow-indigo-500/20">
+                                <i class="fa-solid fa-plus mr-2"></i> Adicionar ao Inventário
+                            </button>
                         </div>
                     </div>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-xs font-bold text-gray-400 ml-1">Energia (kWh)</label>
-                            <input type="number" id="conf-kwh" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+
+                    <!-- GRID ESTOQUE -->
+                    <div id="stock-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <!-- Items via JS -->
+                    </div>
+                </div>
+
+                <!-- === ABA AJUSTES / PERFIS === -->
+                <div id="tab-config" class="hidden fade-in max-w-lg mx-auto space-y-6">
+
+                    <!-- Card Criar Perfil -->
+                    <div
+                        class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-3xl border border-purple-100 dark:border-purple-800">
+                        <h3 class="font-bold text-purple-800 dark:text-purple-300 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-save"></i> Salvar Configuração Atual
+                        </h3>
+                        <div class="flex gap-2">
+                            <input type="text" id="new-profile-name" placeholder="Nome do Perfil (Ex: Figures 200%)"
+                                class="flex-1 text-sm bg-white dark:bg-slate-700 dark:text-white p-3 rounded-xl border border-purple-100 dark:border-slate-600 outline-none focus:ring-2 focus:ring-purple-500">
+                            <button onclick="saveProfile()"
+                                class="bg-purple-600 text-white font-bold px-4 rounded-xl hover:bg-purple-700 shadow-lg shadow-purple-500/30">Salvar</button>
                         </div>
-                        <div>
-                            <label class="text-xs font-bold text-gray-400 ml-1">Potência (Watts)</label>
-                            <input type="number" id="conf-watts" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
-                        </div>
+                        <p class="text-xs text-purple-400 mt-2">Salva preços, taxas e <b>margem de lucro</b> abaixo como
+                            um preset.</p>
                     </div>
 
-                    <button onclick="saveGlobalConfig()" class="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 rounded-xl mt-4 hover:scale-[1.01] transition">
-                        Atualizar Valores
-                    </button>
+                    <!-- Inputs -->
+                    <div
+                        class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 space-y-4 shadow-sm">
+                        <h3 class="font-bold text-gray-700 dark:text-white mb-2">Custos Base</h3>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-bold text-gray-400 ml-1">Preço Resina (Kg)</label>
+                                <input type="number" id="conf-resina"
+                                    class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-gray-400 ml-1">Custo Pós (Fixo)</label>
+                                <input type="number" id="conf-pos"
+                                    class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-bold text-gray-400 ml-1">Energia (kWh)</label>
+                                <input type="number" id="conf-kwh"
+                                    class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-gray-400 ml-1">Potência (Watts)</label>
+                                <input type="number" id="conf-watts"
+                                    class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+                        </div>
+
+                        <button onclick="saveGlobalConfig()"
+                            class="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 rounded-xl mt-4 hover:scale-[1.01] transition">
+                            Atualizar Valores
+                        </button>
+                    </div>
+
+                    <!-- Lista de Perfis Excluir -->
+                    <div
+                        class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm">
+                        <h3 class="font-bold text-gray-700 dark:text-white mb-4">Gerenciar Perfis</h3>
+                        <ul id="profile-list-manage" class="space-y-2 text-sm"></ul>
+                    </div>
                 </div>
 
-                <!-- Lista de Perfis Excluir -->
-                <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm">
-                    <h3 class="font-bold text-gray-700 dark:text-white mb-4">Gerenciar Perfis</h3>
-                    <ul id="profile-list-manage" class="space-y-2 text-sm"></ul>
-                </div>
             </div>
+        </main>
+    </div>
 
-        </div>
-    </main>
-</div>
-
-<!-- MODAL DETALHES -->
-<div id="modal-details" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
-    <div class="bg-white dark:bg-slate-800 w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl relative">
-        <div class="bg-indigo-600 p-6 text-white text-center relative">
-            <button onclick="document.getElementById('modal-details').classList.add('hidden')" class="absolute top-4 right-4 text-white/70 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <h3 class="font-bold text-xl" id="det-nome">Nome</h3>
-            <p class="text-xs text-indigo-200" id="det-data">Data</p>
-        </div>
-        <div class="p-6 space-y-3">
-            <!-- Caso tenha detalhes -->
-            <div id="det-content">
-                <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300"><span>Resina:</span> <span class="font-mono font-bold" id="det-resina"></span></div>
-                <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300"><span>Energia:</span> <span class="font-mono font-bold" id="det-energia"></span></div>
-                <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300"><span>Pós-Proc:</span> <span class="font-mono font-bold" id="det-pos"></span></div>
-                <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300"><span>Embalagem:</span> <span class="font-mono font-bold" id="det-emb"></span></div>
-                <div class="border-t border-dashed border-gray-300 dark:border-slate-600 my-2"></div>
-                <div class="flex justify-between font-bold text-lg text-gray-800 dark:text-white"><span>Total Custo:</span> <span id="det-total"></span></div>
-                
-                <div class="mt-4 bg-green-50 dark:bg-green-900/20 p-3 rounded-xl text-center border border-green-100 dark:border-green-800">
-                    <p class="text-xs text-green-600 dark:text-green-400 uppercase font-bold">Venda Sugerida</p>
-                    <p class="text-xl font-bold text-green-700 dark:text-green-300" id="det-venda"></p>
-                    <p class="text-[10px] text-gray-400 dark:text-slate-400" id="det-taxa"></p>
-                </div>
+    <!-- MODAL DETALHES -->
+    <div id="modal-details"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl relative">
+            <div class="bg-indigo-600 p-6 text-white text-center relative">
+                <button onclick="document.getElementById('modal-details').classList.add('hidden')"
+                    class="absolute top-4 right-4 text-white/70 hover:text-white"><i
+                        class="fa-solid fa-xmark text-xl"></i></button>
+                <h3 class="font-bold text-xl" id="det-nome">Nome</h3>
+                <p class="text-xs text-indigo-200" id="det-data">Data</p>
             </div>
-            <!-- Caso não tenha detalhes (item manual) -->
-            <div id="det-empty" class="hidden text-center py-6">
-                <i class="fa-solid fa-file-circle-xmark text-4xl text-gray-300 dark:text-slate-600 mb-2"></i>
-                <p class="text-gray-500 dark:text-gray-400 text-sm">Este item foi adicionado manualmente ao estoque, sem cálculo de custos registrado.</p>
+            <div class="p-6 space-y-3">
+                <!-- Caso tenha detalhes -->
+                <div id="det-content">
+                    <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300"><span>Resina:</span>
+                        <span class="font-mono font-bold" id="det-resina"></span>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300"><span>Energia:</span>
+                        <span class="font-mono font-bold" id="det-energia"></span>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300"><span>Pós-Proc:</span>
+                        <span class="font-mono font-bold" id="det-pos"></span>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300"><span>Embalagem:</span>
+                        <span class="font-mono font-bold" id="det-emb"></span>
+                    </div>
+                    <div class="border-t border-dashed border-gray-300 dark:border-slate-600 my-2"></div>
+                    <div class="flex justify-between font-bold text-lg text-gray-800 dark:text-white"><span>Total
+                            Custo:</span> <span id="det-total"></span></div>
+
+                    <div
+                        class="mt-4 bg-green-50 dark:bg-green-900/20 p-3 rounded-xl text-center border border-green-100 dark:border-green-800">
+                        <p class="text-xs text-green-600 dark:text-green-400 uppercase font-bold">Venda Sugerida</p>
+                        <p class="text-xl font-bold text-green-700 dark:text-green-300" id="det-venda"></p>
+                        <p class="text-[10px] text-gray-400 dark:text-slate-400" id="det-taxa"></p>
+                    </div>
+                </div>
+                <!-- Caso não tenha detalhes (item manual) -->
+                <div id="det-empty" class="hidden text-center py-6">
+                    <i class="fa-solid fa-file-circle-xmark text-4xl text-gray-300 dark:text-slate-600 mb-2"></i>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">Este item foi adicionado manualmente ao estoque,
+                        sem cálculo de custos registrado.</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // --- COLOQUE SUAS CHAVES DO FIREBASE AQUI ---
-    const firebaseConfig = {
-        apiKey: "SUA_API_KEY",
-        authDomain: "SEU_PROJETO.firebaseapp.com",
-        projectId: "SEU_PROJETO_ID",
-        storageBucket: "SEU_PROJETO.appspot.com",
-        messagingSenderId: "NUMEROS",
-        appId: "APP_ID"
-    };
-    
-    if(firebaseConfig.apiKey === "SUA_API_KEY") {
-        alert("⚠️ ATENÇÃO: Configure suas chaves do Firebase no código (linha ~300)!");
-    }
+        // --- COLOQUE SUAS CHAVES DO FIREBASE AQUI ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBk5VOKh1YesWPObveNZcl6NDTQoSRv2MM",
+            authDomain: "calc3d-app.firebaseapp.com",
+            projectId: "calc3d-app",
+            storageBucket: "calc3d-app.firebasestorage.app",
+            messagingSenderId: "995189437836",
+            appId: "1:995189437836:web:1ea8b4a03ba78e0d87d2a9"
+        };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
 
-    let currentUser = null;
-    let globalConfig = { resina: 180, kwh: 0.90, watts: 120, pos: 2.50 };
-    let profiles = {};
-    let tempCalc = null;
-
-    // --- TEMA ---
-    window.toggleTheme = () => {
-        document.documentElement.classList.toggle('dark');
-        const isDark = document.documentElement.classList.contains('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        document.getElementById('theme-icon').className = isDark ? 'fa-solid fa-sun text-yellow-400' : 'fa-solid fa-moon text-gray-600';
-        document.getElementById('theme-icon-desk').className = isDark ? 'fa-solid fa-sun text-yellow-400' : 'fa-solid fa-moon text-gray-600';
-    }
-    if(localStorage.getItem('theme') === 'dark') window.toggleTheme();
-
-    // --- AUTH ---
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        try {
-            await signInWithEmailAndPassword(auth, document.getElementById('email-input').value, document.getElementById('password-input').value);
-        } catch(err) {
-            document.getElementById('login-error').innerText = "Erro: " + err.code;
-            document.getElementById('login-error').classList.remove('hidden');
-            setLoading(false);
+        if (firebaseConfig.apiKey === "SUA_API_KEY") {
+            alert("⚠️ ATENÇÃO: Configure suas chaves do Firebase no código (linha ~300)!");
         }
-    });
 
-    onAuthStateChanged(auth, (user) => {
-        if(user) {
-            currentUser = user;
-            document.getElementById('screen-login').classList.add('hidden');
-            document.getElementById('screen-app').classList.remove('hidden');
-            document.getElementById('user-email').innerText = user.email.split('@')[0];
-            document.getElementById('user-initial').innerText = user.email[0].toUpperCase();
-            startListeners();
-        } else {
-            document.getElementById('screen-app').classList.add('hidden');
-            document.getElementById('screen-login').classList.remove('hidden');
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let globalConfig = { resina: 180, kwh: 0.90, watts: 120, pos: 2.50 };
+        let profiles = {};
+        let tempCalc = null;
+
+        // --- TEMA ---
+        window.toggleTheme = () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-icon').className = isDark ? 'fa-solid fa-sun text-yellow-400' : 'fa-solid fa-moon text-gray-600';
+            document.getElementById('theme-icon-desk').className = isDark ? 'fa-solid fa-sun text-yellow-400' : 'fa-solid fa-moon text-gray-600';
         }
-    });
+        if (localStorage.getItem('theme') === 'dark') window.toggleTheme();
 
-    function startListeners() {
-        // 1. Config & Perfis
-        onSnapshot(doc(db, 'config', 'geral'), (docSnap) => {
-            if(docSnap.exists()) {
-                const d = docSnap.data();
-                globalConfig = d.current || globalConfig;
-                profiles = d.profiles || {};
-                renderProfiles();
-                if(document.getElementById('profile-select').value === 'default') loadInputs(globalConfig);
+        // --- AUTH ---
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            setLoading(true);
+            try {
+                await signInWithEmailAndPassword(auth, document.getElementById('email-input').value, document.getElementById('password-input').value);
+            } catch (err) {
+                document.getElementById('login-error').innerText = "Erro: " + err.code;
+                document.getElementById('login-error').classList.remove('hidden');
+                setLoading(false);
             }
         });
 
-        // 2. Histórico
-        onSnapshot(collection(db, 'impressoes'), (snap) => {
-            const list = document.getElementById('history-list');
-            list.innerHTML = '';
-            let items = [];
-            snap.forEach(d => items.push({id: d.id, ...d.data()}));
-            items.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-            
-            items.forEach(item => {
-                list.innerHTML += `
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('screen-login').classList.add('hidden');
+                document.getElementById('screen-app').classList.remove('hidden');
+                document.getElementById('user-email').innerText = user.email.split('@')[0];
+                document.getElementById('user-initial').innerText = user.email[0].toUpperCase();
+                startListeners();
+            } else {
+                document.getElementById('screen-app').classList.add('hidden');
+                document.getElementById('screen-login').classList.remove('hidden');
+            }
+        });
+
+        function startListeners() {
+            // 1. Config & Perfis
+            onSnapshot(doc(db, 'config', 'geral'), (docSnap) => {
+                if (docSnap.exists()) {
+                    const d = docSnap.data();
+                    globalConfig = d.current || globalConfig;
+                    profiles = d.profiles || {};
+                    renderProfiles();
+                    if (document.getElementById('profile-select').value === 'default') loadInputs(globalConfig);
+                }
+            });
+
+            // 2. Histórico
+            onSnapshot(collection(db, 'impressoes'), (snap) => {
+                const list = document.getElementById('history-list');
+                list.innerHTML = '';
+                let items = [];
+                snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+                items.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+                items.forEach(item => {
+                    list.innerHTML += `
                 <div class="bg-white dark:bg-slate-750 p-3 rounded-xl border border-gray-100 dark:border-slate-600 flex justify-between items-center shadow-sm">
                     <div class="flex items-center gap-3">
                         <button onclick='showDetails(${JSON.stringify(item)})' class="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 flex items-center justify-center hover:bg-indigo-100 transition"><i class="fa-solid fa-eye text-xs"></i></button>
@@ -453,19 +571,19 @@
                         <button onclick="delDoc('impressoes','${item.id}')" class="text-gray-300 hover:text-red-500 transition"><i class="fa-solid fa-trash text-xs"></i></button>
                     </div>
                 </div>`;
+                });
             });
-        });
 
-        // 3. Estoque
-        onSnapshot(collection(db, 'estoque'), (snap) => {
-            const grid = document.getElementById('stock-grid');
-            grid.innerHTML = '';
-            snap.forEach(d => {
-                const i = d.data();
-                const hasDetails = i.detalhes ? true : false;
-                const detailsData = hasDetails ? JSON.stringify(i.detalhes).replace(/'/g, "&#39;") : 'null';
+            // 3. Estoque
+            onSnapshot(collection(db, 'estoque'), (snap) => {
+                const grid = document.getElementById('stock-grid');
+                grid.innerHTML = '';
+                snap.forEach(d => {
+                    const i = d.data();
+                    const hasDetails = i.detalhes ? true : false;
+                    const detailsData = hasDetails ? JSON.stringify(i.detalhes).replace(/'/g, "&#39;") : 'null';
 
-                grid.innerHTML += `
+                    grid.innerHTML += `
                 <div class="bg-white dark:bg-slate-750 rounded-2xl border border-gray-100 dark:border-slate-600 overflow-hidden shadow-sm hover:shadow-md transition group">
                     <div class="h-32 bg-gray-100 dark:bg-slate-900 relative group/img">
                         ${i.img ? `<img src="${i.img}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-300 dark:text-slate-600"><i class="fa-solid fa-box text-3xl"></i></div>`}
@@ -496,248 +614,249 @@
                         </div>
                     </div>
                 </div>`;
-            });
-        });
-    }
-
-    // --- LOGICA DE IMAGEM DO ESTOQUE ---
-    window.uploadStockImage = async (id, input) => {
-        const file = input.files[0];
-        if(!file) return;
-        const parent = input.closest('.group\\/img'); 
-        if(parent) parent.classList.add('opacity-50');
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            try { await updateDoc(doc(db, 'estoque', id), { img: e.target.result }); } 
-            catch(err) { alert("Erro ao atualizar imagem: " + err.message); } 
-            finally { if(parent) parent.classList.remove('opacity-50'); }
-        };
-        reader.readAsDataURL(file);
-    }
-
-    // --- DETALHES ---
-    window.showDetailsFromStock = (nome, detalhes) => {
-        const modal = document.getElementById('modal-details');
-        const content = document.getElementById('det-content');
-        const empty = document.getElementById('det-empty');
-        document.getElementById('det-nome').innerText = nome;
-        document.getElementById('det-data').innerText = "Item do Estoque";
-
-        if (detalhes && detalhes !== 'null') {
-            content.classList.remove('hidden');
-            empty.classList.add('hidden');
-            const d = detalhes.detalhes || detalhes; 
-            document.getElementById('det-resina').innerText = fmt(d.resina || 0);
-            document.getElementById('det-energia').innerText = fmt(d.energia || 0);
-            document.getElementById('det-pos').innerText = fmt(d.pos || 0);
-            document.getElementById('det-emb').innerText = fmt(d.emb || 0);
-            document.getElementById('det-total').innerText = fmt(detalhes.custoTotal || 0);
-            document.getElementById('det-venda').innerText = fmt(detalhes.precoVenda || 0);
-            const margem = d.taxaVenda || d.taxa; // Compatibilidade com nomes antigos
-            // Procura se tem margem salva, senão assume 100 antigo
-            const lucro = d.lucro !== undefined ? d.lucro : 100;
-            document.getElementById('det-taxa').innerText = `Taxa: ${margem || 0}% | Margem: ${lucro}%`;
-        } else {
-            content.classList.add('hidden');
-            empty.classList.remove('hidden');
-        }
-        modal.classList.remove('hidden');
-    }
-
-    window.showDetails = (item) => { showDetailsFromStock(item.nome, item); }
-
-    // --- CALCULADORA ---
-    window.calcular = () => {
-        const peso = parseFloat(document.getElementById('calc-peso').value);
-        const tempo = parseFloat(document.getElementById('calc-tempo').value);
-        if(!peso || !tempo) return alert("Preencha Peso e Tempo");
-
-        const resina = parseFloat(document.getElementById('conf-resina').value);
-        const kwh = parseFloat(document.getElementById('conf-kwh').value);
-        const watts = parseFloat(document.getElementById('conf-watts').value);
-        const pos = parseFloat(document.getElementById('conf-pos').value);
-        const emb = parseFloat(document.getElementById('calc-emb').value);
-        const taxa = parseFloat(document.getElementById('calc-taxa').value);
-        const margem = parseFloat(document.getElementById('calc-lucro').value) || 100;
-
-        const cResina = (peso * (resina/1000));
-        const cLuz = (watts/1000) * tempo * kwh;
-        const total = cResina + cLuz + pos + emb;
-        
-        // Formula: (Custo * (1 + Margem%)) / (1 - Taxa%)
-        const venda = (total * (1 + (margem/100))) / (1 - (taxa/100));
-
-        document.getElementById('res-custo').innerText = fmt(total);
-        document.getElementById('res-venda').innerText = fmt(venda);
-        document.getElementById('res-lucro').innerText = fmt(venda - total - (venda * (taxa/100)));
-        document.getElementById('result-card').classList.remove('hidden');
-
-        tempCalc = {
-            nome: document.getElementById('calc-nome').value || "Sem nome",
-            custoTotal: total, precoVenda: venda,
-            detalhes: { resina: cResina, energia: cLuz, pos, emb, taxa: taxa, lucro: margem },
-            timestamp: serverTimestamp()
-        };
-    }
-
-    window.salvar = async () => {
-        if(!tempCalc) return;
-        setLoadingBtn('btn-save', true);
-        try {
-            await addDoc(collection(db, 'impressoes'), tempCalc);
-            if(document.getElementById('check-stock').checked) {
-                await addDoc(collection(db, 'estoque'), {
-                    nome: tempCalc.nome, qtd: 1, img: null, detalhes: tempCalc
                 });
-            }
-            alert("Salvo com sucesso!");
-            document.getElementById('result-card').classList.add('hidden');
-        } catch(e) { alert(e.message); }
-        setLoadingBtn('btn-save', false);
-    }
+            });
+        }
 
-    // --- ESTOQUE MANUAL ---
-    window.previewStock = (input) => {
-        const file = input.files[0];
-        if(file) {
+        // --- LOGICA DE IMAGEM DO ESTOQUE ---
+        window.uploadStockImage = async (id, input) => {
+            const file = input.files[0];
+            if (!file) return;
+            const parent = input.closest('.group\\/img');
+            if (parent) parent.classList.add('opacity-50');
             const reader = new FileReader();
-            reader.onload = (e) => {
-                document.getElementById('stock-preview').src = e.target.result;
-                document.getElementById('stock-preview').classList.remove('hidden');
-                document.getElementById('stock-icon').classList.add('hidden');
-            }
+            reader.onload = async (e) => {
+                try { await updateDoc(doc(db, 'estoque', id), { img: e.target.result }); }
+                catch (err) { alert("Erro ao atualizar imagem: " + err.message); }
+                finally { if (parent) parent.classList.remove('opacity-50'); }
+            };
             reader.readAsDataURL(file);
         }
-    }
 
-    window.addStockManual = async () => {
-        const nome = document.getElementById('stock-nome').value;
-        const qtd = parseInt(document.getElementById('stock-qtd').value);
-        const file = document.getElementById('stock-file').files[0];
-        if(!nome || !qtd) return alert("Preencha nome e qtd");
-        
-        let imgBase64 = null;
-        if(file) {
-            imgBase64 = await new Promise(resolve => {
+        // --- DETALHES ---
+        window.showDetailsFromStock = (nome, detalhes) => {
+            const modal = document.getElementById('modal-details');
+            const content = document.getElementById('det-content');
+            const empty = document.getElementById('det-empty');
+            document.getElementById('det-nome').innerText = nome;
+            document.getElementById('det-data').innerText = "Item do Estoque";
+
+            if (detalhes && detalhes !== 'null') {
+                content.classList.remove('hidden');
+                empty.classList.add('hidden');
+                const d = detalhes.detalhes || detalhes;
+                document.getElementById('det-resina').innerText = fmt(d.resina || 0);
+                document.getElementById('det-energia').innerText = fmt(d.energia || 0);
+                document.getElementById('det-pos').innerText = fmt(d.pos || 0);
+                document.getElementById('det-emb').innerText = fmt(d.emb || 0);
+                document.getElementById('det-total').innerText = fmt(detalhes.custoTotal || 0);
+                document.getElementById('det-venda').innerText = fmt(detalhes.precoVenda || 0);
+                const margem = d.taxaVenda || d.taxa; // Compatibilidade com nomes antigos
+                // Procura se tem margem salva, senão assume 100 antigo
+                const lucro = d.lucro !== undefined ? d.lucro : 100;
+                document.getElementById('det-taxa').innerText = `Taxa: ${margem || 0}% | Margem: ${lucro}%`;
+            } else {
+                content.classList.add('hidden');
+                empty.classList.remove('hidden');
+            }
+            modal.classList.remove('hidden');
+        }
+
+        window.showDetails = (item) => { showDetailsFromStock(item.nome, item); }
+
+        // --- CALCULADORA ---
+        window.calcular = () => {
+            const peso = parseFloat(document.getElementById('calc-peso').value);
+            const tempo = parseFloat(document.getElementById('calc-tempo').value);
+            if (!peso || !tempo) return alert("Preencha Peso e Tempo");
+
+            const resina = parseFloat(document.getElementById('conf-resina').value);
+            const kwh = parseFloat(document.getElementById('conf-kwh').value);
+            const watts = parseFloat(document.getElementById('conf-watts').value);
+            const pos = parseFloat(document.getElementById('conf-pos').value);
+            const emb = parseFloat(document.getElementById('calc-emb').value);
+            const taxa = parseFloat(document.getElementById('calc-taxa').value);
+            const margem = parseFloat(document.getElementById('calc-lucro').value) || 100;
+
+            const cResina = (peso * (resina / 1000));
+            const cLuz = (watts / 1000) * tempo * kwh;
+            const total = cResina + cLuz + pos + emb;
+
+            // Formula: (Custo * (1 + Margem%)) / (1 - Taxa%)
+            const venda = (total * (1 + (margem / 100))) / (1 - (taxa / 100));
+
+            document.getElementById('res-custo').innerText = fmt(total);
+            document.getElementById('res-venda').innerText = fmt(venda);
+            document.getElementById('res-lucro').innerText = fmt(venda - total - (venda * (taxa / 100)));
+            document.getElementById('result-card').classList.remove('hidden');
+
+            tempCalc = {
+                nome: document.getElementById('calc-nome').value || "Sem nome",
+                custoTotal: total, precoVenda: venda,
+                detalhes: { resina: cResina, energia: cLuz, pos, emb, taxa: taxa, lucro: margem },
+                timestamp: serverTimestamp()
+            };
+        }
+
+        window.salvar = async () => {
+            if (!tempCalc) return;
+            setLoadingBtn('btn-save', true);
+            try {
+                await addDoc(collection(db, 'impressoes'), tempCalc);
+                if (document.getElementById('check-stock').checked) {
+                    await addDoc(collection(db, 'estoque'), {
+                        nome: tempCalc.nome, qtd: 1, img: null, detalhes: tempCalc
+                    });
+                }
+                alert("Salvo com sucesso!");
+                document.getElementById('result-card').classList.add('hidden');
+            } catch (e) { alert(e.message); }
+            setLoadingBtn('btn-save', false);
+        }
+
+        // --- ESTOQUE MANUAL ---
+        window.previewStock = (input) => {
+            const file = input.files[0];
+            if (file) {
                 const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
+                reader.onload = (e) => {
+                    document.getElementById('stock-preview').src = e.target.result;
+                    document.getElementById('stock-preview').classList.remove('hidden');
+                    document.getElementById('stock-icon').classList.add('hidden');
+                }
                 reader.readAsDataURL(file);
+            }
+        }
+
+        window.addStockManual = async () => {
+            const nome = document.getElementById('stock-nome').value;
+            const qtd = parseInt(document.getElementById('stock-qtd').value);
+            const file = document.getElementById('stock-file').files[0];
+            if (!nome || !qtd) return alert("Preencha nome e qtd");
+
+            let imgBase64 = null;
+            if (file) {
+                imgBase64 = await new Promise(resolve => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                });
+            }
+            await addDoc(collection(db, 'estoque'), { nome, qtd, img: imgBase64, detalhes: null });
+
+            document.getElementById('stock-nome').value = '';
+            document.getElementById('stock-qtd').value = '';
+            document.getElementById('stock-preview').classList.add('hidden');
+            document.getElementById('stock-icon').classList.remove('hidden');
+            alert("Adicionado!");
+        }
+
+        window.updStock = async (id, val) => await updateDoc(doc(db, 'estoque', id), { qtd: increment(val) });
+        window.delDoc = async (col, id) => { if (confirm("Excluir?")) await deleteDoc(doc(db, col, id)); }
+
+        // --- PERFIS ---
+        function renderProfiles() {
+            const sel = document.getElementById('profile-select');
+            const list = document.getElementById('profile-list-manage');
+            sel.innerHTML = '<option value="default">Padrão</option>';
+            list.innerHTML = '';
+            for (let name in profiles) {
+                sel.innerHTML += `<option value="${name}">${name}</option>`;
+                list.innerHTML += `<li class="flex justify-between text-xs p-2 bg-gray-50 dark:bg-slate-700 rounded text-gray-700 dark:text-gray-200"><span>${name}</span> <button onclick="delProfile('${name}')" class="text-red-500 hover:text-red-400">Excluir</button></li>`;
+            }
+        }
+
+        window.loadProfile = (name) => {
+            const data = name === 'default' ? globalConfig : profiles[name];
+            loadInputs(data);
+        }
+
+        function loadInputs(data) {
+            document.getElementById('conf-resina').value = data.resina;
+            document.getElementById('conf-kwh').value = data.kwh;
+            document.getElementById('conf-watts').value = data.watts;
+            document.getElementById('conf-pos').value = data.pos;
+            if (data.emb) document.getElementById('calc-emb').value = data.emb;
+            if (data.taxa) document.getElementById('calc-taxa').value = data.taxa;
+            // Carrega o lucro salvo, ou 100 se não existir (compatibilidade)
+            if (data.lucro !== undefined) document.getElementById('calc-lucro').value = data.lucro;
+        }
+
+        window.saveProfile = async () => {
+            const name = document.getElementById('new-profile-name').value;
+            if (!name) return alert("Nome do perfil vazio");
+            profiles[name] = getInputs();
+            await setDoc(doc(db, 'config', 'geral'), { current: globalConfig, profiles }, { merge: true });
+            alert("Perfil salvo!");
+        }
+
+        window.saveGlobalConfig = async () => {
+            globalConfig = getInputs();
+            await setDoc(doc(db, 'config', 'geral'), { current: globalConfig, profiles }, { merge: true });
+            alert("Valores atualizados!");
+        }
+
+        window.delProfile = async (name) => {
+            if (confirm("Apagar perfil?")) {
+                delete profiles[name];
+                await setDoc(doc(db, 'config', 'geral'), { current: globalConfig, profiles }, { merge: true });
+            }
+        }
+
+        function getInputs() {
+            return {
+                resina: parseFloat(document.getElementById('conf-resina').value),
+                kwh: parseFloat(document.getElementById('conf-kwh').value),
+                watts: parseFloat(document.getElementById('conf-watts').value),
+                pos: parseFloat(document.getElementById('conf-pos').value),
+                emb: parseFloat(document.getElementById('calc-emb').value),
+                taxa: parseFloat(document.getElementById('calc-taxa').value),
+                lucro: parseFloat(document.getElementById('calc-lucro').value) // Novo campo
+            }
+        }
+
+        // --- UI HELPERS ---
+        window.switchTab = (t) => {
+            document.querySelectorAll('main > div > div').forEach(d => d.classList.add('hidden'));
+            document.getElementById('tab-' + t).classList.remove('hidden');
+            document.getElementById('header-title').innerText = t === 'calc' ? 'Calculadora' : (t === 'stock' ? 'Estoque' : 'Ajustes');
+
+            ['calc', 'stock', 'config'].forEach(k => {
+                const btn = document.getElementById('nav-' + k);
+                if (k === t) {
+                    btn.classList.add('bg-indigo-50', 'text-indigo-600', 'dark:bg-indigo-900/20', 'dark:text-indigo-300');
+                    btn.classList.remove('text-gray-400');
+                } else {
+                    btn.classList.remove('bg-indigo-50', 'text-indigo-600', 'dark:bg-indigo-900/20', 'dark:text-indigo-300');
+                    btn.classList.add('text-gray-400');
+                }
             });
         }
-        await addDoc(collection(db, 'estoque'), { nome, qtd, img: imgBase64, detalhes: null });
-        
-        document.getElementById('stock-nome').value = '';
-        document.getElementById('stock-qtd').value = '';
-        document.getElementById('stock-preview').classList.add('hidden');
-        document.getElementById('stock-icon').classList.remove('hidden');
-        alert("Adicionado!");
-    }
 
-    window.updStock = async (id, val) => await updateDoc(doc(db,'estoque',id), { qtd: increment(val) });
-    window.delDoc = async (col, id) => { if(confirm("Excluir?")) await deleteDoc(doc(db,col,id)); }
+        window.logout = () => signOut(auth);
+        window.fmt = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-    // --- PERFIS ---
-    function renderProfiles() {
-        const sel = document.getElementById('profile-select');
-        const list = document.getElementById('profile-list-manage');
-        sel.innerHTML = '<option value="default">Padrão</option>';
-        list.innerHTML = '';
-        for(let name in profiles) {
-            sel.innerHTML += `<option value="${name}">${name}</option>`;
-            list.innerHTML += `<li class="flex justify-between text-xs p-2 bg-gray-50 dark:bg-slate-700 rounded text-gray-700 dark:text-gray-200"><span>${name}</span> <button onclick="delProfile('${name}')" class="text-red-500 hover:text-red-400">Excluir</button></li>`;
-        }
-    }
-
-    window.loadProfile = (name) => {
-        const data = name === 'default' ? globalConfig : profiles[name];
-        loadInputs(data);
-    }
-
-    function loadInputs(data) {
-        document.getElementById('conf-resina').value = data.resina;
-        document.getElementById('conf-kwh').value = data.kwh;
-        document.getElementById('conf-watts').value = data.watts;
-        document.getElementById('conf-pos').value = data.pos;
-        if(data.emb) document.getElementById('calc-emb').value = data.emb;
-        if(data.taxa) document.getElementById('calc-taxa').value = data.taxa;
-        // Carrega o lucro salvo, ou 100 se não existir (compatibilidade)
-        if(data.lucro !== undefined) document.getElementById('calc-lucro').value = data.lucro;
-    }
-
-    window.saveProfile = async () => {
-        const name = document.getElementById('new-profile-name').value;
-        if(!name) return alert("Nome do perfil vazio");
-        profiles[name] = getInputs();
-        await setDoc(doc(db, 'config', 'geral'), { current: globalConfig, profiles }, { merge: true });
-        alert("Perfil salvo!");
-    }
-
-    window.saveGlobalConfig = async () => {
-        globalConfig = getInputs();
-        await setDoc(doc(db, 'config', 'geral'), { current: globalConfig, profiles }, { merge: true });
-        alert("Valores atualizados!");
-    }
-    
-    window.delProfile = async (name) => {
-        if(confirm("Apagar perfil?")) {
-            delete profiles[name];
-            await setDoc(doc(db, 'config', 'geral'), { current: globalConfig, profiles }, { merge: true });
-        }
-    }
-
-    function getInputs() {
-        return {
-            resina: parseFloat(document.getElementById('conf-resina').value),
-            kwh: parseFloat(document.getElementById('conf-kwh').value),
-            watts: parseFloat(document.getElementById('conf-watts').value),
-            pos: parseFloat(document.getElementById('conf-pos').value),
-            emb: parseFloat(document.getElementById('calc-emb').value),
-            taxa: parseFloat(document.getElementById('calc-taxa').value),
-            lucro: parseFloat(document.getElementById('calc-lucro').value) // Novo campo
-        }
-    }
-
-    // --- UI HELPERS ---
-    window.switchTab = (t) => {
-        document.querySelectorAll('main > div > div').forEach(d => d.classList.add('hidden'));
-        document.getElementById('tab-'+t).classList.remove('hidden');
-        document.getElementById('header-title').innerText = t === 'calc' ? 'Calculadora' : (t === 'stock' ? 'Estoque' : 'Ajustes');
-        
-        ['calc','stock','config'].forEach(k => {
-            const btn = document.getElementById('nav-'+k);
-            if(k===t) {
-                btn.classList.add('bg-indigo-50','text-indigo-600','dark:bg-indigo-900/20','dark:text-indigo-300');
-                btn.classList.remove('text-gray-400');
+        function setLoading(l) {
+            if (l) {
+                document.getElementById('btn-login').disabled = true;
+                document.querySelector('#btn-login span').classList.add('hidden');
+                document.querySelector('#btn-login .loader').classList.remove('hidden');
             } else {
-                btn.classList.remove('bg-indigo-50','text-indigo-600','dark:bg-indigo-900/20','dark:text-indigo-300');
-                btn.classList.add('text-gray-400');
+                document.getElementById('btn-login').disabled = false;
+                document.querySelector('#btn-login span').classList.remove('hidden');
+                document.querySelector('#btn-login .loader').classList.add('hidden');
             }
-        });
-    }
-
-    window.logout = () => signOut(auth);
-    window.fmt = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    
-    function setLoading(l) {
-        if(l) {
-            document.getElementById('btn-login').disabled = true;
-            document.querySelector('#btn-login span').classList.add('hidden');
-            document.querySelector('#btn-login .loader').classList.remove('hidden');
-        } else {
-            document.getElementById('btn-login').disabled = false;
-            document.querySelector('#btn-login span').classList.remove('hidden');
-            document.querySelector('#btn-login .loader').classList.add('hidden');
         }
-    }
-    function setLoadingBtn(id, l) {
-        const btn = document.getElementById(id);
-        if(l) btn.innerHTML = '<div class="loader !w-4 !h-4 !border-white/30 !border-t-white"></div>';
-        else btn.innerHTML = '<i class="fa-solid fa-check"></i> Salvo';
-    }
+        function setLoadingBtn(id, l) {
+            const btn = document.getElementById(id);
+            if (l) btn.innerHTML = '<div class="loader !w-4 !h-4 !border-white/30 !border-t-white"></div>';
+            else btn.innerHTML = '<i class="fa-solid fa-check"></i> Salvo';
+        }
 
-    // Init UI
-    switchTab('calc');
-</script>
+        // Init UI
+        switchTab('calc');
+    </script>
 
 </body>
+
 </html>
