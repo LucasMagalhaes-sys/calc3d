@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Calc3D Pro - V3.0 Babilonia</title>
+    <title>Calc3D Pro - V3.2 Financeiro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -27,8 +27,6 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
-        
-        /* Hide scrollbar for nav */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -42,7 +40,7 @@
             <i class="fa-solid fa-cube text-3xl text-white"></i>
         </div>
         <h1 class="text-2xl font-bold mb-2">Calc3D Pro</h1>
-        <p class="text-sm text-gray-400 mb-8">Gestão Completa V3</p>
+        <p class="text-sm text-gray-400 mb-8">Gestão Completa V3.2</p>
         
         <form id="login-form" class="space-y-4 text-left">
             <div>
@@ -69,7 +67,7 @@
     <nav class="bg-white dark:bg-slate-800 md:w-64 md:rounded-3xl shadow-sm border-r md:border border-gray-100 dark:border-slate-700 flex md:flex-col justify-between z-20 order-2 md:order-1 fixed bottom-0 w-full md:relative md:h-auto">
         <div class="p-6 hidden md:block">
             <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">Calc3D</h1>
-            <p class="text-xs text-gray-400">Versão 3.0</p>
+            <p class="text-xs text-gray-400">Versão 3.2</p>
         </div>
 
         <!-- Scrollable Nav for Mobile -->
@@ -129,7 +127,7 @@
         <!-- AREA DE SCROLL -->
         <div class="flex-1 overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 bg-gray-50/50 dark:bg-slate-800/50">
             
-            <!-- === ABA CALCULAR (Original) === -->
+            <!-- === ABA CALCULAR === -->
             <div id="tab-calc" class="fade-in grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- FORM -->
                 <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm">
@@ -178,9 +176,8 @@
                 </div>
             </div>
 
-            <!-- === ABA PEDIDOS (NOVO) === -->
+            <!-- === ABA PEDIDOS === -->
             <div id="tab-orders" class="hidden fade-in space-y-6">
-                <!-- Add Pedido -->
                 <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm">
                     <h3 class="font-bold text-gray-700 dark:text-white mb-4">Novo Pedido</h3>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -197,53 +194,89 @@
                         <button onclick="addOrder()" class="bg-indigo-600 text-white font-bold px-6 rounded-xl hover:bg-indigo-700 transition">Adicionar</button>
                     </div>
                 </div>
-
-                <!-- Lista Pedidos -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="orders-list"></div>
             </div>
 
-            <!-- === ABA FINANÇAS (NOVO) === -->
+            <!-- === ABA FINANÇAS (NOVA V3.2) === -->
             <div id="tab-finance" class="hidden fade-in space-y-6">
-                <!-- Dashboard -->
+                
+                <!-- Navegação Mensal -->
+                <div class="flex items-center justify-between bg-white dark:bg-slate-750 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-600 sticky top-0 z-10">
+                    <button onclick="changeFinanceMonth(-1)" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-700 hover:bg-indigo-100 dark:hover:bg-indigo-900 transition flex items-center justify-center"><i class="fa-solid fa-chevron-left"></i></button>
+                    <div class="text-center">
+                        <h2 class="text-lg font-bold text-gray-800 dark:text-white" id="fin-month-label">Janeiro 2026</h2>
+                        <p class="text-[10px] text-gray-400 uppercase tracking-wider font-bold">Extrato Mensal</p>
+                    </div>
+                    <button onclick="changeFinanceMonth(1)" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-700 hover:bg-indigo-100 dark:hover:bg-indigo-900 transition flex items-center justify-center"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+
+                <!-- Dashboard Mensal -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-green-500 text-white p-6 rounded-3xl shadow-lg">
-                        <p class="text-green-100 text-xs font-bold uppercase">Entradas (Vendas)</p>
-                        <h2 class="text-3xl font-bold" id="fin-income">R$ 0,00</h2>
+                    <div class="bg-green-500 text-white p-6 rounded-3xl shadow-lg relative overflow-hidden">
+                        <div class="relative z-10">
+                            <p class="text-green-100 text-xs font-bold uppercase">Entradas (Mês)</p>
+                            <h2 class="text-3xl font-bold" id="fin-income">R$ 0,00</h2>
+                        </div>
+                        <i class="fa-solid fa-arrow-trend-up absolute -bottom-2 -right-2 text-6xl text-white opacity-20"></i>
                     </div>
-                    <div class="bg-red-500 text-white p-6 rounded-3xl shadow-lg">
-                        <p class="text-red-100 text-xs font-bold uppercase">Saídas (Despesas)</p>
-                        <h2 class="text-3xl font-bold" id="fin-expense">R$ 0,00</h2>
+                    <div class="bg-red-500 text-white p-6 rounded-3xl shadow-lg relative overflow-hidden">
+                        <div class="relative z-10">
+                            <p class="text-red-100 text-xs font-bold uppercase">Saídas (Mês)</p>
+                            <h2 class="text-3xl font-bold" id="fin-expense">R$ 0,00</h2>
+                        </div>
+                        <i class="fa-solid fa-arrow-trend-down absolute -bottom-2 -right-2 text-6xl text-white opacity-20"></i>
                     </div>
-                    <div class="bg-slate-800 text-white p-6 rounded-3xl shadow-lg border border-slate-700">
-                        <p class="text-slate-400 text-xs font-bold uppercase">Lucro Líquido</p>
-                        <h2 class="text-3xl font-bold" id="fin-profit">R$ 0,00</h2>
+                    <div class="bg-slate-800 text-white p-6 rounded-3xl shadow-lg border border-slate-700 relative overflow-hidden">
+                        <div class="relative z-10">
+                            <p class="text-slate-400 text-xs font-bold uppercase">Saldo Líquido</p>
+                            <h2 class="text-3xl font-bold" id="fin-profit">R$ 0,00</h2>
+                        </div>
+                        <i class="fa-solid fa-wallet absolute -bottom-2 -right-2 text-6xl text-white opacity-10"></i>
                     </div>
                 </div>
 
-                <!-- Add Despesa Manual -->
+                <!-- Form Transação Manual -->
                 <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm">
-                    <h3 class="font-bold text-gray-700 dark:text-white mb-4">Registrar Despesa Manual</h3>
-                    <div class="flex gap-4">
-                        <input type="text" id="exp-desc" placeholder="Descrição (Ex: Compra Resina)" class="flex-1 bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
-                        <input type="number" id="exp-val" placeholder="Valor" class="w-32 bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
-                        <button onclick="addExpense()" class="bg-red-500 text-white font-bold px-6 rounded-xl hover:bg-red-600 transition">Lançar</button>
+                    <h3 class="font-bold text-gray-700 dark:text-white mb-4">Lançar Transação</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                        <select id="exp-type" class="bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
+                            <option value="expense">Saída (Despesa)</option>
+                            <option value="income">Entrada (Receita)</option>
+                        </select>
+                        <input type="text" id="exp-desc" placeholder="Descrição (Ex: Impressora)" class="md:col-span-3 bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
                     </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                        <input type="number" id="exp-val" placeholder="Valor Total (R$)" class="bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none font-bold">
+                        <input type="date" id="exp-date" class="bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none text-sm">
+                        
+                        <div class="flex items-center gap-2 bg-gray-50 dark:bg-slate-700 p-3 rounded-xl border border-gray-200 dark:border-slate-600">
+                            <input type="checkbox" id="exp-is-install" onchange="toggleInstallments()" class="w-5 h-5 text-indigo-600 rounded">
+                            <label for="exp-is-install" class="text-sm font-bold text-gray-600 dark:text-gray-300 select-none cursor-pointer">Parcelado?</label>
+                        </div>
+                        
+                        <div id="install-group" class="hidden relative">
+                            <input type="number" id="exp-installments" placeholder="Qtd" value="1" min="2" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
+                            <span class="absolute right-3 top-3 text-sm text-gray-400 font-bold">x</span>
+                        </div>
+                    </div>
+                    <button onclick="addFinance()" class="w-full mt-4 bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 transition shadow-lg">Registrar</button>
                 </div>
 
-                <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm">
-                    <h3 class="font-bold text-gray-700 dark:text-white mb-4">Histórico de Transações</h3>
-                    <div id="finance-list" class="space-y-2"></div>
+                <!-- Extrato (Invoice Style) -->
+                <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm min-h-[300px]">
+                    <h3 class="font-bold text-gray-700 dark:text-white mb-6 flex items-center gap-2"><i class="fa-solid fa-file-invoice-dollar"></i> Extrato do Mês</h3>
+                    <div id="finance-list" class="space-y-0">
+                        <!-- Items via JS -->
+                    </div>
                 </div>
             </div>
 
-            <!-- === ABA BABILONIA (NOVO) === -->
+            <!-- === ABA BABILONIA === -->
             <div id="tab-babylon" class="hidden fade-in space-y-6">
                 <div class="bg-gradient-to-r from-gold-500 to-yellow-600 p-6 rounded-3xl text-white shadow-lg">
                     <h2 class="text-2xl font-bold"><i class="fa-solid fa-landmark mr-2"></i>A Babilônia</h2>
-                    <p class="text-yellow-100 text-sm opacity-90">Biblioteca de Arquivos STL e Projetos</p>
+                    <p class="text-yellow-100 text-sm opacity-90">Acervo de Arquivos</p>
                 </div>
-
-                <!-- Add Item Babilônia -->
                 <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm flex flex-col md:flex-row gap-6">
                     <div class="flex-shrink-0 flex justify-center">
                         <label class="w-32 h-32 bg-gray-50 dark:bg-slate-700 border-2 border-dashed border-gray-300 dark:border-slate-500 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-gold-500 dark:hover:border-gold-500 transition relative overflow-hidden group">
@@ -254,22 +287,23 @@
                         </label>
                     </div>
                     <div class="flex-1 space-y-4">
+                        <input type="hidden" id="bab-id">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <input type="text" id="bab-nome" placeholder="Nome do Modelo" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
-                            <input type="text" id="bab-link" placeholder="Link do Arquivo (Drive, Mega...)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none text-blue-500">
+                            <input type="text" id="bab-link" placeholder="Link (Drive/Mega)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none text-blue-500">
                         </div>
-                        <textarea id="bab-desc" placeholder="Descrição / Configurações de impressão..." class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none h-20 resize-none"></textarea>
-                        <button onclick="addBabylon()" class="bg-gold-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-yellow-700 transition w-full md:w-auto">Adicionar ao Acervo</button>
+                        <textarea id="bab-desc" placeholder="Descrição..." class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none h-20 resize-none"></textarea>
+                        <div class="flex gap-2">
+                            <button id="bab-btn-save" onclick="saveBabylon()" class="bg-gold-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-yellow-700 transition flex-1 md:flex-none">Adicionar</button>
+                            <button id="bab-btn-cancel" onclick="resetBabylonForm()" class="hidden bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-white font-bold py-3 px-6 rounded-xl hover:bg-gray-300 transition">Cancelar</button>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Grid Babilônia -->
                 <div id="babylon-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
             </div>
 
-            <!-- === ABA ESTOQUE (Existente) === -->
+            <!-- === ABA ESTOQUE === -->
             <div id="tab-stock" class="hidden fade-in space-y-6">
-                <!-- Add Item -->
                 <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm flex flex-col md:flex-row gap-6">
                     <div class="flex-shrink-0 flex justify-center">
                         <label class="w-24 h-24 bg-gray-50 dark:bg-slate-700 border-2 border-dashed border-gray-300 dark:border-slate-500 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-indigo-500 transition relative overflow-hidden">
@@ -289,7 +323,6 @@
 
             <!-- === ABA AJUSTES === -->
             <div id="tab-config" class="hidden fade-in max-w-lg mx-auto space-y-6">
-                <!-- Inputs Config (Mesmo da v2.2) -->
                 <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 space-y-4">
                     <h3 class="font-bold text-gray-700 dark:text-white">Custos Base</h3>
                     <div class="grid grid-cols-2 gap-4">
@@ -300,11 +333,10 @@
                     </div>
                     <button onclick="saveGlobalConfig()" class="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 rounded-xl">Salvar Valores</button>
                 </div>
-                <!-- Criar Perfil -->
                 <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-3xl border border-purple-100 dark:border-purple-800">
                     <h3 class="font-bold text-purple-800 dark:text-purple-300 mb-2">Salvar Perfil Atual</h3>
                     <div class="flex gap-2">
-                        <input type="text" id="new-profile-name" placeholder="Nome (Ex: Action Figure)" class="flex-1 bg-white dark:bg-slate-700 dark:text-white p-3 rounded-xl border-none outline-none">
+                        <input type="text" id="new-profile-name" placeholder="Nome" class="flex-1 bg-white dark:bg-slate-700 dark:text-white p-3 rounded-xl border-none outline-none">
                         <button onclick="saveProfile()" class="bg-purple-600 text-white font-bold px-4 rounded-xl">Salvar</button>
                     </div>
                     <ul id="profile-list-manage" class="mt-4 space-y-2 text-sm"></ul>
@@ -316,7 +348,7 @@
 </div>
 
 <!-- MODAL DETALHES -->
-<div id="modal-details" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+<div id="modal-details" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
     <div class="bg-white dark:bg-slate-800 w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl relative animate-fade-in">
         <button onclick="document.getElementById('modal-details').classList.add('hidden')" class="absolute top-4 right-4 text-gray-500 dark:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
         <div class="p-6">
@@ -338,14 +370,21 @@
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // --- CHAVES FIREBASE (COLOQUE AS SUAS AQUI) ---
-        const firebaseConfig = {
+    // --- COLOQUE SUAS CHAVES DO FIREBASE AQUI ---
+    const firebaseConfig = {
+
             apiKey: "AIzaSyBk5VOKh1YesWPObveNZcl6NDTQoSRv2MM",
+
             authDomain: "calc3d-app.firebaseapp.com",
+
             projectId: "calc3d-app",
+
             storageBucket: "calc3d-app.firebasestorage.app",
+
             messagingSenderId: "995189437836",
+
             appId: "1:995189437836:web:1ea8b4a03ba78e0d87d2a9"
+
         };
 
     if(firebaseConfig.apiKey === "SUA_API_KEY") alert("⚠️ Configure as chaves do Firebase no final do código!");
@@ -358,8 +397,34 @@
     let globalConfig = { resina: 180, kwh: 0.90, watts: 120, pos: 2.50 };
     let profiles = {};
     let tempCalc = null;
+    
+    // Controle Financeiro
+    let currentDateRef = new Date(); // Mês atual visualizado
+    let allTransactions = []; // Armazena transações brutas para filtragem local
 
-    // --- TEMA ---
+    // --- UTILS IMAGEM ---
+    async function compressImage(file, maxWidth = 800, quality = 0.7) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width; let height = img.height;
+                    if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; }
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', quality));
+                };
+            };
+            reader.onerror = error => reject(error);
+        });
+    }
+
+    // --- TEMA E AUTH ---
     window.toggleTheme = () => {
         document.documentElement.classList.toggle('dark');
         const isDark = document.documentElement.classList.contains('dark');
@@ -367,10 +432,8 @@
     }
     if(localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
 
-    // --- AUTH ---
     document.getElementById('login-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        setLoading(true);
+        e.preventDefault(); setLoading(true);
         try { await signInWithEmailAndPassword(auth, document.getElementById('email-input').value, document.getElementById('password-input').value); } 
         catch(err) { alert("Erro login: " + err.code); setLoading(false); }
     });
@@ -382,8 +445,10 @@
             document.getElementById('screen-app').classList.remove('hidden');
             document.getElementById('user-email').innerText = user.email.split('@')[0];
             document.getElementById('user-initial').innerText = user.email[0].toUpperCase();
+            document.getElementById('exp-date').valueAsDate = new Date(); // Default date today
             startListeners();
             switchTab('calc');
+            renderFinanceMonth();
         } else {
             document.getElementById('screen-app').classList.add('hidden');
             document.getElementById('screen-login').classList.remove('hidden');
@@ -392,7 +457,6 @@
 
     // --- LISTENERS ---
     function startListeners() {
-        // 1. Config
         onSnapshot(doc(db, 'config', 'geral'), (snap) => {
             if(snap.exists()) {
                 const d = snap.data();
@@ -403,64 +467,37 @@
             }
         });
 
-        // 2. Histórico
         onSnapshot(collection(db, 'impressoes'), (snap) => {
-            const list = document.getElementById('history-list');
-            list.innerHTML = '';
-            let items = [];
-            snap.forEach(d => items.push({id: d.id, ...d.data()}));
+            const list = document.getElementById('history-list'); list.innerHTML = '';
+            let items = []; snap.forEach(d => items.push({id: d.id, ...d.data()}));
             items.sort((a,b) => b.timestamp - a.timestamp);
             items.forEach(i => list.innerHTML += renderHistoryItem(i));
         });
 
-        // 3. Estoque
         onSnapshot(collection(db, 'estoque'), (snap) => {
-            const grid = document.getElementById('stock-grid');
-            grid.innerHTML = '';
-            snap.forEach(d => {
-                const i = d.data();
-                grid.innerHTML += renderStockItem(d.id, i);
-            });
+            const grid = document.getElementById('stock-grid'); grid.innerHTML = '';
+            snap.forEach(d => grid.innerHTML += renderStockItem(d.id, d.data()));
         });
 
-        // 4. Pedidos (NOVO)
         onSnapshot(collection(db, 'pedidos'), (snap) => {
-            const list = document.getElementById('orders-list');
-            list.innerHTML = '';
-            let inc = 0;
-            snap.forEach(d => {
-                const p = d.data();
-                if(p.status === 'concluido') inc += parseFloat(p.valor);
-                list.innerHTML += renderOrderItem(d.id, p);
-            });
-            updateFinance(inc, 0); // Update income from orders
+            const list = document.getElementById('orders-list'); list.innerHTML = '';
+            snap.forEach(d => list.innerHTML += renderOrderItem(d.id, d.data()));
+            // Nota: Vendas de pedidos não vão automaticamente pro financeiro manual, mas poderíamos somar se quisessemos
         });
 
-        // 5. Finanças Manuais (NOVO)
         onSnapshot(collection(db, 'financas'), (snap) => {
-            const list = document.getElementById('finance-list');
-            list.innerHTML = '';
-            let exp = 0;
-            snap.forEach(d => {
-                const f = d.data();
-                exp += parseFloat(f.valor);
-                list.innerHTML += renderFinanceItem(d.id, f);
-            });
-            updateFinance(0, exp); // Update expenses
+            allTransactions = [];
+            snap.forEach(d => allTransactions.push({id: d.id, ...d.data()}));
+            renderFinanceMonth(); // Re-renderiza a view atual
         });
 
-        // 6. Babilônia (NOVO)
         onSnapshot(collection(db, 'babilonia'), (snap) => {
-            const grid = document.getElementById('babylon-grid');
-            grid.innerHTML = '';
-            snap.forEach(d => {
-                const b = d.data();
-                grid.innerHTML += renderBabylonItem(d.id, b);
-            });
+            const grid = document.getElementById('babylon-grid'); grid.innerHTML = '';
+            snap.forEach(d => grid.innerHTML += renderBabylonItem(d.id, d.data()));
         });
     }
 
-    // --- FUNÇÕES DE RENDERIZAÇÃO (HTML Strings) ---
+    // --- RENDERIZACAO GERAL ---
     function renderHistoryItem(i) {
         return `<div class="bg-white dark:bg-slate-750 p-3 rounded-xl border border-gray-100 dark:border-slate-600 flex justify-between items-center shadow-sm">
             <div class="flex items-center gap-3">
@@ -492,7 +529,7 @@
         const colors = { 'pendente': 'bg-yellow-100 text-yellow-600', 'producao': 'bg-blue-100 text-blue-600', 'concluido': 'bg-green-100 text-green-600' };
         return `<div class="bg-white dark:bg-slate-750 p-4 rounded-2xl border border-gray-100 dark:border-slate-600 shadow-sm relative">
             <div class="flex justify-between mb-2">
-                <span class="text-[10px] uppercase font-bold text-gray-400">Pedido #${id.slice(0,4)}</span>
+                <span class="text-[10px] uppercase font-bold text-gray-400">#${id.slice(0,4)}</span>
                 <span class="text-[10px] px-2 py-1 rounded-full font-bold ${colors[p.status]}">${p.status}</span>
             </div>
             <h4 class="font-bold text-gray-800 dark:text-white">${p.cliente}</h4>
@@ -507,39 +544,111 @@
         </div>`;
     }
 
-    function renderFinanceItem(id, f) {
-        return `<div class="flex justify-between items-center p-2 border-b border-gray-100 dark:border-slate-700 last:border-0">
-            <div><p class="text-xs font-bold text-gray-700 dark:text-gray-200">${f.desc}</p><p class="text-[10px] text-gray-400">${new Date(f.date?.seconds * 1000).toLocaleDateString()}</p></div>
-            <div class="flex items-center gap-3"><span class="text-xs font-bold text-red-500">-${fmt(f.valor)}</span><button onclick="delDoc('financas','${id}')" class="text-gray-300 hover:text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button></div>
-        </div>`;
-    }
-
     function renderBabylonItem(id, b) {
+        const safeB = JSON.stringify(b).replace(/"/g, '&quot;');
         return `<div class="bg-white dark:bg-slate-750 rounded-3xl overflow-hidden shadow-lg group relative">
             <div class="h-40 bg-slate-200 dark:bg-slate-900 relative">
                 ${b.img ? `<img src="${b.img}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-400"><i class="fa-solid fa-cube text-4xl"></i></div>`}
                 <div class="absolute inset-0 bg-black/60 hidden group-hover:flex items-center justify-center gap-2">
                     <a href="${b.link}" target="_blank" class="bg-gold-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-gold-600 transition"><i class="fa-solid fa-download"></i></a>
+                    <button onclick="editBabylon('${id}', ${safeB})" class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-600 transition"><i class="fa-solid fa-pencil"></i></button>
                     <button onclick="delDoc('babilonia','${id}')" class="bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-red-600 transition"><i class="fa-solid fa-trash"></i></button>
                 </div>
             </div>
-            <div class="p-4">
-                <h3 class="font-bold text-gray-800 dark:text-white truncate">${b.nome}</h3>
-                <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 h-8 mt-1">${b.desc}</p>
-            </div>
+            <div class="p-4"><h3 class="font-bold text-gray-800 dark:text-white truncate">${b.nome}</h3><p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 h-8 mt-1">${b.desc}</p></div>
         </div>`;
     }
 
-    // --- LOGICA GERAL ---
-    let totalIncome = 0; let totalExpense = 0;
-    
-    // Atualiza dashboard financeiro quando dados mudam
-    function updateFinance(inc, exp) {
-        // Acumula (simples, na real deveria recalcular tudo do zero a cada snapshot para nao duplicar, mas aqui simplifiquei)
-        // Correção: Os snapshots acima ja recalcula tudo do zero. Entao vamos guardar em variaveis globais.
-        if(inc > 0) totalIncome = inc; 
-        if(exp > 0) totalExpense = exp;
+    // --- LÓGICA FINANCEIRA V3.2 (PARCELAS + MÊS) ---
+    window.changeFinanceMonth = (dir) => {
+        currentDateRef.setMonth(currentDateRef.getMonth() + dir);
+        renderFinanceMonth();
+    }
+
+    window.toggleInstallments = () => {
+        const isInst = document.getElementById('exp-is-install').checked;
+        const group = document.getElementById('install-group');
+        if(isInst) group.classList.remove('hidden');
+        else group.classList.add('hidden');
+    }
+
+    function renderFinanceMonth() {
+        const list = document.getElementById('finance-list');
+        list.innerHTML = '';
         
+        const curMonth = currentDateRef.getMonth();
+        const curYear = currentDateRef.getFullYear();
+        
+        // Atualiza titulo
+        const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+        document.getElementById('fin-month-label').innerText = `${monthNames[curMonth]} ${curYear}`;
+
+        let totalIncome = 0;
+        let totalExpense = 0;
+
+        // Filtra transações relevantes para este mês
+        const monthTransactions = [];
+
+        allTransactions.forEach(t => {
+            const tDate = new Date(t.date.seconds * 1000);
+            const installments = t.installments || 1;
+            const valuePerMonth = parseFloat(t.valor) / installments;
+            
+            // Verifica se transação cai neste mes (considerando parcelas)
+            // Logica: Se a data do mês atual é >= data inicio E data mês atual < data inicio + meses parcelas
+            
+            // Calculo diff meses
+            const diffMonths = (curYear - tDate.getFullYear()) * 12 + (curMonth - tDate.getMonth());
+
+            if (diffMonths >= 0 && diffMonths < installments) {
+                // Pertence a este mes
+                const currentParcel = diffMonths + 1;
+                const isInstallment = installments > 1;
+                
+                if (t.type === 'income') totalIncome += valuePerMonth;
+                else totalExpense += valuePerMonth;
+
+                monthTransactions.push({
+                    ...t,
+                    displayValue: valuePerMonth,
+                    currentParcel,
+                    totalParcels: installments,
+                    isInstallment,
+                    sortDay: tDate.getDate() // Ordenar por dia de compra original
+                });
+            }
+        });
+
+        // Renderiza
+        monthTransactions.sort((a,b) => a.sortDay - b.sortDay); // Dia 1 -> 31
+        
+        if(monthTransactions.length === 0) {
+            list.innerHTML = `<div class="text-center py-8 text-gray-400 text-sm">Nenhuma movimentação este mês.</div>`;
+        } else {
+            monthTransactions.forEach(t => {
+                const color = t.type === 'income' ? 'text-green-500' : 'text-red-500';
+                const sign = t.type === 'income' ? '+' : '-';
+                const parcLabel = t.isInstallment ? `<span class="text-[10px] bg-gray-100 dark:bg-slate-700 px-1 rounded text-gray-500 ml-2">Parc ${t.currentParcel}/${t.totalParcels}</span>` : '';
+                
+                list.innerHTML += `
+                <div class="flex justify-between items-center p-3 border-b border-gray-100 dark:border-slate-700 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-800 transition">
+                    <div>
+                        <div class="flex items-center">
+                            <p class="text-xs font-bold text-gray-700 dark:text-gray-200">${t.desc}</p>
+                            ${parcLabel}
+                        </div>
+                        <p class="text-[10px] text-gray-400">Dia ${new Date(t.date.seconds*1000).getDate()}</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-bold ${color}">${sign} ${fmt(t.displayValue)}</span>
+                        ${t.isInstallment && t.currentParcel > 1 ? '' : `<button onclick="delDoc('financas','${t.id}')" class="text-gray-300 hover:text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button>`}
+                    </div>
+                </div>`;
+                // Nota: Botão delete só aparece na parcela 1 ou se não for parcelado, para evitar deletar "o meio" de uma conta (simplificação)
+            });
+        }
+
+        // Atualiza Cards Dashboard
         document.getElementById('fin-income').innerText = fmt(totalIncome);
         document.getElementById('fin-expense').innerText = fmt(totalExpense);
         const profit = totalIncome - totalExpense;
@@ -548,7 +657,35 @@
         pEl.className = `text-3xl font-bold ${profit >= 0 ? 'text-green-400' : 'text-red-400'}`;
     }
 
-    // --- FUNCOES DE ACAO ---
+    window.addFinance = async () => {
+        const type = document.getElementById('exp-type').value;
+        const desc = document.getElementById('exp-desc').value;
+        const valor = parseFloat(document.getElementById('exp-val').value);
+        const dateInput = document.getElementById('exp-date').value;
+        
+        const isInstall = document.getElementById('exp-is-install').checked;
+        const installments = isInstall ? parseInt(document.getElementById('exp-installments').value) : 1;
+
+        if(!desc || !valor || !dateInput) return alert("Preencha todos os campos");
+
+        const dateObj = new Date(dateInput);
+        // Ajuste fuso horario simples para nao voltar dia
+        dateObj.setMinutes(dateObj.getMinutes() + dateObj.getTimezoneOffset());
+
+        await addDoc(collection(db, 'financas'), {
+            desc, valor, type, installments,
+            date: firebase.firestore.Timestamp.fromDate(dateObj)
+        });
+
+        // Limpa form
+        document.getElementById('exp-desc').value = '';
+        document.getElementById('exp-val').value = '';
+        document.getElementById('exp-is-install').checked = false;
+        toggleInstallments();
+        alert("Lançamento Registrado!");
+    }
+
+    // --- FUNCOES COMUNS ---
     window.calcular = () => {
         const peso = parseFloat(document.getElementById('calc-peso').value);
         const tempo = parseFloat(document.getElementById('calc-tempo').value);
@@ -594,14 +731,12 @@
         setLoadingBtn('btn-save', false);
     }
 
-    // Pedidos
     window.addOrder = async () => {
         const cliente = document.getElementById('order-client').value;
         const produto = document.getElementById('order-product').value;
         const valor = parseFloat(document.getElementById('order-value').value);
         const status = document.getElementById('order-status').value;
         if(!cliente || !valor) return alert("Preencha cliente e valor");
-        
         await addDoc(collection(db, 'pedidos'), { cliente, produto, valor, status, timestamp: serverTimestamp() });
         document.getElementById('order-client').value = '';
         document.getElementById('order-product').value = '';
@@ -609,17 +744,6 @@
     }
     window.updateOrderStatus = async (id, status) => await updateDoc(doc(db,'pedidos',id), {status});
 
-    // Finanças
-    window.addExpense = async () => {
-        const desc = document.getElementById('exp-desc').value;
-        const valor = parseFloat(document.getElementById('exp-val').value);
-        if(!desc || !valor) return alert("Preencha tudo");
-        await addDoc(collection(db, 'financas'), { desc, valor, date: serverTimestamp() });
-        document.getElementById('exp-desc').value = '';
-        document.getElementById('exp-val').value = '';
-    }
-
-    // Babilônia
     window.previewBabylon = (input) => {
         const file = input.files[0];
         if(file) {
@@ -632,7 +756,9 @@
             r.readAsDataURL(file);
         }
     }
-    window.addBabylon = async () => {
+
+    window.saveBabylon = async () => {
+        const id = document.getElementById('bab-id').value;
         const nome = document.getElementById('bab-nome').value;
         const link = document.getElementById('bab-link').value;
         const desc = document.getElementById('bab-desc').value;
@@ -640,23 +766,72 @@
         if(!nome || !link) return alert("Nome e Link obrigatórios");
 
         let img = null;
-        if(file) {
-            if(file.size > 800 * 1024) return alert("Imagem muito grande! Use menos de 800KB.");
-            img = await new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(file); });
-        }
-        await addDoc(collection(db, 'babilonia'), { nome, link, desc, img });
-        alert("Adicionado à Babilônia!");
-        // Clear fields logic here
+        if(file) { img = await compressImage(file); }
+
+        const data = { nome, link, desc };
+        if (img) data.img = img;
+
+        try {
+            if (id) { await updateDoc(doc(db, 'babilonia', id), data); alert("Atualizado!"); } 
+            else { await addDoc(collection(db, 'babilonia'), { ...data, img, timestamp: serverTimestamp() }); alert("Adicionado!"); }
+            resetBabylonForm();
+        } catch(e) { alert("Erro: " + e.message); }
     }
 
-    // Utils Globais
+    window.editBabylon = (id, b) => {
+        document.getElementById('bab-id').value = id;
+        document.getElementById('bab-nome').value = b.nome;
+        document.getElementById('bab-link').value = b.link;
+        document.getElementById('bab-desc').value = b.desc;
+        document.getElementById('bab-btn-save').innerText = 'Salvar Alterações';
+        document.getElementById('bab-btn-cancel').classList.remove('hidden');
+        if(b.img) {
+            document.getElementById('bab-preview').src = b.img;
+            document.getElementById('bab-preview').classList.remove('hidden');
+            document.getElementById('bab-icon').classList.add('hidden');
+        }
+        document.querySelector('main').scrollTop = 0;
+        switchTab('babylon'); // Garante foco
+    }
+
+    window.resetBabylonForm = () => {
+        document.getElementById('bab-id').value = '';
+        document.getElementById('bab-nome').value = '';
+        document.getElementById('bab-link').value = '';
+        document.getElementById('bab-desc').value = '';
+        document.getElementById('bab-img').value = '';
+        document.getElementById('bab-preview').classList.add('hidden');
+        document.getElementById('bab-icon').classList.remove('hidden');
+        document.getElementById('bab-btn-save').innerText = 'Adicionar';
+        document.getElementById('bab-btn-cancel').classList.add('hidden');
+    }
+
     window.delDoc = async (col, id) => { if(confirm("Excluir?")) await deleteDoc(doc(db, col, id)); }
     window.updStock = async (id, val) => await updateDoc(doc(db,'estoque',id), { qtd: increment(val) });
-    window.previewStock = (input) => { /* Reuse logic from babylon */ } 
-    window.addStockManual = async () => { /* Reuse v2 logic */ }
-    window.uploadStockImage = async (id, input) => { /* Reuse v2 logic */ }
+    window.previewStock = (input) => { window.previewBabylon(input); } // Reusa logic
     
-    // Config logic
+    window.addStockManual = async () => {
+        const nome = document.getElementById('stock-nome').value;
+        const qtd = parseInt(document.getElementById('stock-qtd').value);
+        const file = document.getElementById('stock-file').files[0];
+        if(!nome || !qtd) return alert("Preencha nome e qtd");
+        let imgBase64 = null;
+        if(file) imgBase64 = await compressImage(file);
+        await addDoc(collection(db, 'estoque'), { nome, qtd, img: imgBase64, detalhes: null });
+        alert("Adicionado!");
+        document.getElementById('stock-nome').value = '';
+        document.getElementById('stock-qtd').value = '';
+    }
+
+    window.uploadStockImage = async (id, input) => {
+        const file = input.files[0];
+        if(!file) return;
+        try {
+            const compressed = await compressImage(file);
+            await updateDoc(doc(db, 'estoque', id), { img: compressed });
+        } catch(err) { alert("Erro: " + err.message); } 
+    }
+    
     window.saveGlobalConfig = async () => {
         globalConfig = {
             resina: parseFloat(document.getElementById('conf-resina').value),
