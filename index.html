@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Calc3D Pro - V3.2 Financeiro</title>
+    <title>Calc3D Pro - V3.3 Fix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -40,7 +40,7 @@
             <i class="fa-solid fa-cube text-3xl text-white"></i>
         </div>
         <h1 class="text-2xl font-bold mb-2">Calc3D Pro</h1>
-        <p class="text-sm text-gray-400 mb-8">Gestão Completa V3.2</p>
+        <p class="text-sm text-gray-400 mb-8">Gestão Completa V3.3</p>
         
         <form id="login-form" class="space-y-4 text-left">
             <div>
@@ -67,10 +67,10 @@
     <nav class="bg-white dark:bg-slate-800 md:w-64 md:rounded-3xl shadow-sm border-r md:border border-gray-100 dark:border-slate-700 flex md:flex-col justify-between z-20 order-2 md:order-1 fixed bottom-0 w-full md:relative md:h-auto">
         <div class="p-6 hidden md:block">
             <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">Calc3D</h1>
-            <p class="text-xs text-gray-400">Versão 3.2</p>
+            <p class="text-xs text-gray-400">Versão 3.3</p>
         </div>
 
-        <!-- Scrollable Nav for Mobile -->
+        <!-- Menu Mobile Scrollavel -->
         <div class="flex md:flex-col overflow-x-auto no-scrollbar md:overflow-visible w-full p-2 md:p-4 gap-2 bg-white dark:bg-slate-800 border-t md:border-t-0 border-gray-100 dark:border-slate-700">
             <button onclick="switchTab('calc')" id="nav-calc" class="nav-btn flex-shrink-0 flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 dark:text-indigo-300 transition-all min-w-[70px]">
                 <i class="fa-solid fa-calculator text-xl md:text-lg"></i>
@@ -166,6 +166,10 @@
                                 <div><p class="text-indigo-200 text-xs font-bold uppercase">Venda Sugerida</p><p class="text-2xl font-bold text-green-300" id="res-venda">R$ 0,00</p></div>
                                 <div class="text-right text-xs text-indigo-100"><p>Lucro: <span class="font-bold" id="res-lucro">R$ 0,00</span></p></div>
                             </div>
+                            <div class="mt-4 flex items-center gap-3">
+                                <input type="checkbox" id="check-stock" class="w-5 h-5 text-indigo-600 rounded">
+                                <label for="check-stock" class="text-sm">Salvar no Estoque</label>
+                            </div>
                             <button id="btn-save" onclick="salvar()" class="w-full mt-4 bg-white text-indigo-700 font-bold py-3 rounded-xl hover:bg-indigo-50 transition flex justify-center items-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> Salvar</button>
                         </div>
                     </div>
@@ -176,66 +180,73 @@
                 </div>
             </div>
 
-            <!-- === ABA PEDIDOS === -->
+            <!-- === ABA PEDIDOS (CORRIGIDO) === -->
             <div id="tab-orders" class="hidden fade-in space-y-6">
+                <!-- Add Pedido -->
                 <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm">
-                    <h3 class="font-bold text-gray-700 dark:text-white mb-4">Novo Pedido</h3>
+                    <h3 class="font-bold text-gray-700 dark:text-white mb-4">Gerenciar Pedido</h3>
+                    <input type="hidden" id="order-id"> <!-- ID para Edição -->
+                    
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <input type="text" id="order-client" placeholder="Nome do Cliente" class="md:col-span-2 w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
-                        <input type="text" id="order-product" placeholder="Produto" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
+                        
+                        <!-- Input com Datalist para sugestão de estoque -->
+                        <div class="relative">
+                            <input list="stock-options" id="order-product" placeholder="Produto (Digite para buscar)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
+                            <datalist id="stock-options">
+                                <!-- Preenchido via JS -->
+                            </datalist>
+                        </div>
+
                         <input type="number" id="order-value" placeholder="Valor (R$)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
                     </div>
+                    
                     <div class="flex gap-4 mt-4">
                         <select id="order-status" class="bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none flex-1">
-                            <option value="pendente">Pendente</option>
+                            <option value="pendente">Pendente (Orçamento)</option>
                             <option value="producao">Em Produção</option>
                             <option value="concluido">Concluído/Entregue</option>
                         </select>
-                        <button onclick="addOrder()" class="bg-indigo-600 text-white font-bold px-6 rounded-xl hover:bg-indigo-700 transition">Adicionar</button>
+                        <button id="order-btn-save" onclick="saveOrder()" class="bg-indigo-600 text-white font-bold px-6 rounded-xl hover:bg-indigo-700 transition">Adicionar</button>
+                        <button id="order-btn-cancel" onclick="resetOrderForm()" class="hidden bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-white font-bold px-6 rounded-xl hover:bg-gray-300 transition">Cancelar</button>
                     </div>
+                    <p class="text-[10px] text-gray-400 mt-2">* Pedidos 'Pendentes' podem ser salvos sem valor definido.</p>
                 </div>
+
+                <!-- Lista Pedidos -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="orders-list"></div>
             </div>
 
-            <!-- === ABA FINANÇAS (NOVA V3.2) === -->
+            <!-- === ABA FINANÇAS (CORRIGIDO) === -->
             <div id="tab-finance" class="hidden fade-in space-y-6">
                 
                 <!-- Navegação Mensal -->
                 <div class="flex items-center justify-between bg-white dark:bg-slate-750 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-600 sticky top-0 z-10">
                     <button onclick="changeFinanceMonth(-1)" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-700 hover:bg-indigo-100 dark:hover:bg-indigo-900 transition flex items-center justify-center"><i class="fa-solid fa-chevron-left"></i></button>
                     <div class="text-center">
-                        <h2 class="text-lg font-bold text-gray-800 dark:text-white" id="fin-month-label">Janeiro 2026</h2>
+                        <h2 class="text-lg font-bold text-gray-800 dark:text-white" id="fin-month-label">Mês Atual</h2>
                         <p class="text-[10px] text-gray-400 uppercase tracking-wider font-bold">Extrato Mensal</p>
                     </div>
                     <button onclick="changeFinanceMonth(1)" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-700 hover:bg-indigo-100 dark:hover:bg-indigo-900 transition flex items-center justify-center"><i class="fa-solid fa-chevron-right"></i></button>
                 </div>
 
-                <!-- Dashboard Mensal -->
+                <!-- Dashboard -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-green-500 text-white p-6 rounded-3xl shadow-lg relative overflow-hidden">
-                        <div class="relative z-10">
-                            <p class="text-green-100 text-xs font-bold uppercase">Entradas (Mês)</p>
-                            <h2 class="text-3xl font-bold" id="fin-income">R$ 0,00</h2>
-                        </div>
+                        <div class="relative z-10"><p class="text-green-100 text-xs font-bold uppercase">Entradas (Mês)</p><h2 class="text-3xl font-bold" id="fin-income">R$ 0,00</h2></div>
                         <i class="fa-solid fa-arrow-trend-up absolute -bottom-2 -right-2 text-6xl text-white opacity-20"></i>
                     </div>
                     <div class="bg-red-500 text-white p-6 rounded-3xl shadow-lg relative overflow-hidden">
-                        <div class="relative z-10">
-                            <p class="text-red-100 text-xs font-bold uppercase">Saídas (Mês)</p>
-                            <h2 class="text-3xl font-bold" id="fin-expense">R$ 0,00</h2>
-                        </div>
+                        <div class="relative z-10"><p class="text-red-100 text-xs font-bold uppercase">Saídas (Mês)</p><h2 class="text-3xl font-bold" id="fin-expense">R$ 0,00</h2></div>
                         <i class="fa-solid fa-arrow-trend-down absolute -bottom-2 -right-2 text-6xl text-white opacity-20"></i>
                     </div>
                     <div class="bg-slate-800 text-white p-6 rounded-3xl shadow-lg border border-slate-700 relative overflow-hidden">
-                        <div class="relative z-10">
-                            <p class="text-slate-400 text-xs font-bold uppercase">Saldo Líquido</p>
-                            <h2 class="text-3xl font-bold" id="fin-profit">R$ 0,00</h2>
-                        </div>
+                        <div class="relative z-10"><p class="text-slate-400 text-xs font-bold uppercase">Saldo Líquido</p><h2 class="text-3xl font-bold" id="fin-profit">R$ 0,00</h2></div>
                         <i class="fa-solid fa-wallet absolute -bottom-2 -right-2 text-6xl text-white opacity-10"></i>
                     </div>
                 </div>
 
-                <!-- Form Transação Manual -->
+                <!-- Form Transação -->
                 <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm">
                     <h3 class="font-bold text-gray-700 dark:text-white mb-4">Lançar Transação</h3>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
@@ -248,12 +259,10 @@
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
                         <input type="number" id="exp-val" placeholder="Valor Total (R$)" class="bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none font-bold">
                         <input type="date" id="exp-date" class="bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none text-sm">
-                        
                         <div class="flex items-center gap-2 bg-gray-50 dark:bg-slate-700 p-3 rounded-xl border border-gray-200 dark:border-slate-600">
                             <input type="checkbox" id="exp-is-install" onchange="toggleInstallments()" class="w-5 h-5 text-indigo-600 rounded">
                             <label for="exp-is-install" class="text-sm font-bold text-gray-600 dark:text-gray-300 select-none cursor-pointer">Parcelado?</label>
                         </div>
-                        
                         <div id="install-group" class="hidden relative">
                             <input type="number" id="exp-installments" placeholder="Qtd" value="1" min="2" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
                             <span class="absolute right-3 top-3 text-sm text-gray-400 font-bold">x</span>
@@ -262,12 +271,10 @@
                     <button onclick="addFinance()" class="w-full mt-4 bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 transition shadow-lg">Registrar</button>
                 </div>
 
-                <!-- Extrato (Invoice Style) -->
+                <!-- Extrato -->
                 <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm min-h-[300px]">
                     <h3 class="font-bold text-gray-700 dark:text-white mb-6 flex items-center gap-2"><i class="fa-solid fa-file-invoice-dollar"></i> Extrato do Mês</h3>
-                    <div id="finance-list" class="space-y-0">
-                        <!-- Items via JS -->
-                    </div>
+                    <div id="finance-list" class="space-y-0"></div>
                 </div>
             </div>
 
@@ -366,26 +373,20 @@
 </div>
 
 <script type="module">
+    // CORREÇÃO 1: Importar Timestamp para datas funcionarem
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, increment, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     // --- COLOQUE SUAS CHAVES DO FIREBASE AQUI ---
     const firebaseConfig = {
-
-            apiKey: "AIzaSyBk5VOKh1YesWPObveNZcl6NDTQoSRv2MM",
-
-            authDomain: "calc3d-app.firebaseapp.com",
-
-            projectId: "calc3d-app",
-
-            storageBucket: "calc3d-app.firebasestorage.app",
-
-            messagingSenderId: "995189437836",
-
-            appId: "1:995189437836:web:1ea8b4a03ba78e0d87d2a9"
-
-        };
+        apiKey: "SUA_API_KEY",
+        authDomain: "SEU_PROJETO.firebaseapp.com",
+        projectId: "SEU_PROJETO_ID",
+        storageBucket: "SEU_PROJETO.appspot.com",
+        messagingSenderId: "NUMEROS",
+        appId: "APP_ID"
+    };
 
     if(firebaseConfig.apiKey === "SUA_API_KEY") alert("⚠️ Configure as chaves do Firebase no final do código!");
 
@@ -397,12 +398,11 @@
     let globalConfig = { resina: 180, kwh: 0.90, watts: 120, pos: 2.50 };
     let profiles = {};
     let tempCalc = null;
-    
-    // Controle Financeiro
-    let currentDateRef = new Date(); // Mês atual visualizado
-    let allTransactions = []; // Armazena transações brutas para filtragem local
+    let stockList = []; // Para autocomplete
+    let currentDateRef = new Date();
+    let allTransactions = [];
 
-    // --- UTILS IMAGEM ---
+    // --- UTILS ---
     async function compressImage(file, maxWidth = 800, quality = 0.7) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -445,7 +445,7 @@
             document.getElementById('screen-app').classList.remove('hidden');
             document.getElementById('user-email').innerText = user.email.split('@')[0];
             document.getElementById('user-initial').innerText = user.email[0].toUpperCase();
-            document.getElementById('exp-date').valueAsDate = new Date(); // Default date today
+            document.getElementById('exp-date').valueAsDate = new Date(); 
             startListeners();
             switchTab('calc');
             renderFinanceMonth();
@@ -475,20 +475,29 @@
         });
 
         onSnapshot(collection(db, 'estoque'), (snap) => {
-            const grid = document.getElementById('stock-grid'); grid.innerHTML = '';
-            snap.forEach(d => grid.innerHTML += renderStockItem(d.id, d.data()));
+            const grid = document.getElementById('stock-grid'); 
+            const dl = document.getElementById('stock-options');
+            grid.innerHTML = ''; dl.innerHTML = '';
+            stockList = [];
+            snap.forEach(d => {
+                const i = d.data();
+                stockList.push(i.nome);
+                dl.innerHTML += `<option value="${i.nome}">`; // Preenche autocomplete
+                grid.innerHTML += renderStockItem(d.id, i);
+            });
         });
 
         onSnapshot(collection(db, 'pedidos'), (snap) => {
             const list = document.getElementById('orders-list'); list.innerHTML = '';
-            snap.forEach(d => list.innerHTML += renderOrderItem(d.id, d.data()));
-            // Nota: Vendas de pedidos não vão automaticamente pro financeiro manual, mas poderíamos somar se quisessemos
+            let items = []; snap.forEach(d => items.push({id: d.id, ...d.data()}));
+            items.sort((a,b) => b.timestamp - a.timestamp); // Mais recentes primeiro
+            items.forEach(p => list.innerHTML += renderOrderItem(p.id, p));
         });
 
         onSnapshot(collection(db, 'financas'), (snap) => {
             allTransactions = [];
             snap.forEach(d => allTransactions.push({id: d.id, ...d.data()}));
-            renderFinanceMonth(); // Re-renderiza a view atual
+            renderFinanceMonth();
         });
 
         onSnapshot(collection(db, 'babilonia'), (snap) => {
@@ -497,7 +506,7 @@
         });
     }
 
-    // --- RENDERIZACAO GERAL ---
+    // --- RENDERIZACAO ---
     function renderHistoryItem(i) {
         return `<div class="bg-white dark:bg-slate-750 p-3 rounded-xl border border-gray-100 dark:border-slate-600 flex justify-between items-center shadow-sm">
             <div class="flex items-center gap-3">
@@ -527,7 +536,9 @@
 
     function renderOrderItem(id, p) {
         const colors = { 'pendente': 'bg-yellow-100 text-yellow-600', 'producao': 'bg-blue-100 text-blue-600', 'concluido': 'bg-green-100 text-green-600' };
-        return `<div class="bg-white dark:bg-slate-750 p-4 rounded-2xl border border-gray-100 dark:border-slate-600 shadow-sm relative">
+        const safeP = JSON.stringify({id, ...p}).replace(/"/g, '&quot;');
+        return `<div class="bg-white dark:bg-slate-750 p-4 rounded-2xl border border-gray-100 dark:border-slate-600 shadow-sm relative group">
+            <button onclick="editOrder(${safeP})" class="absolute top-2 right-8 text-blue-400 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-pencil"></i></button>
             <div class="flex justify-between mb-2">
                 <span class="text-[10px] uppercase font-bold text-gray-400">#${id.slice(0,4)}</span>
                 <span class="text-[10px] px-2 py-1 rounded-full font-bold ${colors[p.status]}">${p.status}</span>
@@ -535,7 +546,7 @@
             <h4 class="font-bold text-gray-800 dark:text-white">${p.cliente}</h4>
             <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">${p.produto}</p>
             <div class="flex justify-between items-center">
-                <span class="font-bold text-lg text-indigo-600 dark:text-indigo-400">${fmt(p.valor)}</span>
+                <span class="font-bold text-lg text-indigo-600 dark:text-indigo-400">${p.valor ? fmt(p.valor) : 'R$ --'}</span>
                 <div class="flex gap-2">
                     ${p.status !== 'concluido' ? `<button onclick="updateOrderStatus('${id}','concluido')" class="text-green-500 hover:bg-green-50 rounded p-1"><i class="fa-solid fa-check"></i></button>` : ''}
                     <button onclick="delDoc('pedidos','${id}')" class="text-red-400 hover:bg-red-50 rounded p-1"><i class="fa-solid fa-trash"></i></button>
@@ -559,96 +570,48 @@
         </div>`;
     }
 
-    // --- LÓGICA FINANCEIRA V3.2 (PARCELAS + MÊS) ---
-    window.changeFinanceMonth = (dir) => {
-        currentDateRef.setMonth(currentDateRef.getMonth() + dir);
-        renderFinanceMonth();
-    }
-
-    window.toggleInstallments = () => {
-        const isInst = document.getElementById('exp-is-install').checked;
-        const group = document.getElementById('install-group');
-        if(isInst) group.classList.remove('hidden');
-        else group.classList.add('hidden');
-    }
+    // --- FINANCAS ---
+    window.changeFinanceMonth = (dir) => { currentDateRef.setMonth(currentDateRef.getMonth() + dir); renderFinanceMonth(); }
+    window.toggleInstallments = () => { document.getElementById('install-group').classList.toggle('hidden'); }
 
     function renderFinanceMonth() {
-        const list = document.getElementById('finance-list');
-        list.innerHTML = '';
-        
-        const curMonth = currentDateRef.getMonth();
-        const curYear = currentDateRef.getFullYear();
-        
-        // Atualiza titulo
-        const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-        document.getElementById('fin-month-label').innerText = `${monthNames[curMonth]} ${curYear}`;
+        const list = document.getElementById('finance-list'); list.innerHTML = '';
+        const curMonth = currentDateRef.getMonth(); const curYear = currentDateRef.getFullYear();
+        document.getElementById('fin-month-label').innerText = `${["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][curMonth]} ${curYear}`;
 
-        let totalIncome = 0;
-        let totalExpense = 0;
-
-        // Filtra transações relevantes para este mês
+        let totalIncome = 0; let totalExpense = 0;
         const monthTransactions = [];
 
         allTransactions.forEach(t => {
-            const tDate = new Date(t.date.seconds * 1000);
+            const tDate = t.date ? new Date(t.date.seconds * 1000) : new Date(); // Safety check
             const installments = t.installments || 1;
             const valuePerMonth = parseFloat(t.valor) / installments;
-            
-            // Verifica se transação cai neste mes (considerando parcelas)
-            // Logica: Se a data do mês atual é >= data inicio E data mês atual < data inicio + meses parcelas
-            
-            // Calculo diff meses
             const diffMonths = (curYear - tDate.getFullYear()) * 12 + (curMonth - tDate.getMonth());
 
             if (diffMonths >= 0 && diffMonths < installments) {
-                // Pertence a este mes
-                const currentParcel = diffMonths + 1;
-                const isInstallment = installments > 1;
-                
-                if (t.type === 'income') totalIncome += valuePerMonth;
-                else totalExpense += valuePerMonth;
-
+                if (t.type === 'income') totalIncome += valuePerMonth; else totalExpense += valuePerMonth;
                 monthTransactions.push({
-                    ...t,
-                    displayValue: valuePerMonth,
-                    currentParcel,
-                    totalParcels: installments,
-                    isInstallment,
-                    sortDay: tDate.getDate() // Ordenar por dia de compra original
+                    ...t, displayValue: valuePerMonth, currentParcel: diffMonths + 1, totalParcels: installments,
+                    isInstallment: installments > 1, sortDay: tDate.getDate()
                 });
             }
         });
 
-        // Renderiza
-        monthTransactions.sort((a,b) => a.sortDay - b.sortDay); // Dia 1 -> 31
+        monthTransactions.sort((a,b) => a.sortDay - b.sortDay);
         
-        if(monthTransactions.length === 0) {
-            list.innerHTML = `<div class="text-center py-8 text-gray-400 text-sm">Nenhuma movimentação este mês.</div>`;
-        } else {
+        if(monthTransactions.length === 0) list.innerHTML = `<div class="text-center py-8 text-gray-400 text-sm">Sem movimentações.</div>`;
+        else {
             monthTransactions.forEach(t => {
                 const color = t.type === 'income' ? 'text-green-500' : 'text-red-500';
                 const sign = t.type === 'income' ? '+' : '-';
-                const parcLabel = t.isInstallment ? `<span class="text-[10px] bg-gray-100 dark:bg-slate-700 px-1 rounded text-gray-500 ml-2">Parc ${t.currentParcel}/${t.totalParcels}</span>` : '';
-                
+                const parcLabel = t.isInstallment ? `<span class="text-[10px] bg-gray-100 dark:bg-slate-700 px-1 rounded text-gray-500 ml-2">${t.currentParcel}/${t.totalParcels}</span>` : '';
                 list.innerHTML += `
                 <div class="flex justify-between items-center p-3 border-b border-gray-100 dark:border-slate-700 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-800 transition">
-                    <div>
-                        <div class="flex items-center">
-                            <p class="text-xs font-bold text-gray-700 dark:text-gray-200">${t.desc}</p>
-                            ${parcLabel}
-                        </div>
-                        <p class="text-[10px] text-gray-400">Dia ${new Date(t.date.seconds*1000).getDate()}</p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <span class="text-xs font-bold ${color}">${sign} ${fmt(t.displayValue)}</span>
-                        ${t.isInstallment && t.currentParcel > 1 ? '' : `<button onclick="delDoc('financas','${t.id}')" class="text-gray-300 hover:text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button>`}
-                    </div>
+                    <div><div class="flex items-center"><p class="text-xs font-bold text-gray-700 dark:text-gray-200">${t.desc}</p>${parcLabel}</div><p class="text-[10px] text-gray-400">Dia ${new Date(t.date.seconds*1000).getDate()}</p></div>
+                    <div class="flex items-center gap-3"><span class="text-xs font-bold ${color}">${sign} ${fmt(t.displayValue)}</span>${!t.isInstallment || t.currentParcel===1 ? `<button onclick="delDoc('financas','${t.id}')" class="text-gray-300 hover:text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button>` : ''}</div>
                 </div>`;
-                // Nota: Botão delete só aparece na parcela 1 ou se não for parcelado, para evitar deletar "o meio" de uma conta (simplificação)
             });
         }
-
-        // Atualiza Cards Dashboard
         document.getElementById('fin-income').innerText = fmt(totalIncome);
         document.getElementById('fin-expense').innerText = fmt(totalExpense);
         const profit = totalIncome - totalExpense;
@@ -657,51 +620,99 @@
         pEl.className = `text-3xl font-bold ${profit >= 0 ? 'text-green-400' : 'text-red-400'}`;
     }
 
+    // CORREÇÃO 2: Uso correto do Timestamp importado
     window.addFinance = async () => {
         const type = document.getElementById('exp-type').value;
         const desc = document.getElementById('exp-desc').value;
         const valor = parseFloat(document.getElementById('exp-val').value);
         const dateInput = document.getElementById('exp-date').value;
-        
         const isInstall = document.getElementById('exp-is-install').checked;
         const installments = isInstall ? parseInt(document.getElementById('exp-installments').value) : 1;
 
         if(!desc || !valor || !dateInput) return alert("Preencha todos os campos");
 
         const dateObj = new Date(dateInput);
-        // Ajuste fuso horario simples para nao voltar dia
-        dateObj.setMinutes(dateObj.getMinutes() + dateObj.getTimezoneOffset());
+        dateObj.setMinutes(dateObj.getMinutes() + dateObj.getTimezoneOffset()); // Fix Timezone
 
-        await addDoc(collection(db, 'financas'), {
-            desc, valor, type, installments,
-            date: firebase.firestore.Timestamp.fromDate(dateObj)
-        });
-
-        // Limpa form
-        document.getElementById('exp-desc').value = '';
-        document.getElementById('exp-val').value = '';
-        document.getElementById('exp-is-install').checked = false;
-        toggleInstallments();
-        alert("Lançamento Registrado!");
+        try {
+            await addDoc(collection(db, 'financas'), {
+                desc, valor, type, installments,
+                date: Timestamp.fromDate(dateObj) // FIX: Usa Timestamp da importação modular
+            });
+            document.getElementById('exp-desc').value = '';
+            document.getElementById('exp-val').value = '';
+            alert("Registrado!");
+        } catch(e) { alert("Erro ao salvar finança: " + e.message); }
     }
 
-    // --- FUNCOES COMUNS ---
+    // --- PEDIDOS (NOVA LÓGICA DE SALVAR/EDITAR) ---
+    window.saveOrder = async () => {
+        const id = document.getElementById('order-id').value;
+        const cliente = document.getElementById('order-client').value;
+        const produto = document.getElementById('order-product').value;
+        const valorRaw = document.getElementById('order-value').value;
+        const valor = valorRaw ? parseFloat(valorRaw) : 0;
+        const status = document.getElementById('order-status').value;
+
+        if(!cliente || !produto) return alert("Cliente e Produto são obrigatórios");
+        // Validação Inteligente: Só exige valor se não for pendente
+        if(status !== 'pendente' && !valor) return alert("Para iniciar produção/concluir, defina o valor!");
+
+        const data = { cliente, produto, valor, status, timestamp: serverTimestamp() };
+
+        try {
+            if(id) { await updateDoc(doc(db,'pedidos',id), {cliente, produto, valor, status}); alert("Pedido Atualizado!"); }
+            else { await addDoc(collection(db, 'pedidos'), data); alert("Pedido Criado!"); }
+            resetOrderForm();
+        } catch(e) { alert("Erro: " + e.message); }
+    }
+
+    window.editOrder = (p) => {
+        document.getElementById('order-id').value = p.id;
+        document.getElementById('order-client').value = p.cliente;
+        document.getElementById('order-product').value = p.produto;
+        document.getElementById('order-value').value = p.valor;
+        document.getElementById('order-status').value = p.status;
+        
+        document.getElementById('order-btn-save').innerText = "Salvar Alterações";
+        document.getElementById('order-btn-cancel').classList.remove('hidden');
+        document.querySelector('main').scrollTop = 0; // Sobe pro topo
+    }
+
+    window.resetOrderForm = () => {
+        document.getElementById('order-id').value = '';
+        document.getElementById('order-client').value = '';
+        document.getElementById('order-product').value = '';
+        document.getElementById('order-value').value = '';
+        document.getElementById('order-status').value = 'pendente';
+        document.getElementById('order-btn-save').innerText = "Adicionar";
+        document.getElementById('order-btn-cancel').classList.add('hidden');
+    }
+    
+    // Wrapper antigo para compatibilidade
+    window.addOrder = () => window.saveOrder(); 
+    window.updateOrderStatus = async (id, status) => await updateDoc(doc(db,'pedidos',id), {status});
+
+    // --- CALCULADORA (CORREÇÃO) ---
+    // Garante que calcular() atualize o tempCalc global corretamente
     window.calcular = () => {
         const peso = parseFloat(document.getElementById('calc-peso').value);
         const tempo = parseFloat(document.getElementById('calc-tempo').value);
-        if(!peso || !tempo) return alert("Preencha dados");
         
-        const resina = parseFloat(document.getElementById('conf-resina').value);
-        const kwh = parseFloat(document.getElementById('conf-kwh').value);
-        const watts = parseFloat(document.getElementById('conf-watts').value);
-        const pos = parseFloat(document.getElementById('conf-pos').value);
-        const emb = parseFloat(document.getElementById('calc-emb').value);
-        const taxa = parseFloat(document.getElementById('calc-taxa').value);
-        const lucro = parseFloat(document.getElementById('calc-lucro').value);
+        if(!peso && peso !== 0) return alert("Preencha o Peso");
+        if(!tempo && tempo !== 0) return alert("Preencha o Tempo");
+
+        const resina = parseFloat(document.getElementById('conf-resina').value) || 0;
+        const kwh = parseFloat(document.getElementById('conf-kwh').value) || 0;
+        const watts = parseFloat(document.getElementById('conf-watts').value) || 0;
+        const pos = parseFloat(document.getElementById('conf-pos').value) || 0;
+        const emb = parseFloat(document.getElementById('calc-emb').value) || 0;
+        const taxa = parseFloat(document.getElementById('calc-taxa').value) || 0;
+        const lucro = parseFloat(document.getElementById('calc-lucro').value) || 100;
 
         const cResina = (peso * (resina/1000));
-        const cEnergia = (watts/1000) * tempo * kwh;
-        const total = cResina + cEnergia + pos + emb;
+        const cLuz = (watts/1000) * tempo * kwh;
+        const total = cResina + cLuz + pos + emb;
         const venda = (total * (1 + (lucro/100))) / (1 - (taxa/100));
 
         document.getElementById('res-custo').innerText = fmt(total);
@@ -712,13 +723,13 @@
         tempCalc = {
             nome: document.getElementById('calc-nome').value || "Sem nome",
             custoTotal: total, precoVenda: venda,
-            detalhes: { resina: cResina, energia: cEnergia, pos, emb },
+            detalhes: { resina: cResina, energia: cLuz, pos, emb, taxa, lucro },
             timestamp: serverTimestamp()
         };
     }
 
     window.salvar = async () => {
-        if(!tempCalc) return;
+        if(!tempCalc) return alert("Calcule primeiro!");
         setLoadingBtn('btn-save', true);
         try {
             await addDoc(collection(db, 'impressoes'), tempCalc);
@@ -727,23 +738,15 @@
             }
             alert("Salvo!");
             document.getElementById('result-card').classList.add('hidden');
+            // Limpa form basico
+            document.getElementById('calc-nome').value = '';
+            document.getElementById('calc-peso').value = '';
+            document.getElementById('calc-tempo').value = '';
         } catch(e) { alert(e.message); }
         setLoadingBtn('btn-save', false);
     }
 
-    window.addOrder = async () => {
-        const cliente = document.getElementById('order-client').value;
-        const produto = document.getElementById('order-product').value;
-        const valor = parseFloat(document.getElementById('order-value').value);
-        const status = document.getElementById('order-status').value;
-        if(!cliente || !valor) return alert("Preencha cliente e valor");
-        await addDoc(collection(db, 'pedidos'), { cliente, produto, valor, status, timestamp: serverTimestamp() });
-        document.getElementById('order-client').value = '';
-        document.getElementById('order-product').value = '';
-        document.getElementById('order-value').value = '';
-    }
-    window.updateOrderStatus = async (id, status) => await updateDoc(doc(db,'pedidos',id), {status});
-
+    // --- BABILONIA (Manter lógica) ---
     window.previewBabylon = (input) => {
         const file = input.files[0];
         if(file) {
@@ -756,7 +759,6 @@
             r.readAsDataURL(file);
         }
     }
-
     window.saveBabylon = async () => {
         const id = document.getElementById('bab-id').value;
         const nome = document.getElementById('bab-nome').value;
@@ -764,20 +766,16 @@
         const desc = document.getElementById('bab-desc').value;
         const file = document.getElementById('bab-img').files[0];
         if(!nome || !link) return alert("Nome e Link obrigatórios");
-
         let img = null;
-        if(file) { img = await compressImage(file); }
-
+        if(file) img = await compressImage(file);
         const data = { nome, link, desc };
         if (img) data.img = img;
-
         try {
             if (id) { await updateDoc(doc(db, 'babilonia', id), data); alert("Atualizado!"); } 
             else { await addDoc(collection(db, 'babilonia'), { ...data, img, timestamp: serverTimestamp() }); alert("Adicionado!"); }
             resetBabylonForm();
         } catch(e) { alert("Erro: " + e.message); }
     }
-
     window.editBabylon = (id, b) => {
         document.getElementById('bab-id').value = id;
         document.getElementById('bab-nome').value = b.nome;
@@ -785,15 +783,10 @@
         document.getElementById('bab-desc').value = b.desc;
         document.getElementById('bab-btn-save').innerText = 'Salvar Alterações';
         document.getElementById('bab-btn-cancel').classList.remove('hidden');
-        if(b.img) {
-            document.getElementById('bab-preview').src = b.img;
-            document.getElementById('bab-preview').classList.remove('hidden');
-            document.getElementById('bab-icon').classList.add('hidden');
-        }
+        if(b.img) { document.getElementById('bab-preview').src = b.img; document.getElementById('bab-preview').classList.remove('hidden'); document.getElementById('bab-icon').classList.add('hidden'); }
         document.querySelector('main').scrollTop = 0;
-        switchTab('babylon'); // Garante foco
+        switchTab('babylon');
     }
-
     window.resetBabylonForm = () => {
         document.getElementById('bab-id').value = '';
         document.getElementById('bab-nome').value = '';
@@ -806,10 +799,10 @@
         document.getElementById('bab-btn-cancel').classList.add('hidden');
     }
 
+    // Utils Globais
     window.delDoc = async (col, id) => { if(confirm("Excluir?")) await deleteDoc(doc(db, col, id)); }
     window.updStock = async (id, val) => await updateDoc(doc(db,'estoque',id), { qtd: increment(val) });
-    window.previewStock = (input) => { window.previewBabylon(input); } // Reusa logic
-    
+    window.previewStock = (input) => { window.previewBabylon(input); }
     window.addStockManual = async () => {
         const nome = document.getElementById('stock-nome').value;
         const qtd = parseInt(document.getElementById('stock-qtd').value);
@@ -822,16 +815,12 @@
         document.getElementById('stock-nome').value = '';
         document.getElementById('stock-qtd').value = '';
     }
-
     window.uploadStockImage = async (id, input) => {
-        const file = input.files[0];
-        if(!file) return;
-        try {
-            const compressed = await compressImage(file);
-            await updateDoc(doc(db, 'estoque', id), { img: compressed });
-        } catch(err) { alert("Erro: " + err.message); } 
+        const file = input.files[0]; if(!file) return;
+        try { const compressed = await compressImage(file); await updateDoc(doc(db, 'estoque', id), { img: compressed }); } catch(err) { alert(err.message); } 
     }
     
+    // Config logic
     window.saveGlobalConfig = async () => {
         globalConfig = {
             resina: parseFloat(document.getElementById('conf-resina').value),
@@ -865,8 +854,7 @@
             lucro: parseFloat(document.getElementById('calc-lucro').value)
         };
         await setDoc(doc(db, 'config', 'geral'), { current: globalConfig, profiles }, { merge: true });
-        alert("Perfil salvo!");
-        renderProfiles();
+        alert("Perfil salvo!"); renderProfiles();
     }
     function renderProfiles() {
         const s = document.getElementById('profile-select');
@@ -878,9 +866,7 @@
             l.innerHTML += `<li class="flex justify-between text-xs dark:text-white"><span>${k}</span> <button onclick="deleteProfile('${k}')" class="text-red-500">Excluir</button></li>`;
         }
     }
-    window.deleteProfile = async (k) => {
-        if(confirm("Excluir?")) { delete profiles[k]; await setDoc(doc(db,'config','geral'), {current:globalConfig, profiles}, {merge:true}); }
-    }
+    window.deleteProfile = async (k) => { if(confirm("Excluir?")) { delete profiles[k]; await setDoc(doc(db,'config','geral'), {current:globalConfig, profiles}, {merge:true}); } }
 
     // Aux
     window.switchTab = (t) => {
