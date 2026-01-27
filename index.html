@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Calc3D Pro - V3.4 Tags</title>
+    <title>Calc3D Pro - V3.5 Integration</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -29,8 +29,6 @@
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Estilo para tags selecionadas */
         .tag-btn.selected { background-color: #eab308; color: white; border-color: #eab308; }
     </style>
 </head>
@@ -43,7 +41,7 @@
             <i class="fa-solid fa-cube text-3xl text-white"></i>
         </div>
         <h1 class="text-2xl font-bold mb-2">Calc3D Pro</h1>
-        <p class="text-sm text-gray-400 mb-8">Gestão Completa V3.4</p>
+        <p class="text-sm text-gray-400 mb-8">Gestão Completa V3.5</p>
         
         <form id="login-form" class="space-y-4 text-left">
             <div>
@@ -70,7 +68,7 @@
     <nav class="bg-white dark:bg-slate-800 md:w-64 md:rounded-3xl shadow-sm border-r md:border border-gray-100 dark:border-slate-700 flex md:flex-col justify-between z-20 order-2 md:order-1 fixed bottom-0 w-full md:relative md:h-auto">
         <div class="p-6 hidden md:block">
             <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">Calc3D</h1>
-            <p class="text-xs text-gray-400">Versão 3.4</p>
+            <p class="text-xs text-gray-400">Versão 3.5</p>
         </div>
 
         <div class="flex md:flex-col overflow-x-auto no-scrollbar md:overflow-visible w-full p-2 md:p-4 gap-2 bg-white dark:bg-slate-800 border-t md:border-t-0 border-gray-100 dark:border-slate-700">
@@ -191,15 +189,12 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <input type="text" id="order-client" placeholder="Nome do Cliente" class="md:col-span-2 w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
-                        
                         <div class="relative">
                             <input list="stock-options" id="order-product" placeholder="Produto (Digite para buscar)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
                             <datalist id="stock-options"></datalist>
                         </div>
-
                         <input type="number" id="order-value" placeholder="Valor (R$)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
                     </div>
-                    
                     <div class="flex gap-4 mt-4">
                         <select id="order-status" class="bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none flex-1">
                             <option value="pendente">Pendente (Orçamento)</option>
@@ -210,7 +205,6 @@
                         <button id="order-btn-cancel" onclick="resetOrderForm()" class="hidden bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-white font-bold px-6 rounded-xl hover:bg-gray-300 transition">Cancelar</button>
                     </div>
                 </div>
-
                 <!-- Lista Pedidos -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="orders-list"></div>
             </div>
@@ -275,7 +269,7 @@
                 </div>
             </div>
 
-            <!-- === ABA BABILONIA (NOVA V3.4) === -->
+            <!-- === ABA BABILONIA === -->
             <div id="tab-babylon" class="hidden fade-in space-y-6">
                 <div class="bg-gradient-to-r from-gold-500 to-yellow-600 p-6 rounded-3xl text-white shadow-lg">
                     <h2 class="text-2xl font-bold"><i class="fa-solid fa-landmark mr-2"></i>A Babilônia</h2>
@@ -284,7 +278,7 @@
 
                 <!-- Barra de Pesquisa -->
                 <div class="relative">
-                    <input type="text" id="bab-search" oninput="searchBabylon()" placeholder="Pesquisar por Nome ou Tag..." class="w-full bg-white dark:bg-slate-750 border border-gray-200 dark:border-slate-600 p-4 pl-12 rounded-2xl shadow-sm outline-none text-lg">
+                    <input type="text" id="bab-search" oninput="searchBabylon()" placeholder="Pesquisar por Nome ou Tag..." class="w-full bg-white dark:bg-slate-750 border border-gray-200 dark:border-slate-600 p-4 pl-12 rounded-2xl shadow-sm outline-none text-lg dark:text-white">
                     <i class="fa-solid fa-search absolute left-4 top-5 text-gray-400"></i>
                 </div>
 
@@ -355,7 +349,6 @@
                     <button onclick="saveGlobalConfig()" class="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 rounded-xl">Salvar Valores</button>
                 </div>
                 
-                <!-- Gerenciar Tags (NOVO) -->
                 <div class="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-3xl border border-yellow-100 dark:border-yellow-800">
                     <h3 class="font-bold text-yellow-800 dark:text-yellow-300 mb-2">Gerenciar Tags</h3>
                     <div class="flex gap-2">
@@ -402,7 +395,7 @@
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, increment, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // --- COLOQUE SUAS CHAVES DO FIREBASE AQUI ---
+    // --- CHAVES FIREBASE (COLOQUE AS SUAS AQUI) ---
         const firebaseConfig = {
             apiKey: "AIzaSyBk5VOKh1YesWPObveNZcl6NDTQoSRv2MM",
             authDomain: "calc3d-app.firebaseapp.com",
@@ -421,13 +414,13 @@
     let currentUser = null;
     let globalConfig = { resina: 180, kwh: 0.90, watts: 120, pos: 2.50 };
     let profiles = {};
-    let globalTags = []; // Lista de Tags Disponiveis
+    let globalTags = [];
     let tempCalc = null;
     let stockList = [];
     let currentDateRef = new Date();
     let allTransactions = [];
-    let babylonList = []; // Para busca local
-    let selectedBabylonTags = []; // Tags selecionadas no form
+    let babylonList = [];
+    let selectedBabylonTags = [];
 
     // --- UTILS ---
     async function compressImage(file, maxWidth = 800, quality = 0.7) {
@@ -477,10 +470,10 @@
                 const d = snap.data();
                 globalConfig = d.current || globalConfig;
                 profiles = d.profiles || {};
-                globalTags = d.tags || []; // Carrega tags
+                globalTags = d.tags || []; 
                 renderProfiles();
-                renderTagsManage(); // Atualiza aba ajustes
-                renderBabylonTags(); // Atualiza aba babilonia
+                renderTagsManage(); 
+                renderBabylonTags(); 
                 if(document.getElementById('profile-select').value === 'default') loadInputs(globalConfig);
             }
         });
@@ -518,7 +511,7 @@
         onSnapshot(collection(db, 'babilonia'), snap => {
             babylonList = [];
             snap.forEach(d => babylonList.push({id: d.id, ...d.data()}));
-            searchBabylon(); // Renderiza usando o filtro atual
+            searchBabylon(); 
         });
     }
 
@@ -545,8 +538,7 @@
     }
 
     function renderBabylonItem(id, b) {
-        const safeB = JSON.stringify(b).replace(/"/g, '&quot;');
-        // Render Tags pills
+        const safeB = JSON.stringify({id, ...b}).replace(/"/g, '&quot;');
         const tagsHtml = (b.tags || []).map(t => `<span class="bg-gold-500/20 text-gold-600 dark:text-gold-500 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase">${t}</span>`).join('');
         
         return `<div class="bg-white dark:bg-slate-750 rounded-3xl overflow-hidden shadow-lg group relative">
@@ -554,79 +546,47 @@
                 ${b.img ? `<img src="${b.img}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-400"><i class="fa-solid fa-cube text-4xl"></i></div>`}
                 <div class="absolute inset-0 bg-black/60 hidden group-hover:flex items-center justify-center gap-2">
                     <a href="${b.link}" target="_blank" class="bg-gold-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-gold-600 transition"><i class="fa-solid fa-download"></i></a>
-                    <button onclick="editBabylon('${id}', ${safeB})" class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-600 transition"><i class="fa-solid fa-pencil"></i></button>
+                    <button onclick="copyToStock(${safeB})" title="Enviar para Estoque" class="bg-green-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-green-600 transition"><i class="fa-solid fa-boxes-stacked"></i></button>
+                    <button onclick="editBabylon(${safeB})" class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-600 transition"><i class="fa-solid fa-pencil"></i></button>
                     <button onclick="delDoc('babilonia','${id}')" class="bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-red-600 transition"><i class="fa-solid fa-trash"></i></button>
                 </div>
             </div>
-            <div class="p-4">
-                <div class="flex flex-wrap gap-1 mb-2">${tagsHtml}</div>
-                <h3 class="font-bold text-gray-800 dark:text-white truncate">${b.nome}</h3>
-                <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 h-8 mt-1">${b.desc}</p>
-            </div>
+            <div class="p-4"><div class="flex flex-wrap gap-1 mb-2">${tagsHtml}</div><h3 class="font-bold text-gray-800 dark:text-white truncate">${b.nome}</h3><p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 h-8 mt-1">${b.desc}</p></div>
         </div>`;
     }
 
-    // --- LOGICA DE TAGS (V3.4) ---
-    // 1. Gerenciar Tags (Aba Ajustes)
+    // --- LOGICA DE TAGS ---
     window.addTag = async () => {
         const name = document.getElementById('new-tag-name').value.trim();
-        if(!name) return;
-        if(globalTags.includes(name)) return alert("Tag já existe");
+        if(!name || globalTags.includes(name)) return;
         globalTags.push(name);
         await setDoc(doc(db, 'config', 'geral'), { tags: globalTags }, { merge: true });
         document.getElementById('new-tag-name').value = '';
     }
-    window.delTag = async (tag) => {
-        if(confirm(`Apagar tag "${tag}"?`)) {
-            globalTags = globalTags.filter(t => t !== tag);
-            await setDoc(doc(db, 'config', 'geral'), { tags: globalTags }, { merge: true });
-        }
-    }
+    window.delTag = async (tag) => { if(confirm(`Apagar "${tag}"?`)) { globalTags = globalTags.filter(t => t !== tag); await setDoc(doc(db, 'config', 'geral'), { tags: globalTags }, { merge: true }); } }
     function renderTagsManage() {
-        const div = document.getElementById('tags-list-manage');
-        div.innerHTML = globalTags.map(t => 
+        document.getElementById('tags-list-manage').innerHTML = globalTags.map(t => 
             `<span class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-200 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2">${t} <button onclick="delTag('${t}')" class="hover:text-red-500"><i class="fa-solid fa-times"></i></button></span>`
         ).join('');
     }
-
-    // 2. Selecionar Tags (Form Babilônia)
     function renderBabylonTags() {
         const div = document.getElementById('bab-tags-container');
         div.innerHTML = globalTags.map(t => 
             `<button type="button" onclick="toggleBabylonTag('${t}', this)" class="tag-btn text-[10px] px-2 py-1 rounded border border-gray-300 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition">${t}</button>`
         ).join('');
-        // Reselecionar se estiver editando
-        selectedBabylonTags.forEach(t => {
-            const btn = Array.from(div.children).find(b => b.innerText === t);
-            if(btn) btn.classList.add('selected');
-        });
+        selectedBabylonTags.forEach(t => { const btn = Array.from(div.children).find(b => b.innerText === t); if(btn) btn.classList.add('selected'); });
     }
     window.toggleBabylonTag = (t, btn) => {
-        if(selectedBabylonTags.includes(t)) {
-            selectedBabylonTags = selectedBabylonTags.filter(x => x !== t);
-            btn.classList.remove('selected');
-        } else {
-            selectedBabylonTags.push(t);
-            btn.classList.add('selected');
-        }
+        if(selectedBabylonTags.includes(t)) { selectedBabylonTags = selectedBabylonTags.filter(x => x !== t); btn.classList.remove('selected'); } 
+        else { selectedBabylonTags.push(t); btn.classList.add('selected'); }
     }
-
-    // 3. Buscar (Nome ou Tag)
     window.searchBabylon = () => {
         const q = document.getElementById('bab-search').value.toLowerCase();
-        const grid = document.getElementById('babylon-grid');
-        grid.innerHTML = '';
-        
-        const filtered = babylonList.filter(b => {
-            const matchName = b.nome.toLowerCase().includes(q);
-            const matchTag = b.tags && b.tags.some(t => t.toLowerCase().includes(q));
-            return matchName || matchTag;
-        });
-
-        filtered.forEach(d => grid.innerHTML += renderBabylonItem(d.id, d));
+        const grid = document.getElementById('babylon-grid'); grid.innerHTML = '';
+        babylonList.filter(b => b.nome.toLowerCase().includes(q) || (b.tags && b.tags.some(t => t.toLowerCase().includes(q)))).forEach(d => grid.innerHTML += renderBabylonItem(d.id, d));
     }
 
-    // --- BABILONIA ACTIONS ---
+    // --- BABILONIA ---
     window.saveBabylon = async () => {
         const id = document.getElementById('bab-id').value;
         const nome = document.getElementById('bab-nome').value;
@@ -634,126 +594,75 @@
         const desc = document.getElementById('bab-desc').value;
         const file = document.getElementById('bab-img').files[0];
         if(!nome || !link) return alert("Preencha Nome e Link");
-
-        let img = null;
-        if(file) img = await compressImage(file);
-        
-        const data = { nome, link, desc, tags: selectedBabylonTags }; // Save tags
+        let img = null; if(file) img = await compressImage(file);
+        const data = { nome, link, desc, tags: selectedBabylonTags };
         if (img) data.img = img;
-
-        try {
-            if (id) { await updateDoc(doc(db, 'babilonia', id), data); alert("Atualizado!"); } 
-            else { await addDoc(collection(db, 'babilonia'), { ...data, img, timestamp: serverTimestamp() }); alert("Adicionado!"); }
-            resetBabylonForm();
-        } catch(e) { alert("Erro: " + e.message); }
+        try { if (id) { await updateDoc(doc(db, 'babilonia', id), data); alert("Atualizado!"); } else { await addDoc(collection(db, 'babilonia'), { ...data, img, timestamp: serverTimestamp() }); alert("Adicionado!"); } resetBabylonForm(); } catch(e) { alert("Erro: " + e.message); }
     }
-
-    window.editBabylon = (id, b) => {
-        document.getElementById('bab-id').value = id;
-        document.getElementById('bab-nome').value = b.nome;
-        document.getElementById('bab-link').value = b.link;
-        document.getElementById('bab-desc').value = b.desc;
-        selectedBabylonTags = b.tags || []; // Load tags
-        renderBabylonTags(); // Refresh visual state
-        
-        document.getElementById('bab-btn-save').innerText = 'Salvar Alterações';
-        document.getElementById('bab-btn-cancel').classList.remove('hidden');
+    window.editBabylon = (b) => {
+        document.getElementById('bab-id').value = b.id; document.getElementById('bab-nome').value = b.nome; document.getElementById('bab-link').value = b.link; document.getElementById('bab-desc').value = b.desc;
+        selectedBabylonTags = b.tags || []; renderBabylonTags();
+        document.getElementById('bab-btn-save').innerText = 'Salvar Alterações'; document.getElementById('bab-btn-cancel').classList.remove('hidden');
         if(b.img) { document.getElementById('bab-preview').src = b.img; document.getElementById('bab-preview').classList.remove('hidden'); document.getElementById('bab-icon').classList.add('hidden'); }
-        document.querySelector('main').scrollTop = 0;
-        switchTab('babylon');
+        document.querySelector('main').scrollTop = 0; switchTab('babylon');
     }
-
+    window.copyToStock = async (item) => {
+        if(confirm(`Copiar "${item.nome}" para o Estoque?`)) {
+            try { await addDoc(collection(db, 'estoque'), { nome: item.nome, qtd: 1, img: item.img || null, updatedAt: serverTimestamp() }); alert("Copiado!"); } catch(e) { alert("Erro: " + e.message); }
+        }
+    }
     window.resetBabylonForm = () => {
-        document.getElementById('bab-id').value = '';
-        document.getElementById('bab-nome').value = '';
-        document.getElementById('bab-link').value = '';
-        document.getElementById('bab-desc').value = '';
-        document.getElementById('bab-img').value = '';
-        selectedBabylonTags = []; renderBabylonTags(); // Reset tags
-        document.getElementById('bab-preview').classList.add('hidden');
-        document.getElementById('bab-icon').classList.remove('hidden');
-        document.getElementById('bab-btn-save').innerText = 'Adicionar';
-        document.getElementById('bab-btn-cancel').classList.add('hidden');
+        document.getElementById('bab-id').value = ''; document.getElementById('bab-nome').value = ''; document.getElementById('bab-link').value = ''; document.getElementById('bab-desc').value = ''; document.getElementById('bab-img').value = '';
+        selectedBabylonTags = []; renderBabylonTags();
+        document.getElementById('bab-preview').classList.add('hidden'); document.getElementById('bab-icon').classList.remove('hidden');
+        document.getElementById('bab-btn-save').innerText = 'Adicionar'; document.getElementById('bab-btn-cancel').classList.add('hidden');
     }
 
     // --- FINANCAS ---
     window.changeFinanceMonth = (dir) => { currentDateRef.setMonth(currentDateRef.getMonth() + dir); renderFinanceMonth(); }
     window.toggleInstallments = () => { document.getElementById('install-group').classList.toggle('hidden'); }
-
     function renderFinanceMonth() {
         const list = document.getElementById('finance-list'); list.innerHTML = '';
         const curMonth = currentDateRef.getMonth(); const curYear = currentDateRef.getFullYear();
         document.getElementById('fin-month-label').innerText = `${["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][curMonth]} ${curYear}`;
-
         let totalIncome = 0; let totalExpense = 0;
         const monthTransactions = [];
-
         allTransactions.forEach(t => {
             const tDate = t.date ? new Date(t.date.seconds * 1000) : new Date(); 
             const installments = t.installments || 1;
             const valuePerMonth = parseFloat(t.valor) / installments;
             const diffMonths = (curYear - tDate.getFullYear()) * 12 + (curMonth - tDate.getMonth());
-
             if (diffMonths >= 0 && diffMonths < installments) {
                 if (t.type === 'income') totalIncome += valuePerMonth; else totalExpense += valuePerMonth;
-                monthTransactions.push({
-                    ...t, displayValue: valuePerMonth, currentParcel: diffMonths + 1, totalParcels: installments,
-                    isInstallment: installments > 1, sortDay: tDate.getDate()
-                });
+                monthTransactions.push({ ...t, displayValue: valuePerMonth, currentParcel: diffMonths + 1, totalParcels: installments, isInstallment: installments > 1, sortDay: tDate.getDate() });
             }
         });
-
         monthTransactions.sort((a,b) => a.sortDay - b.sortDay);
-        
         if(monthTransactions.length === 0) list.innerHTML = `<div class="text-center py-8 text-gray-400 text-sm">Sem movimentações.</div>`;
         else {
             monthTransactions.forEach(t => {
                 const color = t.type === 'income' ? 'text-green-500' : 'text-red-500';
                 const sign = t.type === 'income' ? '+' : '-';
                 const parcLabel = t.isInstallment ? `<span class="text-[10px] bg-gray-100 dark:bg-slate-700 px-1 rounded text-gray-500 ml-2">${t.currentParcel}/${t.totalParcels}</span>` : '';
-                list.innerHTML += `
-                <div class="flex justify-between items-center p-3 border-b border-gray-100 dark:border-slate-700 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-800 transition">
-                    <div><div class="flex items-center"><p class="text-xs font-bold text-gray-700 dark:text-gray-200">${t.desc}</p>${parcLabel}</div><p class="text-[10px] text-gray-400">Dia ${new Date(t.date.seconds*1000).getDate()}</p></div>
-                    <div class="flex items-center gap-3"><span class="text-xs font-bold ${color}">${sign} ${fmt(t.displayValue)}</span>${!t.isInstallment || t.currentParcel===1 ? `<button onclick="delDoc('financas','${t.id}')" class="text-gray-300 hover:text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button>` : ''}</div>
-                </div>`;
+                list.innerHTML += `<div class="flex justify-between items-center p-3 border-b border-gray-100 dark:border-slate-700 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-800 transition"><div><div class="flex items-center"><p class="text-xs font-bold text-gray-700 dark:text-gray-200">${t.desc}</p>${parcLabel}</div><p class="text-[10px] text-gray-400">Dia ${new Date(t.date.seconds*1000).getDate()}</p></div><div class="flex items-center gap-3"><span class="text-xs font-bold ${color}">${sign} ${fmt(t.displayValue)}</span>${!t.isInstallment || t.currentParcel===1 ? `<button onclick="delDoc('financas','${t.id}')" class="text-gray-300 hover:text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button>` : ''}</div></div>`;
             });
         }
-        document.getElementById('fin-income').innerText = fmt(totalIncome);
-        document.getElementById('fin-expense').innerText = fmt(totalExpense);
-        const profit = totalIncome - totalExpense;
-        const pEl = document.getElementById('fin-profit');
-        pEl.innerText = fmt(profit);
-        pEl.className = `text-3xl font-bold ${profit >= 0 ? 'text-green-400' : 'text-red-400'}`;
+        document.getElementById('fin-income').innerText = fmt(totalIncome); document.getElementById('fin-expense').innerText = fmt(totalExpense);
+        const profit = totalIncome - totalExpense; const pEl = document.getElementById('fin-profit'); pEl.innerText = fmt(profit); pEl.className = `text-3xl font-bold ${profit >= 0 ? 'text-green-400' : 'text-red-400'}`;
     }
-
     window.addFinance = async () => {
-        const type = document.getElementById('exp-type').value;
-        const desc = document.getElementById('exp-desc').value;
-        const valor = parseFloat(document.getElementById('exp-val').value);
-        const dateInput = document.getElementById('exp-date').value;
-        const isInstall = document.getElementById('exp-is-install').checked;
-        const installments = isInstall ? parseInt(document.getElementById('exp-installments').value) : 1;
-
+        const type = document.getElementById('exp-type').value; const desc = document.getElementById('exp-desc').value; const valor = parseFloat(document.getElementById('exp-val').value); const dateInput = document.getElementById('exp-date').value;
+        const isInstall = document.getElementById('exp-is-install').checked; const installments = isInstall ? parseInt(document.getElementById('exp-installments').value) : 1;
         if(!desc || !valor || !dateInput) return alert("Preencha todos os campos");
         const dateObj = new Date(dateInput); dateObj.setMinutes(dateObj.getMinutes() + dateObj.getTimezoneOffset());
-
-        try {
-            await addDoc(collection(db, 'financas'), { desc, valor, type, installments, date: Timestamp.fromDate(dateObj) });
-            document.getElementById('exp-desc').value = ''; document.getElementById('exp-val').value = '';
-            alert("Registrado!");
-        } catch(e) { alert("Erro ao salvar finança: " + e.message); }
+        try { await addDoc(collection(db, 'financas'), { desc, valor, type, installments, date: Timestamp.fromDate(dateObj) }); document.getElementById('exp-desc').value = ''; document.getElementById('exp-val').value = ''; alert("Registrado!"); } catch(e) { alert("Erro ao salvar finança: " + e.message); }
     }
 
     // --- OUTRAS FUNCOES ---
     window.saveOrder = async () => {
-        const id = document.getElementById('order-id').value;
-        const cliente = document.getElementById('order-client').value;
-        const produto = document.getElementById('order-product').value;
-        const valorRaw = document.getElementById('order-value').value;
-        const valor = valorRaw ? parseFloat(valorRaw) : 0;
-        const status = document.getElementById('order-status').value;
-        if(!cliente || !produto) return alert("Cliente e Produto são obrigatórios");
-        if(status !== 'pendente' && !valor) return alert("Defina o valor!");
+        const id = document.getElementById('order-id').value; const cliente = document.getElementById('order-client').value; const produto = document.getElementById('order-product').value;
+        const valorRaw = document.getElementById('order-value').value; const valor = valorRaw ? parseFloat(valorRaw) : 0; const status = document.getElementById('order-status').value;
+        if(!cliente || !produto) return alert("Cliente e Produto são obrigatórios"); if(status !== 'pendente' && !valor) return alert("Defina o valor!");
         const data = { cliente, produto, valor, status, timestamp: serverTimestamp() };
         try { if(id) { await updateDoc(doc(db,'pedidos',id), {cliente, produto, valor, status}); alert("Atualizado!"); } else { await addDoc(collection(db, 'pedidos'), data); alert("Criado!"); } resetOrderForm(); } catch(e) { alert("Erro: " + e.message); }
     }
@@ -763,31 +672,17 @@
     window.updateOrderStatus = async (id, status) => await updateDoc(doc(db,'pedidos',id), {status});
 
     window.calcular = () => {
-        const peso = parseFloat(document.getElementById('calc-peso').value);
-        const tempo = parseFloat(document.getElementById('calc-tempo').value);
-        if(!peso && peso !== 0) return alert("Preencha Peso");
-        if(!tempo && tempo !== 0) return alert("Preencha Tempo");
-        const resina = parseFloat(document.getElementById('conf-resina').value) || 0;
-        const kwh = parseFloat(document.getElementById('conf-kwh').value) || 0;
-        const watts = parseFloat(document.getElementById('conf-watts').value) || 0;
-        const pos = parseFloat(document.getElementById('conf-pos').value) || 0;
-        const emb = parseFloat(document.getElementById('calc-emb').value) || 0;
-        const taxa = parseFloat(document.getElementById('calc-taxa').value) || 0;
-        const lucro = parseFloat(document.getElementById('calc-lucro').value) || 100;
-        const cResina = (peso * (resina/1000));
-        const cLuz = (watts/1000) * tempo * kwh;
-        const total = cResina + cLuz + pos + emb;
-        const venda = (total * (1 + (lucro/100))) / (1 - (taxa/100));
-        document.getElementById('res-custo').innerText = fmt(total);
-        document.getElementById('res-venda').innerText = fmt(venda);
-        document.getElementById('res-lucro').innerText = fmt(venda - total - (venda * (taxa/100)));
+        const peso = parseFloat(document.getElementById('calc-peso').value); const tempo = parseFloat(document.getElementById('calc-tempo').value);
+        if(!peso && peso !== 0) return alert("Preencha Peso"); if(!tempo && tempo !== 0) return alert("Preencha Tempo");
+        const resina = parseFloat(document.getElementById('conf-resina').value) || 0; const kwh = parseFloat(document.getElementById('conf-kwh').value) || 0; const watts = parseFloat(document.getElementById('conf-watts').value) || 0; const pos = parseFloat(document.getElementById('conf-pos').value) || 0;
+        const emb = parseFloat(document.getElementById('calc-emb').value) || 0; const taxa = parseFloat(document.getElementById('calc-taxa').value) || 0; const lucro = parseFloat(document.getElementById('calc-lucro').value) || 100;
+        const cResina = (peso * (resina/1000)); const cLuz = (watts/1000) * tempo * kwh; const total = cResina + cLuz + pos + emb; const venda = (total * (1 + (lucro/100))) / (1 - (taxa/100));
+        document.getElementById('res-custo').innerText = fmt(total); document.getElementById('res-venda').innerText = fmt(venda); document.getElementById('res-lucro').innerText = fmt(venda - total - (venda * (taxa/100)));
         document.getElementById('result-card').classList.remove('hidden');
         tempCalc = { nome: document.getElementById('calc-nome').value || "Sem nome", custoTotal: total, precoVenda: venda, detalhes: { resina: cResina, energia: cLuz, pos, emb, taxa, lucro }, timestamp: serverTimestamp() };
     }
-
     window.salvar = async () => {
-        if(!tempCalc) return alert("Calcule primeiro!");
-        setLoadingBtn('btn-save', true);
+        if(!tempCalc) return alert("Calcule primeiro!"); setLoadingBtn('btn-save', true);
         try { await addDoc(collection(db, 'impressoes'), tempCalc); if(document.getElementById('check-stock').checked) { await addDoc(collection(db, 'estoque'), { nome: tempCalc.nome, qtd: 1, img: null, detalhes: tempCalc }); } alert("Salvo!"); document.getElementById('result-card').classList.add('hidden'); document.getElementById('calc-nome').value = ''; document.getElementById('calc-peso').value = ''; document.getElementById('calc-tempo').value = ''; } catch(e) { alert(e.message); } setLoadingBtn('btn-save', false);
     }
 
