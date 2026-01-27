@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Calc3D Pro - V3.3 Fix</title>
+    <title>Calc3D Pro - V3.4 Tags</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -29,6 +29,9 @@
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Estilo para tags selecionadas */
+        .tag-btn.selected { background-color: #eab308; color: white; border-color: #eab308; }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 dark:bg-slate-900 dark:text-gray-100 transition-colors duration-300">
@@ -40,7 +43,7 @@
             <i class="fa-solid fa-cube text-3xl text-white"></i>
         </div>
         <h1 class="text-2xl font-bold mb-2">Calc3D Pro</h1>
-        <p class="text-sm text-gray-400 mb-8">Gestão Completa V3.3</p>
+        <p class="text-sm text-gray-400 mb-8">Gestão Completa V3.4</p>
         
         <form id="login-form" class="space-y-4 text-left">
             <div>
@@ -67,10 +70,9 @@
     <nav class="bg-white dark:bg-slate-800 md:w-64 md:rounded-3xl shadow-sm border-r md:border border-gray-100 dark:border-slate-700 flex md:flex-col justify-between z-20 order-2 md:order-1 fixed bottom-0 w-full md:relative md:h-auto">
         <div class="p-6 hidden md:block">
             <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">Calc3D</h1>
-            <p class="text-xs text-gray-400">Versão 3.3</p>
+            <p class="text-xs text-gray-400">Versão 3.4</p>
         </div>
 
-        <!-- Menu Mobile Scrollavel -->
         <div class="flex md:flex-col overflow-x-auto no-scrollbar md:overflow-visible w-full p-2 md:p-4 gap-2 bg-white dark:bg-slate-800 border-t md:border-t-0 border-gray-100 dark:border-slate-700">
             <button onclick="switchTab('calc')" id="nav-calc" class="nav-btn flex-shrink-0 flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 dark:text-indigo-300 transition-all min-w-[70px]">
                 <i class="fa-solid fa-calculator text-xl md:text-lg"></i>
@@ -180,22 +182,19 @@
                 </div>
             </div>
 
-            <!-- === ABA PEDIDOS (CORRIGIDO) === -->
+            <!-- === ABA PEDIDOS === -->
             <div id="tab-orders" class="hidden fade-in space-y-6">
                 <!-- Add Pedido -->
                 <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm">
                     <h3 class="font-bold text-gray-700 dark:text-white mb-4">Gerenciar Pedido</h3>
-                    <input type="hidden" id="order-id"> <!-- ID para Edição -->
+                    <input type="hidden" id="order-id">
                     
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <input type="text" id="order-client" placeholder="Nome do Cliente" class="md:col-span-2 w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
                         
-                        <!-- Input com Datalist para sugestão de estoque -->
                         <div class="relative">
                             <input list="stock-options" id="order-product" placeholder="Produto (Digite para buscar)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
-                            <datalist id="stock-options">
-                                <!-- Preenchido via JS -->
-                            </datalist>
+                            <datalist id="stock-options"></datalist>
                         </div>
 
                         <input type="number" id="order-value" placeholder="Valor (R$)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
@@ -210,16 +209,14 @@
                         <button id="order-btn-save" onclick="saveOrder()" class="bg-indigo-600 text-white font-bold px-6 rounded-xl hover:bg-indigo-700 transition">Adicionar</button>
                         <button id="order-btn-cancel" onclick="resetOrderForm()" class="hidden bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-white font-bold px-6 rounded-xl hover:bg-gray-300 transition">Cancelar</button>
                     </div>
-                    <p class="text-[10px] text-gray-400 mt-2">* Pedidos 'Pendentes' podem ser salvos sem valor definido.</p>
                 </div>
 
                 <!-- Lista Pedidos -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="orders-list"></div>
             </div>
 
-            <!-- === ABA FINANÇAS (CORRIGIDO) === -->
+            <!-- === ABA FINANÇAS === -->
             <div id="tab-finance" class="hidden fade-in space-y-6">
-                
                 <!-- Navegação Mensal -->
                 <div class="flex items-center justify-between bg-white dark:bg-slate-750 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-600 sticky top-0 z-10">
                     <button onclick="changeFinanceMonth(-1)" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-700 hover:bg-indigo-100 dark:hover:bg-indigo-900 transition flex items-center justify-center"><i class="fa-solid fa-chevron-left"></i></button>
@@ -278,12 +275,20 @@
                 </div>
             </div>
 
-            <!-- === ABA BABILONIA === -->
+            <!-- === ABA BABILONIA (NOVA V3.4) === -->
             <div id="tab-babylon" class="hidden fade-in space-y-6">
                 <div class="bg-gradient-to-r from-gold-500 to-yellow-600 p-6 rounded-3xl text-white shadow-lg">
                     <h2 class="text-2xl font-bold"><i class="fa-solid fa-landmark mr-2"></i>A Babilônia</h2>
                     <p class="text-yellow-100 text-sm opacity-90">Acervo de Arquivos</p>
                 </div>
+
+                <!-- Barra de Pesquisa -->
+                <div class="relative">
+                    <input type="text" id="bab-search" oninput="searchBabylon()" placeholder="Pesquisar por Nome ou Tag..." class="w-full bg-white dark:bg-slate-750 border border-gray-200 dark:border-slate-600 p-4 pl-12 rounded-2xl shadow-sm outline-none text-lg">
+                    <i class="fa-solid fa-search absolute left-4 top-5 text-gray-400"></i>
+                </div>
+
+                <!-- Add/Edit Item Babilônia -->
                 <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm flex flex-col md:flex-row gap-6">
                     <div class="flex-shrink-0 flex justify-center">
                         <label class="w-32 h-32 bg-gray-50 dark:bg-slate-700 border-2 border-dashed border-gray-300 dark:border-slate-500 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-gold-500 dark:hover:border-gold-500 transition relative overflow-hidden group">
@@ -300,12 +305,21 @@
                             <input type="text" id="bab-link" placeholder="Link (Drive/Mega)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none text-blue-500">
                         </div>
                         <textarea id="bab-desc" placeholder="Descrição..." class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none h-20 resize-none"></textarea>
+                        
+                        <!-- Seletor de Tags -->
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase mb-2">Tags</p>
+                            <div id="bab-tags-container" class="flex flex-wrap gap-2"></div>
+                        </div>
+
                         <div class="flex gap-2">
                             <button id="bab-btn-save" onclick="saveBabylon()" class="bg-gold-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-yellow-700 transition flex-1 md:flex-none">Adicionar</button>
                             <button id="bab-btn-cancel" onclick="resetBabylonForm()" class="hidden bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-white font-bold py-3 px-6 rounded-xl hover:bg-gray-300 transition">Cancelar</button>
                         </div>
                     </div>
                 </div>
+
+                <!-- Grid Babilônia -->
                 <div id="babylon-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
             </div>
 
@@ -340,6 +354,17 @@
                     </div>
                     <button onclick="saveGlobalConfig()" class="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 rounded-xl">Salvar Valores</button>
                 </div>
+                
+                <!-- Gerenciar Tags (NOVO) -->
+                <div class="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-3xl border border-yellow-100 dark:border-yellow-800">
+                    <h3 class="font-bold text-yellow-800 dark:text-yellow-300 mb-2">Gerenciar Tags</h3>
+                    <div class="flex gap-2">
+                        <input type="text" id="new-tag-name" placeholder="Nova Tag (Ex: Anime)" class="flex-1 bg-white dark:bg-slate-700 dark:text-white p-3 rounded-xl border-none outline-none">
+                        <button onclick="addTag()" class="bg-yellow-600 text-white font-bold px-4 rounded-xl">Adicionar</button>
+                    </div>
+                    <div id="tags-list-manage" class="mt-4 flex flex-wrap gap-2"></div>
+                </div>
+
                 <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-3xl border border-purple-100 dark:border-purple-800">
                     <h3 class="font-bold text-purple-800 dark:text-purple-300 mb-2">Salvar Perfil Atual</h3>
                     <div class="flex gap-2">
@@ -373,13 +398,12 @@
 </div>
 
 <script type="module">
-    // CORREÇÃO 1: Importar Timestamp para datas funcionarem
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, increment, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     // --- COLOQUE SUAS CHAVES DO FIREBASE AQUI ---
-    const firebaseConfig = {
+        const firebaseConfig = {
             apiKey: "AIzaSyBk5VOKh1YesWPObveNZcl6NDTQoSRv2MM",
             authDomain: "calc3d-app.firebaseapp.com",
             projectId: "calc3d-app",
@@ -397,58 +421,49 @@
     let currentUser = null;
     let globalConfig = { resina: 180, kwh: 0.90, watts: 120, pos: 2.50 };
     let profiles = {};
+    let globalTags = []; // Lista de Tags Disponiveis
     let tempCalc = null;
-    let stockList = []; // Para autocomplete
+    let stockList = [];
     let currentDateRef = new Date();
     let allTransactions = [];
+    let babylonList = []; // Para busca local
+    let selectedBabylonTags = []; // Tags selecionadas no form
 
     // --- UTILS ---
     async function compressImage(file, maxWidth = 800, quality = 0.7) {
         return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (event) => {
-                const img = new Image();
-                img.src = event.target.result;
+            const reader = new FileReader(); reader.readAsDataURL(file);
+            reader.onload = e => {
+                const img = new Image(); img.src = e.target.result;
                 img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    let width = img.width; let height = img.height;
-                    if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; }
-                    canvas.width = width; canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    resolve(canvas.toDataURL('image/jpeg', quality));
+                    const c = document.createElement('canvas');
+                    let w = img.width, h = img.height;
+                    if(w > maxWidth) { h *= maxWidth/w; w = maxWidth; }
+                    c.width = w; c.height = h;
+                    c.getContext('2d').drawImage(img,0,0,w,h);
+                    resolve(c.toDataURL('image/jpeg',quality));
                 };
             };
-            reader.onerror = error => reject(error);
+            reader.onerror = reject;
         });
     }
 
-    // --- TEMA E AUTH ---
-    window.toggleTheme = () => {
-        document.documentElement.classList.toggle('dark');
-        const isDark = document.documentElement.classList.contains('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    }
-    if(localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
-
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
+    // --- AUTH ---
+    document.getElementById('login-form').addEventListener('submit', async e => {
         e.preventDefault(); setLoading(true);
         try { await signInWithEmailAndPassword(auth, document.getElementById('email-input').value, document.getElementById('password-input').value); } 
         catch(err) { alert("Erro login: " + err.code); setLoading(false); }
     });
 
-    onAuthStateChanged(auth, (user) => {
-        if(user) {
-            currentUser = user;
+    onAuthStateChanged(auth, u => {
+        if(u) {
+            currentUser = u;
             document.getElementById('screen-login').classList.add('hidden');
             document.getElementById('screen-app').classList.remove('hidden');
-            document.getElementById('user-email').innerText = user.email.split('@')[0];
-            document.getElementById('user-initial').innerText = user.email[0].toUpperCase();
+            document.getElementById('user-email').innerText = u.email.split('@')[0];
+            document.getElementById('user-initial').innerText = u.email[0].toUpperCase();
             document.getElementById('exp-date').valueAsDate = new Date(); 
-            startListeners();
-            switchTab('calc');
-            renderFinanceMonth();
+            startListeners(); switchTab('calc'); renderFinanceMonth();
         } else {
             document.getElementById('screen-app').classList.add('hidden');
             document.getElementById('screen-login').classList.remove('hidden');
@@ -457,106 +472,83 @@
 
     // --- LISTENERS ---
     function startListeners() {
-        onSnapshot(doc(db, 'config', 'geral'), (snap) => {
+        onSnapshot(doc(db, 'config', 'geral'), snap => {
             if(snap.exists()) {
                 const d = snap.data();
                 globalConfig = d.current || globalConfig;
                 profiles = d.profiles || {};
+                globalTags = d.tags || []; // Carrega tags
                 renderProfiles();
+                renderTagsManage(); // Atualiza aba ajustes
+                renderBabylonTags(); // Atualiza aba babilonia
                 if(document.getElementById('profile-select').value === 'default') loadInputs(globalConfig);
             }
         });
 
-        onSnapshot(collection(db, 'impressoes'), (snap) => {
+        onSnapshot(collection(db, 'impressoes'), snap => {
             const list = document.getElementById('history-list'); list.innerHTML = '';
             let items = []; snap.forEach(d => items.push({id: d.id, ...d.data()}));
             items.sort((a,b) => b.timestamp - a.timestamp);
             items.forEach(i => list.innerHTML += renderHistoryItem(i));
         });
 
-        onSnapshot(collection(db, 'estoque'), (snap) => {
+        onSnapshot(collection(db, 'estoque'), snap => {
             const grid = document.getElementById('stock-grid'); 
             const dl = document.getElementById('stock-options');
-            grid.innerHTML = ''; dl.innerHTML = '';
-            stockList = [];
+            grid.innerHTML = ''; dl.innerHTML = ''; stockList = [];
             snap.forEach(d => {
-                const i = d.data();
-                stockList.push(i.nome);
-                dl.innerHTML += `<option value="${i.nome}">`; // Preenche autocomplete
+                const i = d.data(); stockList.push(i.nome);
+                dl.innerHTML += `<option value="${i.nome}">`;
                 grid.innerHTML += renderStockItem(d.id, i);
             });
         });
 
-        onSnapshot(collection(db, 'pedidos'), (snap) => {
+        onSnapshot(collection(db, 'pedidos'), snap => {
             const list = document.getElementById('orders-list'); list.innerHTML = '';
             let items = []; snap.forEach(d => items.push({id: d.id, ...d.data()}));
-            items.sort((a,b) => b.timestamp - a.timestamp); // Mais recentes primeiro
+            items.sort((a,b) => b.timestamp - a.timestamp);
             items.forEach(p => list.innerHTML += renderOrderItem(p.id, p));
         });
 
-        onSnapshot(collection(db, 'financas'), (snap) => {
-            allTransactions = [];
-            snap.forEach(d => allTransactions.push({id: d.id, ...d.data()}));
+        onSnapshot(collection(db, 'financas'), snap => {
+            allTransactions = []; snap.forEach(d => allTransactions.push({id: d.id, ...d.data()}));
             renderFinanceMonth();
         });
 
-        onSnapshot(collection(db, 'babilonia'), (snap) => {
-            const grid = document.getElementById('babylon-grid'); grid.innerHTML = '';
-            snap.forEach(d => grid.innerHTML += renderBabylonItem(d.id, d.data()));
+        onSnapshot(collection(db, 'babilonia'), snap => {
+            babylonList = [];
+            snap.forEach(d => babylonList.push({id: d.id, ...d.data()}));
+            searchBabylon(); // Renderiza usando o filtro atual
         });
     }
 
     // --- RENDERIZACAO ---
     function renderHistoryItem(i) {
         return `<div class="bg-white dark:bg-slate-750 p-3 rounded-xl border border-gray-100 dark:border-slate-600 flex justify-between items-center shadow-sm">
-            <div class="flex items-center gap-3">
-                <button onclick='showDetails(${JSON.stringify(i)})' class="text-indigo-500"><i class="fa-solid fa-eye"></i></button>
-                <div><p class="text-xs font-bold dark:text-white">${i.nome}</p></div>
-            </div>
+            <div class="flex items-center gap-3"><button onclick='showDetails(${JSON.stringify(i)})' class="text-indigo-500"><i class="fa-solid fa-eye"></i></button><div><p class="text-xs font-bold dark:text-white">${i.nome}</p></div></div>
             <div class="flex items-center gap-3"><span class="text-xs font-bold text-indigo-500">${fmt(i.custoTotal)}</span><button onclick="delDoc('impressoes','${i.id}')" class="text-red-400"><i class="fa-solid fa-trash text-xs"></i></button></div>
         </div>`;
     }
 
     function renderStockItem(id, i) {
-        return `<div class="bg-white dark:bg-slate-750 rounded-2xl border border-gray-100 dark:border-slate-600 overflow-hidden shadow-sm group">
-            <div class="h-32 bg-gray-100 dark:bg-slate-900 relative group/img">
-                ${i.img ? `<img src="${i.img}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-300"><i class="fa-solid fa-box text-3xl"></i></div>`}
-                <div class="absolute inset-0 bg-black/50 hidden group-hover/img:flex items-center justify-center"><label class="cursor-pointer text-white text-xs font-bold"><i class="fa-solid fa-camera mr-1"></i>Trocar<input type="file" class="hidden" onchange="uploadStockImage('${id}',this)" accept="image/*"></label></div>
-                <button onclick="delDoc('estoque','${id}')" class="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash text-[10px]"></i></button>
-            </div>
-            <div class="p-3"><p class="text-xs font-bold truncate dark:text-white mb-2">${i.nome}</p>
-                <div class="flex justify-between items-center bg-gray-50 dark:bg-slate-800 rounded-lg p-1">
-                    <button onclick="updStock('${id}',-1)" class="w-6 text-red-500"><i class="fa-solid fa-minus text-[10px]"></i></button>
-                    <span class="text-xs font-bold dark:text-white">${i.qtd}</span>
-                    <button onclick="updStock('${id}',1)" class="w-6 text-green-500"><i class="fa-solid fa-plus text-[10px]"></i></button>
-                </div>
-            </div>
-        </div>`;
+        return `<div class="bg-white dark:bg-slate-750 rounded-2xl border border-gray-100 dark:border-slate-600 overflow-hidden shadow-sm group"><div class="h-32 bg-gray-100 dark:bg-slate-900 relative group/img">${i.img ? `<img src="${i.img}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-300"><i class="fa-solid fa-box text-3xl"></i></div>`}<div class="absolute inset-0 bg-black/50 hidden group-hover/img:flex items-center justify-center"><label class="cursor-pointer text-white text-xs font-bold"><i class="fa-solid fa-camera mr-1"></i>Trocar<input type="file" class="hidden" onchange="uploadStockImage('${id}',this)" accept="image/*"></label></div><button onclick="delDoc('estoque','${id}')" class="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash text-[10px]"></i></button></div><div class="p-3"><p class="text-xs font-bold truncate dark:text-white mb-2">${i.nome}</p><div class="flex justify-between items-center bg-gray-50 dark:bg-slate-800 rounded-lg p-1"><button onclick="updStock('${id}',-1)" class="w-6 text-red-500"><i class="fa-solid fa-minus text-[10px]"></i></button><span class="text-xs font-bold dark:text-white">${i.qtd}</span><button onclick="updStock('${id}',1)" class="w-6 text-green-500"><i class="fa-solid fa-plus text-[10px]"></i></button></div></div></div>`;
     }
 
     function renderOrderItem(id, p) {
         const colors = { 'pendente': 'bg-yellow-100 text-yellow-600', 'producao': 'bg-blue-100 text-blue-600', 'concluido': 'bg-green-100 text-green-600' };
         const safeP = JSON.stringify({id, ...p}).replace(/"/g, '&quot;');
-        return `<div class="bg-white dark:bg-slate-750 p-4 rounded-2xl border border-gray-100 dark:border-slate-600 shadow-sm relative group">
-            <button onclick="editOrder(${safeP})" class="absolute top-2 right-8 text-blue-400 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-pencil"></i></button>
-            <div class="flex justify-between mb-2">
-                <span class="text-[10px] uppercase font-bold text-gray-400">#${id.slice(0,4)}</span>
-                <span class="text-[10px] px-2 py-1 rounded-full font-bold ${colors[p.status]}">${p.status}</span>
-            </div>
-            <h4 class="font-bold text-gray-800 dark:text-white">${p.cliente}</h4>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">${p.produto}</p>
-            <div class="flex justify-between items-center">
-                <span class="font-bold text-lg text-indigo-600 dark:text-indigo-400">${p.valor ? fmt(p.valor) : 'R$ --'}</span>
-                <div class="flex gap-2">
-                    ${p.status !== 'concluido' ? `<button onclick="updateOrderStatus('${id}','concluido')" class="text-green-500 hover:bg-green-50 rounded p-1"><i class="fa-solid fa-check"></i></button>` : ''}
-                    <button onclick="delDoc('pedidos','${id}')" class="text-red-400 hover:bg-red-50 rounded p-1"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            </div>
-        </div>`;
+        return `<div class="bg-white dark:bg-slate-750 p-4 rounded-2xl border border-gray-100 dark:border-slate-600 shadow-sm relative group"><button onclick="editOrder(${safeP})" class="absolute top-2 right-8 text-blue-400 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-pencil"></i></button><div class="flex justify-between mb-2"><span class="text-[10px] uppercase font-bold text-gray-400">#${id.slice(0,4)}</span><span class="text-[10px] px-2 py-1 rounded-full font-bold ${colors[p.status]}">${p.status}</span></div><h4 class="font-bold text-gray-800 dark:text-white">${p.cliente}</h4><p class="text-xs text-gray-500 dark:text-gray-400 mb-3">${p.produto}</p><div class="flex justify-between items-center"><span class="font-bold text-lg text-indigo-600 dark:text-indigo-400">${p.valor ? fmt(p.valor) : 'R$ --'}</span><div class="flex gap-2">${p.status !== 'concluido' ? `<button onclick="updateOrderStatus('${id}','concluido')" class="text-green-500 hover:bg-green-50 rounded p-1"><i class="fa-solid fa-check"></i></button>` : ''}<button onclick="delDoc('pedidos','${id}')" class="text-red-400 hover:bg-red-50 rounded p-1"><i class="fa-solid fa-trash"></i></button></div></div></div>`;
+    }
+
+    function renderFinanceItem(id, f) {
+        return `<div class="flex justify-between items-center p-2 border-b border-gray-100 dark:border-slate-700 last:border-0"><div><p class="text-xs font-bold text-gray-700 dark:text-gray-200">${f.desc}</p><p class="text-[10px] text-gray-400">${new Date(f.date?.seconds * 1000).toLocaleDateString()}</p></div><div class="flex items-center gap-3"><span class="text-xs font-bold text-red-500">-${fmt(f.valor)}</span><button onclick="delDoc('financas','${id}')" class="text-gray-300 hover:text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button></div></div>`;
     }
 
     function renderBabylonItem(id, b) {
         const safeB = JSON.stringify(b).replace(/"/g, '&quot;');
+        // Render Tags pills
+        const tagsHtml = (b.tags || []).map(t => `<span class="bg-gold-500/20 text-gold-600 dark:text-gold-500 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase">${t}</span>`).join('');
+        
         return `<div class="bg-white dark:bg-slate-750 rounded-3xl overflow-hidden shadow-lg group relative">
             <div class="h-40 bg-slate-200 dark:bg-slate-900 relative">
                 ${b.img ? `<img src="${b.img}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-400"><i class="fa-solid fa-cube text-4xl"></i></div>`}
@@ -566,8 +558,122 @@
                     <button onclick="delDoc('babilonia','${id}')" class="bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-red-600 transition"><i class="fa-solid fa-trash"></i></button>
                 </div>
             </div>
-            <div class="p-4"><h3 class="font-bold text-gray-800 dark:text-white truncate">${b.nome}</h3><p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 h-8 mt-1">${b.desc}</p></div>
+            <div class="p-4">
+                <div class="flex flex-wrap gap-1 mb-2">${tagsHtml}</div>
+                <h3 class="font-bold text-gray-800 dark:text-white truncate">${b.nome}</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 h-8 mt-1">${b.desc}</p>
+            </div>
         </div>`;
+    }
+
+    // --- LOGICA DE TAGS (V3.4) ---
+    // 1. Gerenciar Tags (Aba Ajustes)
+    window.addTag = async () => {
+        const name = document.getElementById('new-tag-name').value.trim();
+        if(!name) return;
+        if(globalTags.includes(name)) return alert("Tag já existe");
+        globalTags.push(name);
+        await setDoc(doc(db, 'config', 'geral'), { tags: globalTags }, { merge: true });
+        document.getElementById('new-tag-name').value = '';
+    }
+    window.delTag = async (tag) => {
+        if(confirm(`Apagar tag "${tag}"?`)) {
+            globalTags = globalTags.filter(t => t !== tag);
+            await setDoc(doc(db, 'config', 'geral'), { tags: globalTags }, { merge: true });
+        }
+    }
+    function renderTagsManage() {
+        const div = document.getElementById('tags-list-manage');
+        div.innerHTML = globalTags.map(t => 
+            `<span class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-200 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2">${t} <button onclick="delTag('${t}')" class="hover:text-red-500"><i class="fa-solid fa-times"></i></button></span>`
+        ).join('');
+    }
+
+    // 2. Selecionar Tags (Form Babilônia)
+    function renderBabylonTags() {
+        const div = document.getElementById('bab-tags-container');
+        div.innerHTML = globalTags.map(t => 
+            `<button type="button" onclick="toggleBabylonTag('${t}', this)" class="tag-btn text-[10px] px-2 py-1 rounded border border-gray-300 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition">${t}</button>`
+        ).join('');
+        // Reselecionar se estiver editando
+        selectedBabylonTags.forEach(t => {
+            const btn = Array.from(div.children).find(b => b.innerText === t);
+            if(btn) btn.classList.add('selected');
+        });
+    }
+    window.toggleBabylonTag = (t, btn) => {
+        if(selectedBabylonTags.includes(t)) {
+            selectedBabylonTags = selectedBabylonTags.filter(x => x !== t);
+            btn.classList.remove('selected');
+        } else {
+            selectedBabylonTags.push(t);
+            btn.classList.add('selected');
+        }
+    }
+
+    // 3. Buscar (Nome ou Tag)
+    window.searchBabylon = () => {
+        const q = document.getElementById('bab-search').value.toLowerCase();
+        const grid = document.getElementById('babylon-grid');
+        grid.innerHTML = '';
+        
+        const filtered = babylonList.filter(b => {
+            const matchName = b.nome.toLowerCase().includes(q);
+            const matchTag = b.tags && b.tags.some(t => t.toLowerCase().includes(q));
+            return matchName || matchTag;
+        });
+
+        filtered.forEach(d => grid.innerHTML += renderBabylonItem(d.id, d));
+    }
+
+    // --- BABILONIA ACTIONS ---
+    window.saveBabylon = async () => {
+        const id = document.getElementById('bab-id').value;
+        const nome = document.getElementById('bab-nome').value;
+        const link = document.getElementById('bab-link').value;
+        const desc = document.getElementById('bab-desc').value;
+        const file = document.getElementById('bab-img').files[0];
+        if(!nome || !link) return alert("Preencha Nome e Link");
+
+        let img = null;
+        if(file) img = await compressImage(file);
+        
+        const data = { nome, link, desc, tags: selectedBabylonTags }; // Save tags
+        if (img) data.img = img;
+
+        try {
+            if (id) { await updateDoc(doc(db, 'babilonia', id), data); alert("Atualizado!"); } 
+            else { await addDoc(collection(db, 'babilonia'), { ...data, img, timestamp: serverTimestamp() }); alert("Adicionado!"); }
+            resetBabylonForm();
+        } catch(e) { alert("Erro: " + e.message); }
+    }
+
+    window.editBabylon = (id, b) => {
+        document.getElementById('bab-id').value = id;
+        document.getElementById('bab-nome').value = b.nome;
+        document.getElementById('bab-link').value = b.link;
+        document.getElementById('bab-desc').value = b.desc;
+        selectedBabylonTags = b.tags || []; // Load tags
+        renderBabylonTags(); // Refresh visual state
+        
+        document.getElementById('bab-btn-save').innerText = 'Salvar Alterações';
+        document.getElementById('bab-btn-cancel').classList.remove('hidden');
+        if(b.img) { document.getElementById('bab-preview').src = b.img; document.getElementById('bab-preview').classList.remove('hidden'); document.getElementById('bab-icon').classList.add('hidden'); }
+        document.querySelector('main').scrollTop = 0;
+        switchTab('babylon');
+    }
+
+    window.resetBabylonForm = () => {
+        document.getElementById('bab-id').value = '';
+        document.getElementById('bab-nome').value = '';
+        document.getElementById('bab-link').value = '';
+        document.getElementById('bab-desc').value = '';
+        document.getElementById('bab-img').value = '';
+        selectedBabylonTags = []; renderBabylonTags(); // Reset tags
+        document.getElementById('bab-preview').classList.add('hidden');
+        document.getElementById('bab-icon').classList.remove('hidden');
+        document.getElementById('bab-btn-save').innerText = 'Adicionar';
+        document.getElementById('bab-btn-cancel').classList.add('hidden');
     }
 
     // --- FINANCAS ---
@@ -583,7 +689,7 @@
         const monthTransactions = [];
 
         allTransactions.forEach(t => {
-            const tDate = t.date ? new Date(t.date.seconds * 1000) : new Date(); // Safety check
+            const tDate = t.date ? new Date(t.date.seconds * 1000) : new Date(); 
             const installments = t.installments || 1;
             const valuePerMonth = parseFloat(t.valor) / installments;
             const diffMonths = (curYear - tDate.getFullYear()) * 12 + (curMonth - tDate.getMonth());
@@ -620,7 +726,6 @@
         pEl.className = `text-3xl font-bold ${profit >= 0 ? 'text-green-400' : 'text-red-400'}`;
     }
 
-    // CORREÇÃO 2: Uso correto do Timestamp importado
     window.addFinance = async () => {
         const type = document.getElementById('exp-type').value;
         const desc = document.getElementById('exp-desc').value;
@@ -630,22 +735,16 @@
         const installments = isInstall ? parseInt(document.getElementById('exp-installments').value) : 1;
 
         if(!desc || !valor || !dateInput) return alert("Preencha todos os campos");
-
-        const dateObj = new Date(dateInput);
-        dateObj.setMinutes(dateObj.getMinutes() + dateObj.getTimezoneOffset()); // Fix Timezone
+        const dateObj = new Date(dateInput); dateObj.setMinutes(dateObj.getMinutes() + dateObj.getTimezoneOffset());
 
         try {
-            await addDoc(collection(db, 'financas'), {
-                desc, valor, type, installments,
-                date: Timestamp.fromDate(dateObj) // FIX: Usa Timestamp da importação modular
-            });
-            document.getElementById('exp-desc').value = '';
-            document.getElementById('exp-val').value = '';
+            await addDoc(collection(db, 'financas'), { desc, valor, type, installments, date: Timestamp.fromDate(dateObj) });
+            document.getElementById('exp-desc').value = ''; document.getElementById('exp-val').value = '';
             alert("Registrado!");
         } catch(e) { alert("Erro ao salvar finança: " + e.message); }
     }
 
-    // --- PEDIDOS (NOVA LÓGICA DE SALVAR/EDITAR) ---
+    // --- OUTRAS FUNCOES ---
     window.saveOrder = async () => {
         const id = document.getElementById('order-id').value;
         const cliente = document.getElementById('order-client').value;
@@ -653,55 +752,21 @@
         const valorRaw = document.getElementById('order-value').value;
         const valor = valorRaw ? parseFloat(valorRaw) : 0;
         const status = document.getElementById('order-status').value;
-
         if(!cliente || !produto) return alert("Cliente e Produto são obrigatórios");
-        // Validação Inteligente: Só exige valor se não for pendente
-        if(status !== 'pendente' && !valor) return alert("Para iniciar produção/concluir, defina o valor!");
-
+        if(status !== 'pendente' && !valor) return alert("Defina o valor!");
         const data = { cliente, produto, valor, status, timestamp: serverTimestamp() };
-
-        try {
-            if(id) { await updateDoc(doc(db,'pedidos',id), {cliente, produto, valor, status}); alert("Pedido Atualizado!"); }
-            else { await addDoc(collection(db, 'pedidos'), data); alert("Pedido Criado!"); }
-            resetOrderForm();
-        } catch(e) { alert("Erro: " + e.message); }
+        try { if(id) { await updateDoc(doc(db,'pedidos',id), {cliente, produto, valor, status}); alert("Atualizado!"); } else { await addDoc(collection(db, 'pedidos'), data); alert("Criado!"); } resetOrderForm(); } catch(e) { alert("Erro: " + e.message); }
     }
-
-    window.editOrder = (p) => {
-        document.getElementById('order-id').value = p.id;
-        document.getElementById('order-client').value = p.cliente;
-        document.getElementById('order-product').value = p.produto;
-        document.getElementById('order-value').value = p.valor;
-        document.getElementById('order-status').value = p.status;
-        
-        document.getElementById('order-btn-save').innerText = "Salvar Alterações";
-        document.getElementById('order-btn-cancel').classList.remove('hidden');
-        document.querySelector('main').scrollTop = 0; // Sobe pro topo
-    }
-
-    window.resetOrderForm = () => {
-        document.getElementById('order-id').value = '';
-        document.getElementById('order-client').value = '';
-        document.getElementById('order-product').value = '';
-        document.getElementById('order-value').value = '';
-        document.getElementById('order-status').value = 'pendente';
-        document.getElementById('order-btn-save').innerText = "Adicionar";
-        document.getElementById('order-btn-cancel').classList.add('hidden');
-    }
-    
-    // Wrapper antigo para compatibilidade
+    window.editOrder = (p) => { document.getElementById('order-id').value = p.id; document.getElementById('order-client').value = p.cliente; document.getElementById('order-product').value = p.produto; document.getElementById('order-value').value = p.valor; document.getElementById('order-status').value = p.status; document.getElementById('order-btn-save').innerText = "Salvar"; document.getElementById('order-btn-cancel').classList.remove('hidden'); document.querySelector('main').scrollTop = 0; }
+    window.resetOrderForm = () => { document.getElementById('order-id').value = ''; document.getElementById('order-client').value = ''; document.getElementById('order-product').value = ''; document.getElementById('order-value').value = ''; document.getElementById('order-status').value = 'pendente'; document.getElementById('order-btn-save').innerText = "Adicionar"; document.getElementById('order-btn-cancel').classList.add('hidden'); }
     window.addOrder = () => window.saveOrder(); 
     window.updateOrderStatus = async (id, status) => await updateDoc(doc(db,'pedidos',id), {status});
 
-    // --- CALCULADORA (CORREÇÃO) ---
-    // Garante que calcular() atualize o tempCalc global corretamente
     window.calcular = () => {
         const peso = parseFloat(document.getElementById('calc-peso').value);
         const tempo = parseFloat(document.getElementById('calc-tempo').value);
-        
-        if(!peso && peso !== 0) return alert("Preencha o Peso");
-        if(!tempo && tempo !== 0) return alert("Preencha o Tempo");
-
+        if(!peso && peso !== 0) return alert("Preencha Peso");
+        if(!tempo && tempo !== 0) return alert("Preencha Tempo");
         const resina = parseFloat(document.getElementById('conf-resina').value) || 0;
         const kwh = parseFloat(document.getElementById('conf-kwh').value) || 0;
         const watts = parseFloat(document.getElementById('conf-watts').value) || 0;
@@ -709,202 +774,44 @@
         const emb = parseFloat(document.getElementById('calc-emb').value) || 0;
         const taxa = parseFloat(document.getElementById('calc-taxa').value) || 0;
         const lucro = parseFloat(document.getElementById('calc-lucro').value) || 100;
-
         const cResina = (peso * (resina/1000));
         const cLuz = (watts/1000) * tempo * kwh;
         const total = cResina + cLuz + pos + emb;
         const venda = (total * (1 + (lucro/100))) / (1 - (taxa/100));
-
         document.getElementById('res-custo').innerText = fmt(total);
         document.getElementById('res-venda').innerText = fmt(venda);
         document.getElementById('res-lucro').innerText = fmt(venda - total - (venda * (taxa/100)));
         document.getElementById('result-card').classList.remove('hidden');
-
-        tempCalc = {
-            nome: document.getElementById('calc-nome').value || "Sem nome",
-            custoTotal: total, precoVenda: venda,
-            detalhes: { resina: cResina, energia: cLuz, pos, emb, taxa, lucro },
-            timestamp: serverTimestamp()
-        };
+        tempCalc = { nome: document.getElementById('calc-nome').value || "Sem nome", custoTotal: total, precoVenda: venda, detalhes: { resina: cResina, energia: cLuz, pos, emb, taxa, lucro }, timestamp: serverTimestamp() };
     }
 
     window.salvar = async () => {
         if(!tempCalc) return alert("Calcule primeiro!");
         setLoadingBtn('btn-save', true);
-        try {
-            await addDoc(collection(db, 'impressoes'), tempCalc);
-            if(document.getElementById('check-stock').checked) {
-                await addDoc(collection(db, 'estoque'), { nome: tempCalc.nome, qtd: 1, img: null, detalhes: tempCalc });
-            }
-            alert("Salvo!");
-            document.getElementById('result-card').classList.add('hidden');
-            // Limpa form basico
-            document.getElementById('calc-nome').value = '';
-            document.getElementById('calc-peso').value = '';
-            document.getElementById('calc-tempo').value = '';
-        } catch(e) { alert(e.message); }
-        setLoadingBtn('btn-save', false);
+        try { await addDoc(collection(db, 'impressoes'), tempCalc); if(document.getElementById('check-stock').checked) { await addDoc(collection(db, 'estoque'), { nome: tempCalc.nome, qtd: 1, img: null, detalhes: tempCalc }); } alert("Salvo!"); document.getElementById('result-card').classList.add('hidden'); document.getElementById('calc-nome').value = ''; document.getElementById('calc-peso').value = ''; document.getElementById('calc-tempo').value = ''; } catch(e) { alert(e.message); } setLoadingBtn('btn-save', false);
     }
 
-    // --- BABILONIA (Manter lógica) ---
-    window.previewBabylon = (input) => {
-        const file = input.files[0];
-        if(file) {
-            const r = new FileReader();
-            r.onload = e => {
-                document.getElementById('bab-preview').src = e.target.result;
-                document.getElementById('bab-preview').classList.remove('hidden');
-                document.getElementById('bab-icon').classList.add('hidden');
-            }
-            r.readAsDataURL(file);
-        }
-    }
-    window.saveBabylon = async () => {
-        const id = document.getElementById('bab-id').value;
-        const nome = document.getElementById('bab-nome').value;
-        const link = document.getElementById('bab-link').value;
-        const desc = document.getElementById('bab-desc').value;
-        const file = document.getElementById('bab-img').files[0];
-        if(!nome || !link) return alert("Nome e Link obrigatórios");
-        let img = null;
-        if(file) img = await compressImage(file);
-        const data = { nome, link, desc };
-        if (img) data.img = img;
-        try {
-            if (id) { await updateDoc(doc(db, 'babilonia', id), data); alert("Atualizado!"); } 
-            else { await addDoc(collection(db, 'babilonia'), { ...data, img, timestamp: serverTimestamp() }); alert("Adicionado!"); }
-            resetBabylonForm();
-        } catch(e) { alert("Erro: " + e.message); }
-    }
-    window.editBabylon = (id, b) => {
-        document.getElementById('bab-id').value = id;
-        document.getElementById('bab-nome').value = b.nome;
-        document.getElementById('bab-link').value = b.link;
-        document.getElementById('bab-desc').value = b.desc;
-        document.getElementById('bab-btn-save').innerText = 'Salvar Alterações';
-        document.getElementById('bab-btn-cancel').classList.remove('hidden');
-        if(b.img) { document.getElementById('bab-preview').src = b.img; document.getElementById('bab-preview').classList.remove('hidden'); document.getElementById('bab-icon').classList.add('hidden'); }
-        document.querySelector('main').scrollTop = 0;
-        switchTab('babylon');
-    }
-    window.resetBabylonForm = () => {
-        document.getElementById('bab-id').value = '';
-        document.getElementById('bab-nome').value = '';
-        document.getElementById('bab-link').value = '';
-        document.getElementById('bab-desc').value = '';
-        document.getElementById('bab-img').value = '';
-        document.getElementById('bab-preview').classList.add('hidden');
-        document.getElementById('bab-icon').classList.remove('hidden');
-        document.getElementById('bab-btn-save').innerText = 'Adicionar';
-        document.getElementById('bab-btn-cancel').classList.add('hidden');
-    }
-
-    // Utils Globais
+    window.previewStock = (input) => { window.previewBabylon(input); }
+    window.addStockManual = async () => { const nome = document.getElementById('stock-nome').value; const qtd = parseInt(document.getElementById('stock-qtd').value); const file = document.getElementById('stock-file').files[0]; if(!nome || !qtd) return alert("Preencha nome e qtd"); let imgBase64 = null; if(file) imgBase64 = await compressImage(file); await addDoc(collection(db, 'estoque'), { nome, qtd, img: imgBase64, detalhes: null }); alert("Adicionado!"); document.getElementById('stock-nome').value = ''; document.getElementById('stock-qtd').value = ''; }
+    window.uploadStockImage = async (id, input) => { const file = input.files[0]; if(!file) return; try { const compressed = await compressImage(file); await updateDoc(doc(db, 'estoque', id), { img: compressed }); } catch(err) { alert(err.message); } }
     window.delDoc = async (col, id) => { if(confirm("Excluir?")) await deleteDoc(doc(db, col, id)); }
     window.updStock = async (id, val) => await updateDoc(doc(db,'estoque',id), { qtd: increment(val) });
-    window.previewStock = (input) => { window.previewBabylon(input); }
-    window.addStockManual = async () => {
-        const nome = document.getElementById('stock-nome').value;
-        const qtd = parseInt(document.getElementById('stock-qtd').value);
-        const file = document.getElementById('stock-file').files[0];
-        if(!nome || !qtd) return alert("Preencha nome e qtd");
-        let imgBase64 = null;
-        if(file) imgBase64 = await compressImage(file);
-        await addDoc(collection(db, 'estoque'), { nome, qtd, img: imgBase64, detalhes: null });
-        alert("Adicionado!");
-        document.getElementById('stock-nome').value = '';
-        document.getElementById('stock-qtd').value = '';
-    }
-    window.uploadStockImage = async (id, input) => {
-        const file = input.files[0]; if(!file) return;
-        try { const compressed = await compressImage(file); await updateDoc(doc(db, 'estoque', id), { img: compressed }); } catch(err) { alert(err.message); } 
-    }
-    
-    // Config logic
-    window.saveGlobalConfig = async () => {
-        globalConfig = {
-            resina: parseFloat(document.getElementById('conf-resina').value),
-            kwh: parseFloat(document.getElementById('conf-kwh').value),
-            watts: parseFloat(document.getElementById('conf-watts').value),
-            pos: parseFloat(document.getElementById('conf-pos').value)
-        };
-        await setDoc(doc(db, 'config', 'geral'), { current: globalConfig, profiles }, { merge: true });
-        alert("Salvo!");
-    }
-    window.loadProfile = (name) => {
-        const d = name === 'default' ? globalConfig : profiles[name];
-        document.getElementById('conf-resina').value = d.resina;
-        document.getElementById('conf-kwh').value = d.kwh;
-        document.getElementById('conf-watts').value = d.watts;
-        document.getElementById('conf-pos').value = d.pos;
-        if(d.emb) document.getElementById('calc-emb').value = d.emb;
-        if(d.taxa) document.getElementById('calc-taxa').value = d.taxa;
-        if(d.lucro) document.getElementById('calc-lucro').value = d.lucro;
-    }
-    window.saveProfile = async () => {
-        const name = document.getElementById('new-profile-name').value;
-        if(!name) return alert("Nome vazio");
-        profiles[name] = {
-            resina: parseFloat(document.getElementById('conf-resina').value),
-            kwh: parseFloat(document.getElementById('conf-kwh').value),
-            watts: parseFloat(document.getElementById('conf-watts').value),
-            pos: parseFloat(document.getElementById('conf-pos').value),
-            emb: parseFloat(document.getElementById('calc-emb').value),
-            taxa: parseFloat(document.getElementById('calc-taxa').value),
-            lucro: parseFloat(document.getElementById('calc-lucro').value)
-        };
-        await setDoc(doc(db, 'config', 'geral'), { current: globalConfig, profiles }, { merge: true });
-        alert("Perfil salvo!"); renderProfiles();
-    }
-    function renderProfiles() {
-        const s = document.getElementById('profile-select');
-        const l = document.getElementById('profile-list-manage');
-        s.innerHTML = '<option value="default">Padrão</option>';
-        l.innerHTML = '';
-        for(let k in profiles) {
-            s.innerHTML += `<option value="${k}">${k}</option>`;
-            l.innerHTML += `<li class="flex justify-between text-xs dark:text-white"><span>${k}</span> <button onclick="deleteProfile('${k}')" class="text-red-500">Excluir</button></li>`;
-        }
-    }
-    window.deleteProfile = async (k) => { if(confirm("Excluir?")) { delete profiles[k]; await setDoc(doc(db,'config','geral'), {current:globalConfig, profiles}, {merge:true}); } }
 
-    // Aux
-    window.switchTab = (t) => {
-        ['calc','stock','finance','orders','babylon','config'].forEach(k => {
-            const btn = document.getElementById('nav-'+k);
-            const div = document.getElementById('tab-'+k);
-            if(k === t) {
-                btn.classList.add('bg-indigo-50','text-indigo-600','dark:bg-indigo-900/20','dark:text-indigo-300');
-                btn.classList.remove('text-gray-400');
-                div.classList.remove('hidden');
-                document.getElementById('header-title').innerText = k.toUpperCase();
-            } else {
-                btn.classList.remove('bg-indigo-50','text-indigo-600','dark:bg-indigo-900/20','dark:text-indigo-300');
-                btn.classList.add('text-gray-400');
-                div.classList.add('hidden');
-            }
-        });
-    }
-    window.showDetails = (i) => {
-        document.getElementById('det-nome').innerText = i.nome;
-        document.getElementById('det-data').innerText = new Date(i.timestamp?.seconds*1000).toLocaleDateString();
-        const d = i.detalhes;
-        document.getElementById('det-resina').innerText = fmt(d.resina);
-        document.getElementById('det-energia').innerText = fmt(d.energia);
-        document.getElementById('det-outros').innerText = fmt(d.pos + d.emb);
-        document.getElementById('det-total').innerText = fmt(i.custoTotal);
-        document.getElementById('modal-details').classList.remove('hidden');
-    }
+    window.saveGlobalConfig = async () => { globalConfig = { resina: parseFloat(document.getElementById('conf-resina').value), kwh: parseFloat(document.getElementById('conf-kwh').value), watts: parseFloat(document.getElementById('conf-watts').value), pos: parseFloat(document.getElementById('conf-pos').value) }; await setDoc(doc(db, 'config', 'geral'), { current: globalConfig, profiles, tags: globalTags }, { merge: true }); alert("Salvo!"); }
+    window.loadProfile = (name) => { const d = name === 'default' ? globalConfig : profiles[name]; document.getElementById('conf-resina').value = d.resina; document.getElementById('conf-kwh').value = d.kwh; document.getElementById('conf-watts').value = d.watts; document.getElementById('conf-pos').value = d.pos; if(d.emb) document.getElementById('calc-emb').value = d.emb; if(d.taxa) document.getElementById('calc-taxa').value = d.taxa; if(d.lucro) document.getElementById('calc-lucro').value = d.lucro; }
+    window.saveProfile = async () => { const name = document.getElementById('new-profile-name').value; if(!name) return alert("Nome vazio"); profiles[name] = { resina: parseFloat(document.getElementById('conf-resina').value), kwh: parseFloat(document.getElementById('conf-kwh').value), watts: parseFloat(document.getElementById('conf-watts').value), pos: parseFloat(document.getElementById('conf-pos').value), emb: parseFloat(document.getElementById('calc-emb').value), taxa: parseFloat(document.getElementById('calc-taxa').value), lucro: parseFloat(document.getElementById('calc-lucro').value) }; await setDoc(doc(db, 'config', 'geral'), { current: globalConfig, profiles, tags: globalTags }, { merge: true }); alert("Perfil salvo!"); renderProfiles(); }
+    function renderProfiles() { const s = document.getElementById('profile-select'); const l = document.getElementById('profile-list-manage'); s.innerHTML = '<option value="default">Padrão</option>'; l.innerHTML = ''; for(let k in profiles) { s.innerHTML += `<option value="${k}">${k}</option>`; l.innerHTML += `<li class="flex justify-between text-xs dark:text-white"><span>${k}</span> <button onclick="deleteProfile('${k}')" class="text-red-500">Excluir</button></li>`; } }
+    window.deleteProfile = async (k) => { if(confirm("Excluir?")) { delete profiles[k]; await setDoc(doc(db,'config','geral'), {current:globalConfig, profiles, tags: globalTags}, {merge:true}); } }
+
+    window.switchTab = (t) => { ['calc','stock','finance','orders','babylon','config'].forEach(k => { const btn = document.getElementById('nav-'+k); const div = document.getElementById('tab-'+k); if(k === t) { btn.classList.add('bg-indigo-50','text-indigo-600','dark:bg-indigo-900/20','dark:text-indigo-300'); btn.classList.remove('text-gray-400'); div.classList.remove('hidden'); document.getElementById('header-title').innerText = k.toUpperCase(); } else { btn.classList.remove('bg-indigo-50','text-indigo-600','dark:bg-indigo-900/20','dark:text-indigo-300'); btn.classList.add('text-gray-400'); div.classList.add('hidden'); } }); }
+    window.showDetails = (i) => { document.getElementById('det-nome').innerText = i.nome; document.getElementById('det-data').innerText = new Date(i.timestamp?.seconds*1000).toLocaleDateString(); const d = i.detalhes; document.getElementById('det-resina').innerText = fmt(d.resina); document.getElementById('det-energia').innerText = fmt(d.energia); document.getElementById('det-outros').innerText = fmt(d.pos + d.emb); document.getElementById('det-total').innerText = fmt(i.custoTotal); document.getElementById('modal-details').classList.remove('hidden'); }
     window.logout = () => signOut(auth);
     window.fmt = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    window.toggleTheme = () => { document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light'); }
+    if(localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
     function setLoading(l) { document.getElementById('btn-login').disabled = l; }
-    function setLoadingBtn(id, l) {
-        const btn = document.getElementById(id);
-        if(l) btn.innerHTML = '<div class="loader !w-4 !h-4 !border-white/30 !border-t-white"></div>';
-        else btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Salvar';
-    }
+    function setLoadingBtn(id, l) { const btn = document.getElementById(id); if(l) btn.innerHTML = '<div class="loader !w-4 !h-4 !border-white/30 !border-t-white"></div>'; else btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Salvar'; }
 
-    // Init
     switchTab('calc');
 </script>
 </body>
