@@ -395,15 +395,15 @@
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, increment, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // --- CHAVES FIREBASE (COLOQUE AS SUAS AQUI) ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyBk5VOKh1YesWPObveNZcl6NDTQoSRv2MM",
-            authDomain: "calc3d-app.firebaseapp.com",
-            projectId: "calc3d-app",
-            storageBucket: "calc3d-app.firebasestorage.app",
-            messagingSenderId: "995189437836",
-            appId: "1:995189437836:web:1ea8b4a03ba78e0d87d2a9"
-        };
+    // --- COLOQUE SUAS CHAVES DO FIREBASE AQUI ---
+    const firebaseConfig = {
+        apiKey: "SUA_API_KEY",
+        authDomain: "SEU_PROJETO.firebaseapp.com",
+        projectId: "SEU_PROJETO_ID",
+        storageBucket: "SEU_PROJETO.appspot.com",
+        messagingSenderId: "NUMEROS",
+        appId: "APP_ID"
+    };
 
     if(firebaseConfig.apiKey === "SUA_API_KEY") alert("⚠️ Configure as chaves do Firebase no final do código!");
 
