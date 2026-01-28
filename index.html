@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Calc3D Pro - V3.5 Integration</title>
+    <title>Calc3D Pro - V3.7 Fluxo Integrado</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -41,7 +41,7 @@
             <i class="fa-solid fa-cube text-3xl text-white"></i>
         </div>
         <h1 class="text-2xl font-bold mb-2">Calc3D Pro</h1>
-        <p class="text-sm text-gray-400 mb-8">Gestão Completa V3.5</p>
+        <p class="text-sm text-gray-400 mb-8">Fluxo de Produção V3.7</p>
         
         <form id="login-form" class="space-y-4 text-left">
             <div>
@@ -68,29 +68,31 @@
     <nav class="bg-white dark:bg-slate-800 md:w-64 md:rounded-3xl shadow-sm border-r md:border border-gray-100 dark:border-slate-700 flex md:flex-col justify-between z-20 order-2 md:order-1 fixed bottom-0 w-full md:relative md:h-auto">
         <div class="p-6 hidden md:block">
             <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">Calc3D</h1>
-            <p class="text-xs text-gray-400">Versão 3.5</p>
+            <p class="text-xs text-gray-400">Versão 3.7</p>
         </div>
 
         <div class="flex md:flex-col overflow-x-auto no-scrollbar md:overflow-visible w-full p-2 md:p-4 gap-2 bg-white dark:bg-slate-800 border-t md:border-t-0 border-gray-100 dark:border-slate-700">
+            <!-- ORDEM LÓGICA DO FLUXO -->
+            <button onclick="switchTab('babylon')" id="nav-babylon" class="nav-btn flex-shrink-0 flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all min-w-[70px]">
+                <i class="fa-solid fa-landmark text-xl md:text-lg"></i>
+                <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">1. Babilônia</span>
+            </button>
             <button onclick="switchTab('calc')" id="nav-calc" class="nav-btn flex-shrink-0 flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 dark:text-indigo-300 transition-all min-w-[70px]">
                 <i class="fa-solid fa-calculator text-xl md:text-lg"></i>
-                <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">Calc</span>
-            </button>
-            <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn flex-shrink-0 flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all min-w-[70px]">
-                <i class="fa-solid fa-clipboard-list text-xl md:text-lg"></i>
-                <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">Pedidos</span>
-            </button>
-            <button onclick="switchTab('finance')" id="nav-finance" class="nav-btn flex-shrink-0 flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all min-w-[70px]">
-                <i class="fa-solid fa-chart-pie text-xl md:text-lg"></i>
-                <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">Finanças</span>
+                <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">2. Cotação</span>
             </button>
             <button onclick="switchTab('stock')" id="nav-stock" class="nav-btn flex-shrink-0 flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all min-w-[70px]">
                 <i class="fa-solid fa-boxes-stacked text-xl md:text-lg"></i>
-                <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">Estoque</span>
+                <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">3. Estoque</span>
             </button>
-            <button onclick="switchTab('babylon')" id="nav-babylon" class="nav-btn flex-shrink-0 flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all min-w-[70px]">
-                <i class="fa-solid fa-landmark text-xl md:text-lg"></i>
-                <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">Babilônia</span>
+            <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn flex-shrink-0 flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all min-w-[70px]">
+                <i class="fa-solid fa-clipboard-list text-xl md:text-lg"></i>
+                <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">4. Pedidos</span>
+            </button>
+            <div class="md:border-t dark:border-slate-700 md:my-2"></div>
+            <button onclick="switchTab('finance')" id="nav-finance" class="nav-btn flex-shrink-0 flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all min-w-[70px]">
+                <i class="fa-solid fa-chart-pie text-xl md:text-lg"></i>
+                <span class="text-[10px] md:text-sm font-bold mt-1 md:mt-0">Finanças</span>
             </button>
             <button onclick="switchTab('config')" id="nav-config" class="nav-btn flex-shrink-0 flex-1 md:flex-none p-3 rounded-xl flex flex-col md:flex-row items-center md:gap-3 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all min-w-[70px]">
                 <i class="fa-solid fa-gear text-xl md:text-lg"></i>
@@ -127,10 +129,56 @@
         <!-- AREA DE SCROLL -->
         <div class="flex-1 overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 bg-gray-50/50 dark:bg-slate-800/50">
             
-            <!-- === ABA CALCULAR === -->
-            <div id="tab-calc" class="fade-in grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- === 1. BABILONIA === -->
+            <div id="tab-babylon" class="hidden fade-in space-y-6">
+                <div class="bg-gradient-to-r from-gold-500 to-yellow-600 p-6 rounded-3xl text-white shadow-lg flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold"><i class="fa-solid fa-landmark mr-2"></i>A Babilônia</h2>
+                        <p class="text-yellow-100 text-sm opacity-90">Passo 1: Escolha o modelo</p>
+                    </div>
+                </div>
+
+                <!-- Barra de Pesquisa -->
+                <div class="relative">
+                    <input type="text" id="bab-search" oninput="searchBabylon()" placeholder="Pesquisar por Nome ou Tag..." class="w-full bg-white dark:bg-slate-750 border border-gray-200 dark:border-slate-600 p-4 pl-12 rounded-2xl shadow-sm outline-none text-lg dark:text-white">
+                    <i class="fa-solid fa-search absolute left-4 top-5 text-gray-400"></i>
+                </div>
+
+                <!-- Add/Edit -->
+                <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm flex flex-col md:flex-row gap-6">
+                    <div class="flex-shrink-0 flex justify-center">
+                        <label class="w-32 h-32 bg-gray-50 dark:bg-slate-700 border-2 border-dashed border-gray-300 dark:border-slate-500 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-gold-500 dark:hover:border-gold-500 transition relative overflow-hidden group">
+                            <i class="fa-solid fa-image text-2xl text-gray-300 dark:text-slate-500" id="bab-icon"></i>
+                            <p class="text-[8px] text-gray-400 mt-2 uppercase font-bold">Capa</p>
+                            <img id="bab-preview" class="absolute inset-0 w-full h-full object-cover hidden">
+                            <input type="file" id="bab-img" accept="image/*" class="hidden" onchange="previewBabylon(this)">
+                        </label>
+                    </div>
+                    <div class="flex-1 space-y-4">
+                        <input type="hidden" id="bab-id">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="bab-nome" placeholder="Nome do Modelo" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
+                            <input type="text" id="bab-link" placeholder="Link do Arquivo (Drive/Mega)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none text-blue-500">
+                        </div>
+                        <textarea id="bab-desc" placeholder="Descrição..." class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none h-20 resize-none"></textarea>
+                        
+                        <div><p class="text-xs font-bold text-gray-400 uppercase mb-2">Tags</p><div id="bab-tags-container" class="flex flex-wrap gap-2"></div></div>
+
+                        <div class="flex gap-2">
+                            <button id="bab-btn-save" onclick="saveBabylon()" class="bg-gold-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-yellow-700 transition flex-1 md:flex-none">Adicionar</button>
+                            <button id="bab-btn-cancel" onclick="resetBabylonForm()" class="hidden bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-white font-bold py-3 px-6 rounded-xl hover:bg-gray-300 transition">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="babylon-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            </div>
+
+            <!-- === 2. CALCULAR === -->
+            <div id="tab-calc" class="hidden fade-in grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- FORM -->
                 <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm">
+                    <h3 class="font-bold text-gray-700 dark:text-white mb-4">Passo 2: Cotação</h3>
                     <div class="mb-6">
                         <label class="text-[10px] font-bold text-gray-400 uppercase ml-1 mb-1 block">Perfil de Impressão</label>
                         <select id="profile-select" onchange="loadProfile(this.value)" class="w-full bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-gray-700 dark:text-gray-200 py-3 px-4 rounded-xl font-bold text-sm outline-none">
@@ -138,7 +186,7 @@
                         </select>
                     </div>
                     <div class="space-y-4">
-                        <input type="text" id="calc-nome" placeholder="Nome do Projeto" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
+                        <input type="text" id="calc-nome" placeholder="Nome do Projeto" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 font-bold text-lg">
                         <div class="grid grid-cols-2 gap-4">
                             <input type="number" id="calc-peso" placeholder="Peso (g)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
                             <input type="number" id="calc-tempo" placeholder="Tempo (h)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
@@ -152,56 +200,78 @@
                             </div>
                         </div>
                     </div>
-                    <button onclick="calcular()" class="w-full mt-6 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-4 rounded-xl shadow-lg hover:scale-[1.02] transition">Calcular</button>
+                    <button onclick="calcular()" class="w-full mt-6 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-4 rounded-xl shadow-lg hover:scale-[1.02] transition">Calcular Custos</button>
                 </div>
 
-                <!-- RESULTADO E HISTORICO -->
+                <!-- RESULTADO -->
                 <div class="space-y-6">
                     <div id="result-card" class="hidden bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
                         <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
                         <div class="relative z-10">
-                            <p class="text-indigo-200 text-xs font-bold uppercase">Custo Total</p>
+                            <p class="text-indigo-200 text-xs font-bold uppercase">Custo de Produção</p>
                             <h2 class="text-4xl font-bold mb-1" id="res-custo">R$ 0,00</h2>
                             <div class="flex justify-between items-end mt-4 pt-4 border-t border-white/10">
-                                <div><p class="text-indigo-200 text-xs font-bold uppercase">Venda Sugerida</p><p class="text-2xl font-bold text-green-300" id="res-venda">R$ 0,00</p></div>
+                                <div><p class="text-indigo-200 text-xs font-bold uppercase">Preço Venda</p><p class="text-2xl font-bold text-green-300" id="res-venda">R$ 0,00</p></div>
                                 <div class="text-right text-xs text-indigo-100"><p>Lucro: <span class="font-bold" id="res-lucro">R$ 0,00</span></p></div>
                             </div>
-                            <div class="mt-4 flex items-center gap-3">
-                                <input type="checkbox" id="check-stock" class="w-5 h-5 text-indigo-600 rounded">
-                                <label for="check-stock" class="text-sm">Salvar no Estoque</label>
-                            </div>
-                            <button id="btn-save" onclick="salvar()" class="w-full mt-4 bg-white text-indigo-700 font-bold py-3 rounded-xl hover:bg-indigo-50 transition flex justify-center items-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> Salvar</button>
+                            <!-- Botão de Ação Principal: Enviar para Estoque -->
+                            <button id="btn-save" onclick="salvar()" class="w-full mt-4 bg-white text-indigo-700 font-bold py-3 rounded-xl hover:bg-indigo-50 transition flex justify-center items-center gap-2 shadow-lg">
+                                <i class="fa-solid fa-box-open"></i> Produzir para Estoque
+                            </button>
+                            <p class="text-[10px] text-center text-indigo-200 mt-2">Isso salva no histórico e adiciona 1 unidade ao estoque.</p>
                         </div>
                     </div>
                     <div>
-                        <div class="flex justify-between items-center mb-3 px-1"><h3 class="text-xs font-bold text-gray-400 uppercase">Histórico</h3></div>
+                        <div class="flex justify-between items-center mb-3 px-1"><h3 class="text-xs font-bold text-gray-400 uppercase">Histórico de Cálculos</h3></div>
                         <div id="history-list" class="space-y-3 max-h-[400px] overflow-y-auto pr-1"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- === ABA PEDIDOS === -->
+            <!-- === 3. ESTOQUE === -->
+            <div id="tab-stock" class="hidden fade-in space-y-6">
+                <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm flex flex-col md:flex-row gap-6 items-center justify-between">
+                    <div>
+                        <h3 class="font-bold text-gray-700 dark:text-white">Passo 3: Estoque</h3>
+                        <p class="text-xs text-gray-400">Produtos prontos para entrega.</p>
+                    </div>
+                    <button onclick="addStockManual()" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-xl hover:bg-indigo-700 transition text-sm">Adicionar Manualmente</button>
+                </div>
+                <!-- Manual Add Hidden Form (Simplificado) -->
+                <div id="manual-stock-form" class="hidden bg-gray-50 dark:bg-slate-800 p-4 rounded-xl border border-gray-200 dark:border-slate-600 grid grid-cols-3 gap-2">
+                    <input type="text" id="stock-nome" placeholder="Nome" class="col-span-2 p-2 rounded-lg text-sm dark:bg-slate-700 dark:text-white border-none outline-none">
+                    <input type="number" id="stock-qtd" placeholder="Qtd" class="p-2 rounded-lg text-sm dark:bg-slate-700 dark:text-white border-none outline-none">
+                </div>
+
+                <div id="stock-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+            </div>
+
+            <!-- === 4. PEDIDOS === -->
             <div id="tab-orders" class="hidden fade-in space-y-6">
                 <!-- Add Pedido -->
                 <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm">
-                    <h3 class="font-bold text-gray-700 dark:text-white mb-4">Gerenciar Pedido</h3>
+                    <h3 class="font-bold text-gray-700 dark:text-white mb-4">Passo 4: Novo Pedido</h3>
                     <input type="hidden" id="order-id">
                     
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <input type="text" id="order-client" placeholder="Nome do Cliente" class="md:col-span-2 w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
-                        <div class="relative">
-                            <input list="stock-options" id="order-product" placeholder="Produto (Digite para buscar)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
+                        
+                        <div class="relative group">
+                            <input list="stock-options" id="order-product" onchange="checkProductCost()" placeholder="Produto do Estoque" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none border-l-4 border-l-transparent focus:border-l-indigo-500 transition-all">
                             <datalist id="stock-options"></datalist>
+                            <i class="fa-solid fa-box absolute right-4 top-4 text-gray-400"></i>
                         </div>
-                        <input type="number" id="order-value" placeholder="Valor (R$)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
+
+                        <input type="number" id="order-value" placeholder="Valor Venda (R$)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none font-bold text-green-600">
                     </div>
+                    
                     <div class="flex gap-4 mt-4">
                         <select id="order-status" class="bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none flex-1">
-                            <option value="pendente">Pendente (Orçamento)</option>
+                            <option value="pendente">Pendente</option>
                             <option value="producao">Em Produção</option>
-                            <option value="concluido">Concluído/Entregue</option>
+                            <option value="concluido">Concluído</option>
                         </select>
-                        <button id="order-btn-save" onclick="saveOrder()" class="bg-indigo-600 text-white font-bold px-6 rounded-xl hover:bg-indigo-700 transition">Adicionar</button>
+                        <button id="order-btn-save" onclick="saveOrder()" class="bg-indigo-600 text-white font-bold px-6 rounded-xl hover:bg-indigo-700 transition shadow-lg">Criar Pedido</button>
                         <button id="order-btn-cancel" onclick="resetOrderForm()" class="hidden bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-white font-bold px-6 rounded-xl hover:bg-gray-300 transition">Cancelar</button>
                     </div>
                 </div>
@@ -232,14 +302,14 @@
                         <i class="fa-solid fa-arrow-trend-down absolute -bottom-2 -right-2 text-6xl text-white opacity-20"></i>
                     </div>
                     <div class="bg-slate-800 text-white p-6 rounded-3xl shadow-lg border border-slate-700 relative overflow-hidden">
-                        <div class="relative z-10"><p class="text-slate-400 text-xs font-bold uppercase">Saldo Líquido</p><h2 class="text-3xl font-bold" id="fin-profit">R$ 0,00</h2></div>
+                        <div class="relative z-10"><p class="text-slate-400 text-xs font-bold uppercase" id="fin-profit-label">Saldo Total Acumulado</p><h2 class="text-3xl font-bold" id="fin-profit">R$ 0,00</h2></div>
                         <i class="fa-solid fa-wallet absolute -bottom-2 -right-2 text-6xl text-white opacity-10"></i>
                     </div>
                 </div>
 
                 <!-- Form Transação -->
                 <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm">
-                    <h3 class="font-bold text-gray-700 dark:text-white mb-4">Lançar Transação</h3>
+                    <h3 class="font-bold text-gray-700 dark:text-white mb-4">Lançar Transação Manual</h3>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                         <select id="exp-type" class="bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
                             <option value="expense">Saída (Despesa)</option>
@@ -267,73 +337,6 @@
                     <h3 class="font-bold text-gray-700 dark:text-white mb-6 flex items-center gap-2"><i class="fa-solid fa-file-invoice-dollar"></i> Extrato do Mês</h3>
                     <div id="finance-list" class="space-y-0"></div>
                 </div>
-            </div>
-
-            <!-- === ABA BABILONIA === -->
-            <div id="tab-babylon" class="hidden fade-in space-y-6">
-                <div class="bg-gradient-to-r from-gold-500 to-yellow-600 p-6 rounded-3xl text-white shadow-lg">
-                    <h2 class="text-2xl font-bold"><i class="fa-solid fa-landmark mr-2"></i>A Babilônia</h2>
-                    <p class="text-yellow-100 text-sm opacity-90">Acervo de Arquivos</p>
-                </div>
-
-                <!-- Barra de Pesquisa -->
-                <div class="relative">
-                    <input type="text" id="bab-search" oninput="searchBabylon()" placeholder="Pesquisar por Nome ou Tag..." class="w-full bg-white dark:bg-slate-750 border border-gray-200 dark:border-slate-600 p-4 pl-12 rounded-2xl shadow-sm outline-none text-lg dark:text-white">
-                    <i class="fa-solid fa-search absolute left-4 top-5 text-gray-400"></i>
-                </div>
-
-                <!-- Add/Edit Item Babilônia -->
-                <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm flex flex-col md:flex-row gap-6">
-                    <div class="flex-shrink-0 flex justify-center">
-                        <label class="w-32 h-32 bg-gray-50 dark:bg-slate-700 border-2 border-dashed border-gray-300 dark:border-slate-500 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-gold-500 dark:hover:border-gold-500 transition relative overflow-hidden group">
-                            <i class="fa-solid fa-image text-2xl text-gray-300 dark:text-slate-500" id="bab-icon"></i>
-                            <p class="text-[8px] text-gray-400 mt-2 uppercase font-bold">Capa</p>
-                            <img id="bab-preview" class="absolute inset-0 w-full h-full object-cover hidden">
-                            <input type="file" id="bab-img" accept="image/*" class="hidden" onchange="previewBabylon(this)">
-                        </label>
-                    </div>
-                    <div class="flex-1 space-y-4">
-                        <input type="hidden" id="bab-id">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" id="bab-nome" placeholder="Nome do Modelo" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
-                            <input type="text" id="bab-link" placeholder="Link (Drive/Mega)" class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none text-blue-500">
-                        </div>
-                        <textarea id="bab-desc" placeholder="Descrição..." class="w-full bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none h-20 resize-none"></textarea>
-                        
-                        <!-- Seletor de Tags -->
-                        <div>
-                            <p class="text-xs font-bold text-gray-400 uppercase mb-2">Tags</p>
-                            <div id="bab-tags-container" class="flex flex-wrap gap-2"></div>
-                        </div>
-
-                        <div class="flex gap-2">
-                            <button id="bab-btn-save" onclick="saveBabylon()" class="bg-gold-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-yellow-700 transition flex-1 md:flex-none">Adicionar</button>
-                            <button id="bab-btn-cancel" onclick="resetBabylonForm()" class="hidden bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-white font-bold py-3 px-6 rounded-xl hover:bg-gray-300 transition">Cancelar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Grid Babilônia -->
-                <div id="babylon-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
-            </div>
-
-            <!-- === ABA ESTOQUE === -->
-            <div id="tab-stock" class="hidden fade-in space-y-6">
-                <div class="bg-white dark:bg-slate-750 p-6 rounded-3xl border border-gray-100 dark:border-slate-600 shadow-sm flex flex-col md:flex-row gap-6">
-                    <div class="flex-shrink-0 flex justify-center">
-                        <label class="w-24 h-24 bg-gray-50 dark:bg-slate-700 border-2 border-dashed border-gray-300 dark:border-slate-500 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-indigo-500 transition relative overflow-hidden">
-                            <i class="fa-solid fa-camera text-xl text-gray-300" id="stock-icon"></i>
-                            <img id="stock-preview" class="absolute inset-0 w-full h-full object-cover hidden">
-                            <input type="file" id="stock-file" accept="image/*" class="hidden" onchange="previewStock(this)">
-                        </label>
-                    </div>
-                    <div class="flex-1 grid grid-cols-3 gap-4 content-center">
-                        <input type="text" id="stock-nome" placeholder="Nome" class="col-span-2 bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
-                        <input type="number" id="stock-qtd" placeholder="Qtd" class="bg-gray-50 dark:bg-slate-700 dark:text-white border border-gray-200 dark:border-slate-600 p-3 rounded-xl outline-none">
-                        <button onclick="addStockManual()" class="col-span-3 bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 transition">Adicionar</button>
-                    </div>
-                </div>
-                <div id="stock-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
             </div>
 
             <!-- === ABA AJUSTES === -->
@@ -372,19 +375,32 @@
     </main>
 </div>
 
-<!-- MODAL DETALHES -->
+<!-- MODAL RELATORIO DE LUCRO (NOVO) -->
 <div id="modal-details" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
     <div class="bg-white dark:bg-slate-800 w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl relative animate-fade-in">
         <button onclick="document.getElementById('modal-details').classList.add('hidden')" class="absolute top-4 right-4 text-gray-500 dark:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
         <div class="p-6">
-            <h3 class="font-bold text-xl dark:text-white mb-1" id="det-nome">Nome</h3>
-            <p class="text-xs text-gray-400 mb-4" id="det-data">Data</p>
+            <h3 class="font-bold text-xl dark:text-white mb-1" id="det-nome">Relatório</h3>
+            <p class="text-xs text-gray-400 mb-4" id="det-data">---</p>
             <div id="det-content" class="space-y-2 text-sm dark:text-gray-300">
-                <div class="flex justify-between"><span>Resina:</span> <span class="font-mono font-bold" id="det-resina"></span></div>
-                <div class="flex justify-between"><span>Energia:</span> <span class="font-mono font-bold" id="det-energia"></span></div>
-                <div class="flex justify-between"><span>Outros:</span> <span class="font-mono font-bold" id="det-outros"></span></div>
-                <hr class="border-gray-200 dark:border-slate-600 my-2">
-                <div class="flex justify-between font-bold text-lg dark:text-white"><span>Total:</span> <span id="det-total"></span></div>
+                <div class="bg-gray-50 dark:bg-slate-750 p-3 rounded-xl mb-3">
+                    <p class="text-xs uppercase font-bold text-gray-400">Custos de Produção</p>
+                    <div class="flex justify-between mt-1"><span>Resina:</span> <span class="font-mono font-bold" id="det-resina"></span></div>
+                    <div class="flex justify-between"><span>Energia:</span> <span class="font-mono font-bold" id="det-energia"></span></div>
+                    <div class="flex justify-between"><span>Pós+Emb:</span> <span class="font-mono font-bold" id="det-outros"></span></div>
+                    <div class="border-t border-dashed border-gray-300 dark:border-slate-600 my-1"></div>
+                    <div class="flex justify-between font-bold text-red-500"><span>Custo Total:</span> <span id="det-total"></span></div>
+                </div>
+                
+                <div class="flex justify-between items-center text-lg">
+                    <span>Venda:</span> 
+                    <span class="font-bold text-green-500" id="det-venda-real">R$ 0,00</span>
+                </div>
+                
+                <div class="bg-indigo-50 dark:bg-indigo-900/30 p-4 rounded-xl text-center border border-indigo-100 dark:border-indigo-800 mt-2">
+                    <p class="text-xs text-indigo-500 uppercase font-bold">Lucro Líquido</p>
+                    <h2 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400" id="det-lucro-real">R$ 0,00</h2>
+                </div>
             </div>
         </div>
     </div>
@@ -416,11 +432,12 @@
     let profiles = {};
     let globalTags = [];
     let tempCalc = null;
-    let stockList = [];
+    let stockItemsMap = {}; // Armazena dados completos do estoque para lookup
     let currentDateRef = new Date();
     let allTransactions = [];
     let babylonList = [];
     let selectedBabylonTags = [];
+    let ordersTotal = 0;
 
     // --- UTILS ---
     async function compressImage(file, maxWidth = 800, quality = 0.7) {
@@ -488,9 +505,10 @@
         onSnapshot(collection(db, 'estoque'), snap => {
             const grid = document.getElementById('stock-grid'); 
             const dl = document.getElementById('stock-options');
-            grid.innerHTML = ''; dl.innerHTML = ''; stockList = [];
+            grid.innerHTML = ''; dl.innerHTML = ''; stockItemsMap = {};
             snap.forEach(d => {
-                const i = d.data(); stockList.push(i.nome);
+                const i = d.data(); 
+                stockItemsMap[i.nome] = i; // Map for lookup
                 dl.innerHTML += `<option value="${i.nome}">`;
                 grid.innerHTML += renderStockItem(d.id, i);
             });
@@ -500,7 +518,13 @@
             const list = document.getElementById('orders-list'); list.innerHTML = '';
             let items = []; snap.forEach(d => items.push({id: d.id, ...d.data()}));
             items.sort((a,b) => b.timestamp - a.timestamp);
-            items.forEach(p => list.innerHTML += renderOrderItem(p.id, p));
+            
+            ordersTotal = 0;
+            items.forEach(p => {
+                list.innerHTML += renderOrderItem(p.id, p);
+                if(p.status === 'concluido') ordersTotal += parseFloat(p.valor || 0);
+            });
+            renderFinanceMonth();
         });
 
         onSnapshot(collection(db, 'financas'), snap => {
@@ -515,28 +539,83 @@
         });
     }
 
-    // --- RENDERIZACAO ---
-    function renderHistoryItem(i) {
-        return `<div class="bg-white dark:bg-slate-750 p-3 rounded-xl border border-gray-100 dark:border-slate-600 flex justify-between items-center shadow-sm">
-            <div class="flex items-center gap-3"><button onclick='showDetails(${JSON.stringify(i)})' class="text-indigo-500"><i class="fa-solid fa-eye"></i></button><div><p class="text-xs font-bold dark:text-white">${i.nome}</p></div></div>
-            <div class="flex items-center gap-3"><span class="text-xs font-bold text-indigo-500">${fmt(i.custoTotal)}</span><button onclick="delDoc('impressoes','${i.id}')" class="text-red-400"><i class="fa-solid fa-trash text-xs"></i></button></div>
-        </div>`;
+    // --- INTEGRACAO BABILONIA -> CALC ---
+    window.sendToCalc = (item) => {
+        switchTab('calc');
+        document.getElementById('calc-nome').value = item.nome;
+        // Reset inputs
+        document.getElementById('calc-peso').value = '';
+        document.getElementById('calc-tempo').value = '';
+        document.getElementById('result-card').classList.add('hidden');
+        // Visual feedback
+        document.getElementById('calc-nome').focus();
     }
 
-    function renderStockItem(id, i) {
-        return `<div class="bg-white dark:bg-slate-750 rounded-2xl border border-gray-100 dark:border-slate-600 overflow-hidden shadow-sm group"><div class="h-32 bg-gray-100 dark:bg-slate-900 relative group/img">${i.img ? `<img src="${i.img}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-300"><i class="fa-solid fa-box text-3xl"></i></div>`}<div class="absolute inset-0 bg-black/50 hidden group-hover/img:flex items-center justify-center"><label class="cursor-pointer text-white text-xs font-bold"><i class="fa-solid fa-camera mr-1"></i>Trocar<input type="file" class="hidden" onchange="uploadStockImage('${id}',this)" accept="image/*"></label></div><button onclick="delDoc('estoque','${id}')" class="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash text-[10px]"></i></button></div><div class="p-3"><p class="text-xs font-bold truncate dark:text-white mb-2">${i.nome}</p><div class="flex justify-between items-center bg-gray-50 dark:bg-slate-800 rounded-lg p-1"><button onclick="updStock('${id}',-1)" class="w-6 text-red-500"><i class="fa-solid fa-minus text-[10px]"></i></button><span class="text-xs font-bold dark:text-white">${i.qtd}</span><button onclick="updStock('${id}',1)" class="w-6 text-green-500"><i class="fa-solid fa-plus text-[10px]"></i></button></div></div></div>`;
+    // --- INTEGRACAO PEDIDOS -> ESTOQUE/LUCRO ---
+    window.checkProductCost = () => {
+        const prodName = document.getElementById('order-product').value;
+        const item = stockItemsMap[prodName];
+        const valInput = document.getElementById('order-value');
+        
+        // Se o item tem preço de venda sugerido e o campo está vazio, sugere
+        if(item && item.detalhes && item.detalhes.precoVenda && !valInput.value) {
+            valInput.value = item.detalhes.precoVenda.toFixed(2);
+        }
     }
 
-    function renderOrderItem(id, p) {
-        const colors = { 'pendente': 'bg-yellow-100 text-yellow-600', 'producao': 'bg-blue-100 text-blue-600', 'concluido': 'bg-green-100 text-green-600' };
-        const safeP = JSON.stringify({id, ...p}).replace(/"/g, '&quot;');
-        return `<div class="bg-white dark:bg-slate-750 p-4 rounded-2xl border border-gray-100 dark:border-slate-600 shadow-sm relative group"><button onclick="editOrder(${safeP})" class="absolute top-2 right-8 text-blue-400 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-pencil"></i></button><div class="flex justify-between mb-2"><span class="text-[10px] uppercase font-bold text-gray-400">#${id.slice(0,4)}</span><span class="text-[10px] px-2 py-1 rounded-full font-bold ${colors[p.status]}">${p.status}</span></div><h4 class="font-bold text-gray-800 dark:text-white">${p.cliente}</h4><p class="text-xs text-gray-500 dark:text-gray-400 mb-3">${p.produto}</p><div class="flex justify-between items-center"><span class="font-bold text-lg text-indigo-600 dark:text-indigo-400">${p.valor ? fmt(p.valor) : 'R$ --'}</span><div class="flex gap-2">${p.status !== 'concluido' ? `<button onclick="updateOrderStatus('${id}','concluido')" class="text-green-500 hover:bg-green-50 rounded p-1"><i class="fa-solid fa-check"></i></button>` : ''}<button onclick="delDoc('pedidos','${id}')" class="text-red-400 hover:bg-red-50 rounded p-1"><i class="fa-solid fa-trash"></i></button></div></div></div>`;
+    window.saveOrder = async () => {
+        const id = document.getElementById('order-id').value;
+        const cliente = document.getElementById('order-client').value;
+        const produto = document.getElementById('order-product').value;
+        const valorRaw = document.getElementById('order-value').value;
+        const valor = valorRaw ? parseFloat(valorRaw) : 0;
+        const status = document.getElementById('order-status').value;
+
+        if(!cliente || !produto) return alert("Cliente e Produto são obrigatórios");
+        if(status !== 'pendente' && !valor) return alert("Defina o valor!");
+
+        // Busca detalhes de custo do estoque para salvar no pedido (Snapshot do custo atual)
+        const stockItem = stockItemsMap[produto];
+        const costDetails = stockItem && stockItem.detalhes ? stockItem.detalhes : null;
+
+        const data = { cliente, produto, valor, status, costDetails, timestamp: serverTimestamp() };
+
+        try {
+            if(id) { await updateDoc(doc(db,'pedidos',id), {cliente, produto, valor, status, costDetails}); alert("Atualizado!"); }
+            else { await addDoc(collection(db, 'pedidos'), data); alert("Criado!"); }
+            resetOrderForm();
+        } catch(e) { alert("Erro: " + e.message); }
     }
 
-    function renderFinanceItem(id, f) {
-        return `<div class="flex justify-between items-center p-2 border-b border-gray-100 dark:border-slate-700 last:border-0"><div><p class="text-xs font-bold text-gray-700 dark:text-gray-200">${f.desc}</p><p class="text-[10px] text-gray-400">${new Date(f.date?.seconds * 1000).toLocaleDateString()}</p></div><div class="flex items-center gap-3"><span class="text-xs font-bold text-red-500">-${fmt(f.valor)}</span><button onclick="delDoc('financas','${id}')" class="text-gray-300 hover:text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button></div></div>`;
+    // --- RELATORIO DE PEDIDO ---
+    window.showOrderReport = (order) => {
+        const d = order.costDetails;
+        if(!d) return alert("Este pedido não tem dados de custo vinculados.");
+        
+        // Reuse modal details but adapted
+        document.getElementById('det-nome').innerText = `Relatório: ${order.produto}`;
+        document.getElementById('det-data').innerText = `Cliente: ${order.cliente}`;
+        
+        // Custos (do detalhes salvo no pedido)
+        const dd = d.detalhes || d; // Compatibilidade de estrutura
+        document.getElementById('det-resina').innerText = fmt(dd.resina || 0);
+        document.getElementById('det-energia').innerText = fmt(dd.energia || 0);
+        document.getElementById('det-outros').innerText = fmt((dd.pos || 0) + (dd.emb || 0));
+        document.getElementById('det-total').innerText = fmt(d.custoTotal || 0);
+        
+        // Venda Real
+        document.getElementById('det-venda-real').innerText = fmt(order.valor || 0);
+        
+        // Lucro
+        const lucro = (order.valor || 0) - (d.custoTotal || 0);
+        const pEl = document.getElementById('det-lucro-real');
+        pEl.innerText = fmt(lucro);
+        pEl.className = `text-3xl font-bold ${lucro >= 0 ? 'text-green-500' : 'text-red-500'}`;
+        
+        document.getElementById('modal-details').classList.remove('hidden');
     }
 
+    // --- RENDERIZACAO ATUALIZADA ---
     function renderBabylonItem(id, b) {
         const safeB = JSON.stringify({id, ...b}).replace(/"/g, '&quot;');
         const tagsHtml = (b.tags || []).map(t => `<span class="bg-gold-500/20 text-gold-600 dark:text-gold-500 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase">${t}</span>`).join('');
@@ -545,8 +624,8 @@
             <div class="h-40 bg-slate-200 dark:bg-slate-900 relative">
                 ${b.img ? `<img src="${b.img}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-400"><i class="fa-solid fa-cube text-4xl"></i></div>`}
                 <div class="absolute inset-0 bg-black/60 hidden group-hover:flex items-center justify-center gap-2">
+                    <button onclick='sendToCalc(${safeB})' title="Cotar na Calculadora" class="bg-indigo-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i class="fa-solid fa-calculator"></i></button>
                     <a href="${b.link}" target="_blank" class="bg-gold-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-gold-600 transition"><i class="fa-solid fa-download"></i></a>
-                    <button onclick="copyToStock(${safeB})" title="Enviar para Estoque" class="bg-green-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-green-600 transition"><i class="fa-solid fa-boxes-stacked"></i></button>
                     <button onclick="editBabylon(${safeB})" class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-600 transition"><i class="fa-solid fa-pencil"></i></button>
                     <button onclick="delDoc('babilonia','${id}')" class="bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-red-600 transition"><i class="fa-solid fa-trash"></i></button>
                 </div>
@@ -555,122 +634,74 @@
         </div>`;
     }
 
-    // --- LOGICA DE TAGS ---
-    window.addTag = async () => {
-        const name = document.getElementById('new-tag-name').value.trim();
-        if(!name || globalTags.includes(name)) return;
-        globalTags.push(name);
-        await setDoc(doc(db, 'config', 'geral'), { tags: globalTags }, { merge: true });
-        document.getElementById('new-tag-name').value = '';
-    }
-    window.delTag = async (tag) => { if(confirm(`Apagar "${tag}"?`)) { globalTags = globalTags.filter(t => t !== tag); await setDoc(doc(db, 'config', 'geral'), { tags: globalTags }, { merge: true }); } }
-    function renderTagsManage() {
-        document.getElementById('tags-list-manage').innerHTML = globalTags.map(t => 
-            `<span class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-200 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2">${t} <button onclick="delTag('${t}')" class="hover:text-red-500"><i class="fa-solid fa-times"></i></button></span>`
-        ).join('');
-    }
-    function renderBabylonTags() {
-        const div = document.getElementById('bab-tags-container');
-        div.innerHTML = globalTags.map(t => 
-            `<button type="button" onclick="toggleBabylonTag('${t}', this)" class="tag-btn text-[10px] px-2 py-1 rounded border border-gray-300 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition">${t}</button>`
-        ).join('');
-        selectedBabylonTags.forEach(t => { const btn = Array.from(div.children).find(b => b.innerText === t); if(btn) btn.classList.add('selected'); });
-    }
-    window.toggleBabylonTag = (t, btn) => {
-        if(selectedBabylonTags.includes(t)) { selectedBabylonTags = selectedBabylonTags.filter(x => x !== t); btn.classList.remove('selected'); } 
-        else { selectedBabylonTags.push(t); btn.classList.add('selected'); }
-    }
-    window.searchBabylon = () => {
-        const q = document.getElementById('bab-search').value.toLowerCase();
-        const grid = document.getElementById('babylon-grid'); grid.innerHTML = '';
-        babylonList.filter(b => b.nome.toLowerCase().includes(q) || (b.tags && b.tags.some(t => t.toLowerCase().includes(q)))).forEach(d => grid.innerHTML += renderBabylonItem(d.id, d));
-    }
-
-    // --- BABILONIA ---
-    window.saveBabylon = async () => {
-        const id = document.getElementById('bab-id').value;
-        const nome = document.getElementById('bab-nome').value;
-        const link = document.getElementById('bab-link').value;
-        const desc = document.getElementById('bab-desc').value;
-        const file = document.getElementById('bab-img').files[0];
-        if(!nome || !link) return alert("Preencha Nome e Link");
-        let img = null; if(file) img = await compressImage(file);
-        const data = { nome, link, desc, tags: selectedBabylonTags };
-        if (img) data.img = img;
-        try { if (id) { await updateDoc(doc(db, 'babilonia', id), data); alert("Atualizado!"); } else { await addDoc(collection(db, 'babilonia'), { ...data, img, timestamp: serverTimestamp() }); alert("Adicionado!"); } resetBabylonForm(); } catch(e) { alert("Erro: " + e.message); }
-    }
-    window.editBabylon = (b) => {
-        document.getElementById('bab-id').value = b.id; document.getElementById('bab-nome').value = b.nome; document.getElementById('bab-link').value = b.link; document.getElementById('bab-desc').value = b.desc;
-        selectedBabylonTags = b.tags || []; renderBabylonTags();
-        document.getElementById('bab-btn-save').innerText = 'Salvar Alterações'; document.getElementById('bab-btn-cancel').classList.remove('hidden');
-        if(b.img) { document.getElementById('bab-preview').src = b.img; document.getElementById('bab-preview').classList.remove('hidden'); document.getElementById('bab-icon').classList.add('hidden'); }
-        document.querySelector('main').scrollTop = 0; switchTab('babylon');
-    }
-    window.copyToStock = async (item) => {
-        if(confirm(`Copiar "${item.nome}" para o Estoque?`)) {
-            try { await addDoc(collection(db, 'estoque'), { nome: item.nome, qtd: 1, img: item.img || null, updatedAt: serverTimestamp() }); alert("Copiado!"); } catch(e) { alert("Erro: " + e.message); }
+    function renderOrderItem(id, p) {
+        const colors = { 'pendente': 'bg-yellow-100 text-yellow-600', 'producao': 'bg-blue-100 text-blue-600', 'concluido': 'bg-green-100 text-green-600' };
+        const safeP = JSON.stringify({id, ...p}).replace(/"/g, '&quot;');
+        
+        // Verifica lucro (se tiver custos)
+        let profitTag = '';
+        if(p.costDetails && p.valor) {
+            const lucro = p.valor - p.costDetails.custoTotal;
+            const color = lucro >= 0 ? 'text-green-500' : 'text-red-500';
+            profitTag = `<div class="mt-2 pt-2 border-t border-gray-100 dark:border-slate-600 flex justify-between items-center">
+                <span class="text-[10px] font-bold text-gray-400 uppercase">Lucro Real</span>
+                <span class="text-xs font-bold ${color}">${fmt(lucro)}</span>
+                <button onclick='showOrderReport(${safeP})' class="ml-2 text-indigo-400 hover:text-indigo-600"><i class="fa-solid fa-chart-line"></i></button>
+            </div>`;
         }
-    }
-    window.resetBabylonForm = () => {
-        document.getElementById('bab-id').value = ''; document.getElementById('bab-nome').value = ''; document.getElementById('bab-link').value = ''; document.getElementById('bab-desc').value = ''; document.getElementById('bab-img').value = '';
-        selectedBabylonTags = []; renderBabylonTags();
-        document.getElementById('bab-preview').classList.add('hidden'); document.getElementById('bab-icon').classList.remove('hidden');
-        document.getElementById('bab-btn-save').innerText = 'Adicionar'; document.getElementById('bab-btn-cancel').classList.add('hidden');
+
+        return `<div class="bg-white dark:bg-slate-750 p-4 rounded-2xl border border-gray-100 dark:border-slate-600 shadow-sm relative group">
+            <button onclick="editOrder(${safeP})" class="absolute top-2 right-8 text-blue-400 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-pencil"></i></button>
+            <div class="flex justify-between mb-2">
+                <span class="text-[10px] uppercase font-bold text-gray-400">#${id.slice(0,4)}</span>
+                <span class="text-[10px] px-2 py-1 rounded-full font-bold ${colors[p.status]}">${p.status}</span>
+            </div>
+            <h4 class="font-bold text-gray-800 dark:text-white">${p.cliente}</h4>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">${p.produto}</p>
+            <div class="flex justify-between items-center mt-2">
+                <span class="font-bold text-lg text-indigo-600 dark:text-indigo-400">${p.valor ? fmt(p.valor) : 'R$ --'}</span>
+                <div class="flex gap-2">
+                    ${p.status !== 'concluido' ? `<button onclick="updateOrderStatus('${id}','concluido')" class="text-green-500 hover:bg-green-50 rounded p-1"><i class="fa-solid fa-check"></i></button>` : ''}
+                    <button onclick="delDoc('pedidos','${id}')" class="text-red-400 hover:bg-red-50 rounded p-1"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
+            ${profitTag}
+        </div>`;
     }
 
-    // --- FINANCAS ---
-    window.changeFinanceMonth = (dir) => { currentDateRef.setMonth(currentDateRef.getMonth() + dir); renderFinanceMonth(); }
-    window.toggleInstallments = () => { document.getElementById('install-group').classList.toggle('hidden'); }
-    function renderFinanceMonth() {
-        const list = document.getElementById('finance-list'); list.innerHTML = '';
-        const curMonth = currentDateRef.getMonth(); const curYear = currentDateRef.getFullYear();
-        document.getElementById('fin-month-label').innerText = `${["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][curMonth]} ${curYear}`;
-        let totalIncome = 0; let totalExpense = 0;
-        const monthTransactions = [];
-        allTransactions.forEach(t => {
-            const tDate = t.date ? new Date(t.date.seconds * 1000) : new Date(); 
-            const installments = t.installments || 1;
-            const valuePerMonth = parseFloat(t.valor) / installments;
-            const diffMonths = (curYear - tDate.getFullYear()) * 12 + (curMonth - tDate.getMonth());
-            if (diffMonths >= 0 && diffMonths < installments) {
-                if (t.type === 'income') totalIncome += valuePerMonth; else totalExpense += valuePerMonth;
-                monthTransactions.push({ ...t, displayValue: valuePerMonth, currentParcel: diffMonths + 1, totalParcels: installments, isInstallment: installments > 1, sortDay: tDate.getDate() });
-            }
-        });
-        monthTransactions.sort((a,b) => a.sortDay - b.sortDay);
-        if(monthTransactions.length === 0) list.innerHTML = `<div class="text-center py-8 text-gray-400 text-sm">Sem movimentações.</div>`;
-        else {
-            monthTransactions.forEach(t => {
-                const color = t.type === 'income' ? 'text-green-500' : 'text-red-500';
-                const sign = t.type === 'income' ? '+' : '-';
-                const parcLabel = t.isInstallment ? `<span class="text-[10px] bg-gray-100 dark:bg-slate-700 px-1 rounded text-gray-500 ml-2">${t.currentParcel}/${t.totalParcels}</span>` : '';
-                list.innerHTML += `<div class="flex justify-between items-center p-3 border-b border-gray-100 dark:border-slate-700 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-800 transition"><div><div class="flex items-center"><p class="text-xs font-bold text-gray-700 dark:text-gray-200">${t.desc}</p>${parcLabel}</div><p class="text-[10px] text-gray-400">Dia ${new Date(t.date.seconds*1000).getDate()}</p></div><div class="flex items-center gap-3"><span class="text-xs font-bold ${color}">${sign} ${fmt(t.displayValue)}</span>${!t.isInstallment || t.currentParcel===1 ? `<button onclick="delDoc('financas','${t.id}')" class="text-gray-300 hover:text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button>` : ''}</div></div>`;
-            });
-        }
-        document.getElementById('fin-income').innerText = fmt(totalIncome); document.getElementById('fin-expense').innerText = fmt(totalExpense);
-        const profit = totalIncome - totalExpense; const pEl = document.getElementById('fin-profit'); pEl.innerText = fmt(profit); pEl.className = `text-3xl font-bold ${profit >= 0 ? 'text-green-400' : 'text-red-400'}`;
-    }
-    window.addFinance = async () => {
-        const type = document.getElementById('exp-type').value; const desc = document.getElementById('exp-desc').value; const valor = parseFloat(document.getElementById('exp-val').value); const dateInput = document.getElementById('exp-date').value;
-        const isInstall = document.getElementById('exp-is-install').checked; const installments = isInstall ? parseInt(document.getElementById('exp-installments').value) : 1;
-        if(!desc || !valor || !dateInput) return alert("Preencha todos os campos");
-        const dateObj = new Date(dateInput); dateObj.setMinutes(dateObj.getMinutes() + dateObj.getTimezoneOffset());
-        try { await addDoc(collection(db, 'financas'), { desc, valor, type, installments, date: Timestamp.fromDate(dateObj) }); document.getElementById('exp-desc').value = ''; document.getElementById('exp-val').value = ''; alert("Registrado!"); } catch(e) { alert("Erro ao salvar finança: " + e.message); }
+    function renderStockItem(id, i) {
+        return `<div class="bg-white dark:bg-slate-750 rounded-2xl border border-gray-100 dark:border-slate-600 overflow-hidden shadow-sm group">
+            <div class="h-32 bg-gray-100 dark:bg-slate-900 relative group/img">
+                ${i.img ? `<img src="${i.img}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-300"><i class="fa-solid fa-box text-3xl"></i></div>`}
+                <div class="absolute inset-0 bg-black/50 hidden group-hover/img:flex items-center justify-center"><label class="cursor-pointer text-white text-xs font-bold"><i class="fa-solid fa-camera mr-1"></i>Trocar<input type="file" class="hidden" onchange="uploadStockImage('${id}',this)" accept="image/*"></label></div>
+                <button onclick="delDoc('estoque','${id}')" class="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash text-[10px]"></i></button>
+            </div>
+            <div class="p-3">
+                <p class="text-xs font-bold truncate dark:text-white mb-2">${i.nome}</p>
+                <div class="flex justify-between items-center bg-gray-50 dark:bg-slate-800 rounded-lg p-1">
+                    <button onclick="updStock('${id}',-1)" class="w-6 text-red-500"><i class="fa-solid fa-minus text-[10px]"></i></button>
+                    <span class="text-xs font-bold dark:text-white">${i.qtd}</span>
+                    <button onclick="updStock('${id}',1)" class="w-6 text-green-500"><i class="fa-solid fa-plus text-[10px]"></i></button>
+                </div>
+            </div>
+        </div>`;
     }
 
-    // --- OUTRAS FUNCOES ---
-    window.saveOrder = async () => {
-        const id = document.getElementById('order-id').value; const cliente = document.getElementById('order-client').value; const produto = document.getElementById('order-product').value;
-        const valorRaw = document.getElementById('order-value').value; const valor = valorRaw ? parseFloat(valorRaw) : 0; const status = document.getElementById('order-status').value;
-        if(!cliente || !produto) return alert("Cliente e Produto são obrigatórios"); if(status !== 'pendente' && !valor) return alert("Defina o valor!");
-        const data = { cliente, produto, valor, status, timestamp: serverTimestamp() };
-        try { if(id) { await updateDoc(doc(db,'pedidos',id), {cliente, produto, valor, status}); alert("Atualizado!"); } else { await addDoc(collection(db, 'pedidos'), data); alert("Criado!"); } resetOrderForm(); } catch(e) { alert("Erro: " + e.message); }
+    function renderHistoryItem(i) {
+        // Usa a modal genérica de relatório
+        // Precisamos adaptar o objeto i para ter 'costDetails' para usar o showOrderReport, 
+        // ou adaptar o showOrderReport. Vamos usar o showDetails (antigo) para historico simples.
+        return `<div class="bg-white dark:bg-slate-750 p-3 rounded-xl border border-gray-100 dark:border-slate-600 flex justify-between items-center shadow-sm">
+            <div class="flex items-center gap-3"><button onclick='showDetails(${JSON.stringify(i)})' class="text-indigo-500"><i class="fa-solid fa-eye"></i></button><div><p class="text-xs font-bold dark:text-white">${i.nome}</p></div></div>
+            <div class="flex items-center gap-3"><span class="text-xs font-bold text-indigo-500">${fmt(i.custoTotal)}</span><button onclick="delDoc('impressoes','${i.id}')" class="text-red-400"><i class="fa-solid fa-trash text-xs"></i></button></div>
+        </div>`;
     }
-    window.editOrder = (p) => { document.getElementById('order-id').value = p.id; document.getElementById('order-client').value = p.cliente; document.getElementById('order-product').value = p.produto; document.getElementById('order-value').value = p.valor; document.getElementById('order-status').value = p.status; document.getElementById('order-btn-save').innerText = "Salvar"; document.getElementById('order-btn-cancel').classList.remove('hidden'); document.querySelector('main').scrollTop = 0; }
-    window.resetOrderForm = () => { document.getElementById('order-id').value = ''; document.getElementById('order-client').value = ''; document.getElementById('order-product').value = ''; document.getElementById('order-value').value = ''; document.getElementById('order-status').value = 'pendente'; document.getElementById('order-btn-save').innerText = "Adicionar"; document.getElementById('order-btn-cancel').classList.add('hidden'); }
-    window.addOrder = () => window.saveOrder(); 
-    window.updateOrderStatus = async (id, status) => await updateDoc(doc(db,'pedidos',id), {status});
 
+    function renderFinanceItem(id, f) {
+        return `<div class="flex justify-between items-center p-2 border-b border-gray-100 dark:border-slate-700 last:border-0"><div><p class="text-xs font-bold text-gray-700 dark:text-gray-200">${f.desc}</p><p class="text-[10px] text-gray-400">${new Date(f.date?.seconds * 1000).toLocaleDateString()}</p></div><div class="flex items-center gap-3"><span class="text-xs font-bold text-red-500">-${fmt(f.valor)}</span><button onclick="delDoc('financas','${id}')" class="text-gray-300 hover:text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button></div></div>`;
+    }
+
+    // --- OUTRAS LOGICAS ---
     window.calcular = () => {
         const peso = parseFloat(document.getElementById('calc-peso').value); const tempo = parseFloat(document.getElementById('calc-tempo').value);
         if(!peso && peso !== 0) return alert("Preencha Peso"); if(!tempo && tempo !== 0) return alert("Preencha Tempo");
@@ -683,27 +714,86 @@
     }
     window.salvar = async () => {
         if(!tempCalc) return alert("Calcule primeiro!"); setLoadingBtn('btn-save', true);
-        try { await addDoc(collection(db, 'impressoes'), tempCalc); if(document.getElementById('check-stock').checked) { await addDoc(collection(db, 'estoque'), { nome: tempCalc.nome, qtd: 1, img: null, detalhes: tempCalc }); } alert("Salvo!"); document.getElementById('result-card').classList.add('hidden'); document.getElementById('calc-nome').value = ''; document.getElementById('calc-peso').value = ''; document.getElementById('calc-tempo').value = ''; } catch(e) { alert(e.message); } setLoadingBtn('btn-save', false);
+        try { 
+            await addDoc(collection(db, 'impressoes'), tempCalc); 
+            // Save to stock with 1 qty default
+            await addDoc(collection(db, 'estoque'), { nome: tempCalc.nome, qtd: 1, img: null, detalhes: tempCalc }); 
+            alert("Produzido para Estoque!"); 
+            document.getElementById('result-card').classList.add('hidden'); 
+            document.getElementById('calc-nome').value = ''; 
+            document.getElementById('calc-peso').value = ''; 
+            document.getElementById('calc-tempo').value = ''; 
+        } catch(e) { alert(e.message); } setLoadingBtn('btn-save', false);
     }
 
-    window.previewStock = (input) => { window.previewBabylon(input); }
+    // Reuse other functions from v3.6
+    window.changeFinanceMonth = (dir) => { currentDateRef.setMonth(currentDateRef.getMonth() + dir); renderFinanceMonth(); }
+    window.toggleInstallments = () => { document.getElementById('install-group').classList.toggle('hidden'); }
+    function renderFinanceMonth() {
+        const list = document.getElementById('finance-list'); list.innerHTML = '';
+        const curMonth = currentDateRef.getMonth(); const curYear = currentDateRef.getFullYear();
+        document.getElementById('fin-month-label').innerText = `${["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][curMonth]} ${curYear}`;
+        let totalIncomeM = 0; let totalExpenseM = 0; let totalFinanceBalance = 0;
+        allTransactions.forEach(t => { if (t.type === 'income') totalFinanceBalance += parseFloat(t.valor); else totalFinanceBalance -= parseFloat(t.valor); });
+        const monthTransactions = [];
+        allTransactions.forEach(t => {
+            const tDate = t.date ? new Date(t.date.seconds * 1000) : new Date(); 
+            const installments = t.installments || 1;
+            const valuePerMonth = parseFloat(t.valor) / installments;
+            const diffMonths = (curYear - tDate.getFullYear()) * 12 + (curMonth - tDate.getMonth());
+            if (diffMonths >= 0 && diffMonths < installments) {
+                if (t.type === 'income') totalIncomeM += valuePerMonth; else totalExpenseM += valuePerMonth;
+                monthTransactions.push({ ...t, displayValue: valuePerMonth, currentParcel: diffMonths + 1, totalParcels: installments, isInstallment: installments > 1, sortDay: tDate.getDate() });
+            }
+        });
+        monthTransactions.sort((a,b) => a.sortDay - b.sortDay);
+        if(monthTransactions.length === 0) list.innerHTML = `<div class="text-center py-8 text-gray-400 text-sm">Sem movimentações.</div>`;
+        else {
+            monthTransactions.forEach(t => {
+                const color = t.type === 'income' ? 'text-green-500' : 'text-red-500'; const sign = t.type === 'income' ? '+' : '-'; const parcLabel = t.isInstallment ? `<span class="text-[10px] bg-gray-100 dark:bg-slate-700 px-1 rounded text-gray-500 ml-2">${t.currentParcel}/${t.totalParcels}</span>` : '';
+                list.innerHTML += `<div class="flex justify-between items-center p-3 border-b border-gray-100 dark:border-slate-700 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-800 transition"><div><div class="flex items-center"><p class="text-xs font-bold text-gray-700 dark:text-gray-200">${t.desc}</p>${parcLabel}</div><p class="text-[10px] text-gray-400">Dia ${new Date(t.date.seconds*1000).getDate()}</p></div><div class="flex items-center gap-3"><span class="text-xs font-bold ${color}">${sign} ${fmt(t.displayValue)}</span>${!t.isInstallment || t.currentParcel===1 ? `<button onclick="delDoc('financas','${t.id}')" class="text-gray-300 hover:text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button>` : ''}</div></div>`;
+            });
+        }
+        document.getElementById('fin-income').innerText = fmt(totalIncomeM); document.getElementById('fin-expense').innerText = fmt(totalExpenseM);
+        const totalProfit = totalFinanceBalance + ordersTotal;
+        const pEl = document.getElementById('fin-profit'); pEl.innerText = fmt(totalProfit); pEl.className = `text-3xl font-bold ${totalProfit >= 0 ? 'text-green-400' : 'text-red-400'}`;
+    }
+    window.addFinance = async () => {
+        const type = document.getElementById('exp-type').value; const desc = document.getElementById('exp-desc').value; const valor = parseFloat(document.getElementById('exp-val').value); const dateInput = document.getElementById('exp-date').value;
+        const isInstall = document.getElementById('exp-is-install').checked; const installments = isInstall ? parseInt(document.getElementById('exp-installments').value) : 1;
+        if(!desc || !valor || !dateInput) return alert("Preencha todos os campos");
+        const dateObj = new Date(dateInput); dateObj.setMinutes(dateObj.getMinutes() + dateObj.getTimezoneOffset());
+        try { await addDoc(collection(db, 'financas'), { desc, valor, type, installments, date: Timestamp.fromDate(dateObj) }); document.getElementById('exp-desc').value = ''; document.getElementById('exp-val').value = ''; alert("Registrado!"); } catch(e) { alert("Erro ao salvar finança: " + e.message); }
+    }
+
+    // Babylon/Stock/Tags utils from prev version
+    window.previewBabylon = (input) => { const file = input.files[0]; if(file) { const r = new FileReader(); r.onload = e => { document.getElementById('bab-preview').src = e.target.result; document.getElementById('bab-preview').classList.remove('hidden'); document.getElementById('bab-icon').classList.add('hidden'); }; r.readAsDataURL(file); } }
+    window.saveBabylon = async () => { const id = document.getElementById('bab-id').value; const nome = document.getElementById('bab-nome').value; const link = document.getElementById('bab-link').value; const desc = document.getElementById('bab-desc').value; const file = document.getElementById('bab-img').files[0]; if(!nome || !link) return alert("Preencha Nome e Link"); let img = null; if(file) img = await compressImage(file); const data = { nome, link, desc, tags: selectedBabylonTags }; if (img) data.img = img; try { if (id) { await updateDoc(doc(db, 'babilonia', id), data); alert("Atualizado!"); } else { await addDoc(collection(db, 'babilonia'), { ...data, img, timestamp: serverTimestamp() }); alert("Adicionado!"); } resetBabylonForm(); } catch(e) { alert("Erro: " + e.message); } }
+    window.editBabylon = (b) => { document.getElementById('bab-id').value = b.id; document.getElementById('bab-nome').value = b.nome; document.getElementById('bab-link').value = b.link; document.getElementById('bab-desc').value = b.desc; selectedBabylonTags = b.tags || []; renderBabylonTags(); document.getElementById('bab-btn-save').innerText = 'Salvar Alterações'; document.getElementById('bab-btn-cancel').classList.remove('hidden'); if(b.img) { document.getElementById('bab-preview').src = b.img; document.getElementById('bab-preview').classList.remove('hidden'); document.getElementById('bab-icon').classList.add('hidden'); } document.querySelector('main').scrollTop = 0; switchTab('babylon'); }
+    window.resetBabylonForm = () => { document.getElementById('bab-id').value = ''; document.getElementById('bab-nome').value = ''; document.getElementById('bab-link').value = ''; document.getElementById('bab-desc').value = ''; document.getElementById('bab-img').value = ''; selectedBabylonTags = []; renderBabylonTags(); document.getElementById('bab-preview').classList.add('hidden'); document.getElementById('bab-icon').classList.remove('hidden'); document.getElementById('bab-btn-save').innerText = 'Adicionar'; document.getElementById('bab-btn-cancel').classList.add('hidden'); }
+    window.copyToStock = async (item) => { if(confirm(`Copiar "${item.nome}" para o Estoque?`)) { try { await addDoc(collection(db, 'estoque'), { nome: item.nome, qtd: 1, img: item.img || null, updatedAt: serverTimestamp() }); alert("Copiado!"); } catch(e) { alert("Erro: " + e.message); } } }
     window.addStockManual = async () => { const nome = document.getElementById('stock-nome').value; const qtd = parseInt(document.getElementById('stock-qtd').value); const file = document.getElementById('stock-file').files[0]; if(!nome || !qtd) return alert("Preencha nome e qtd"); let imgBase64 = null; if(file) imgBase64 = await compressImage(file); await addDoc(collection(db, 'estoque'), { nome, qtd, img: imgBase64, detalhes: null }); alert("Adicionado!"); document.getElementById('stock-nome').value = ''; document.getElementById('stock-qtd').value = ''; }
     window.uploadStockImage = async (id, input) => { const file = input.files[0]; if(!file) return; try { const compressed = await compressImage(file); await updateDoc(doc(db, 'estoque', id), { img: compressed }); } catch(err) { alert(err.message); } }
     window.delDoc = async (col, id) => { if(confirm("Excluir?")) await deleteDoc(doc(db, col, id)); }
     window.updStock = async (id, val) => await updateDoc(doc(db,'estoque',id), { qtd: increment(val) });
-
+    window.addTag = async () => { const name = document.getElementById('new-tag-name').value.trim(); if(!name || globalTags.includes(name)) return; globalTags.push(name); await setDoc(doc(db, 'config', 'geral'), { tags: globalTags }, { merge: true }); document.getElementById('new-tag-name').value = ''; }
+    window.delTag = async (tag) => { if(confirm(`Apagar "${tag}"?`)) { globalTags = globalTags.filter(t => t !== tag); await setDoc(doc(db, 'config', 'geral'), { tags: globalTags }, { merge: true }); } }
+    function renderTagsManage() { document.getElementById('tags-list-manage').innerHTML = globalTags.map(t => `<span class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-200 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2">${t} <button onclick="delTag('${t}')" class="hover:text-red-500"><i class="fa-solid fa-times"></i></button></span>`).join(''); }
+    function renderBabylonTags() { const div = document.getElementById('bab-tags-container'); div.innerHTML = globalTags.map(t => `<button type="button" onclick="toggleBabylonTag('${t}', this)" class="tag-btn text-[10px] px-2 py-1 rounded border border-gray-300 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition">${t}</button>`).join(''); selectedBabylonTags.forEach(t => { const btn = Array.from(div.children).find(b => b.innerText === t); if(btn) btn.classList.add('selected'); }); }
+    window.toggleBabylonTag = (t, btn) => { if(selectedBabylonTags.includes(t)) { selectedBabylonTags = selectedBabylonTags.filter(x => x !== t); btn.classList.remove('selected'); } else { selectedBabylonTags.push(t); btn.classList.add('selected'); } }
+    window.searchBabylon = () => { const q = document.getElementById('bab-search').value.toLowerCase(); const grid = document.getElementById('babylon-grid'); grid.innerHTML = ''; babylonList.filter(b => b.nome.toLowerCase().includes(q) || (b.tags && b.tags.some(t => t.toLowerCase().includes(q)))).forEach(d => grid.innerHTML += renderBabylonItem(d.id, d)); }
     window.saveGlobalConfig = async () => { globalConfig = { resina: parseFloat(document.getElementById('conf-resina').value), kwh: parseFloat(document.getElementById('conf-kwh').value), watts: parseFloat(document.getElementById('conf-watts').value), pos: parseFloat(document.getElementById('conf-pos').value) }; await setDoc(doc(db, 'config', 'geral'), { current: globalConfig, profiles, tags: globalTags }, { merge: true }); alert("Salvo!"); }
     window.loadProfile = (name) => { const d = name === 'default' ? globalConfig : profiles[name]; document.getElementById('conf-resina').value = d.resina; document.getElementById('conf-kwh').value = d.kwh; document.getElementById('conf-watts').value = d.watts; document.getElementById('conf-pos').value = d.pos; if(d.emb) document.getElementById('calc-emb').value = d.emb; if(d.taxa) document.getElementById('calc-taxa').value = d.taxa; if(d.lucro) document.getElementById('calc-lucro').value = d.lucro; }
     window.saveProfile = async () => { const name = document.getElementById('new-profile-name').value; if(!name) return alert("Nome vazio"); profiles[name] = { resina: parseFloat(document.getElementById('conf-resina').value), kwh: parseFloat(document.getElementById('conf-kwh').value), watts: parseFloat(document.getElementById('conf-watts').value), pos: parseFloat(document.getElementById('conf-pos').value), emb: parseFloat(document.getElementById('calc-emb').value), taxa: parseFloat(document.getElementById('calc-taxa').value), lucro: parseFloat(document.getElementById('calc-lucro').value) }; await setDoc(doc(db, 'config', 'geral'), { current: globalConfig, profiles, tags: globalTags }, { merge: true }); alert("Perfil salvo!"); renderProfiles(); }
     function renderProfiles() { const s = document.getElementById('profile-select'); const l = document.getElementById('profile-list-manage'); s.innerHTML = '<option value="default">Padrão</option>'; l.innerHTML = ''; for(let k in profiles) { s.innerHTML += `<option value="${k}">${k}</option>`; l.innerHTML += `<li class="flex justify-between text-xs dark:text-white"><span>${k}</span> <button onclick="deleteProfile('${k}')" class="text-red-500">Excluir</button></li>`; } }
     window.deleteProfile = async (k) => { if(confirm("Excluir?")) { delete profiles[k]; await setDoc(doc(db,'config','geral'), {current:globalConfig, profiles, tags: globalTags}, {merge:true}); } }
-
+    window.editOrder = (p) => { document.getElementById('order-id').value = p.id; document.getElementById('order-client').value = p.cliente; document.getElementById('order-product').value = p.produto; document.getElementById('order-value').value = p.valor; document.getElementById('order-status').value = p.status; document.getElementById('order-btn-save').innerText = "Salvar"; document.getElementById('order-btn-cancel').classList.remove('hidden'); document.querySelector('main').scrollTop = 0; }
+    window.resetOrderForm = () => { document.getElementById('order-id').value = ''; document.getElementById('order-client').value = ''; document.getElementById('order-product').value = ''; document.getElementById('order-value').value = ''; document.getElementById('order-status').value = 'pendente'; document.getElementById('order-btn-save').innerText = "Adicionar"; document.getElementById('order-btn-cancel').classList.add('hidden'); }
+    window.updateOrderStatus = async (id, status) => await updateDoc(doc(db,'pedidos',id), {status});
     window.switchTab = (t) => { ['calc','stock','finance','orders','babylon','config'].forEach(k => { const btn = document.getElementById('nav-'+k); const div = document.getElementById('tab-'+k); if(k === t) { btn.classList.add('bg-indigo-50','text-indigo-600','dark:bg-indigo-900/20','dark:text-indigo-300'); btn.classList.remove('text-gray-400'); div.classList.remove('hidden'); document.getElementById('header-title').innerText = k.toUpperCase(); } else { btn.classList.remove('bg-indigo-50','text-indigo-600','dark:bg-indigo-900/20','dark:text-indigo-300'); btn.classList.add('text-gray-400'); div.classList.add('hidden'); } }); }
     window.showDetails = (i) => { document.getElementById('det-nome').innerText = i.nome; document.getElementById('det-data').innerText = new Date(i.timestamp?.seconds*1000).toLocaleDateString(); const d = i.detalhes; document.getElementById('det-resina').innerText = fmt(d.resina); document.getElementById('det-energia').innerText = fmt(d.energia); document.getElementById('det-outros').innerText = fmt(d.pos + d.emb); document.getElementById('det-total').innerText = fmt(i.custoTotal); document.getElementById('modal-details').classList.remove('hidden'); }
     window.logout = () => signOut(auth);
     window.fmt = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    window.toggleTheme = () => { document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light'); }
-    if(localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
     function setLoading(l) { document.getElementById('btn-login').disabled = l; }
     function setLoadingBtn(id, l) { const btn = document.getElementById(id); if(l) btn.innerHTML = '<div class="loader !w-4 !h-4 !border-white/30 !border-t-white"></div>'; else btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Salvar'; }
 
